@@ -1,0 +1,14 @@
+{
+  "name": "ts-node18-cjs",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "start": "ts-node ./src/index.ts",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "",
+  "devDependencies": {
+    "ts-node": "^10.9.2"
+  }
+}

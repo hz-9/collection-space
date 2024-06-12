@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  nexus:
+    user: root
+    platform: linux/amd64
+    image: sonatype/nexus3:3.66.0
+    restart: always
+    networks:
+      all:
+        aliases:
+          - nexus
+    ports:
+      - 8081:8081
+    volumes:
+      - ../temp/nexus/data:/nexus-data
+
+networks:
+  all:
