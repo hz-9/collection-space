@@ -1,0 +1,11 @@
+{
+  "extends": "./t-1.tsconfig.json",
+
+  "compilerOptions": {
+    "paths": {
+      "redlock": [
+        "./node_modules/redlock/dist/index.d.ts"
+      ]
+    }
+  }
+}

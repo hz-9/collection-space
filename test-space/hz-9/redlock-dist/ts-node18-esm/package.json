@@ -1,0 +1,18 @@
+{
+  "name": "ts-node18-cjs",
+  "version": "0.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "start": "ts-node ./src/index.ts",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "",
+  "devDependencies": {
+    "ts-node": "^10.9.2"
+  },
+  "dependencies": {
+    "redlock": "5.0.0-beta.2"
+  }
+}
