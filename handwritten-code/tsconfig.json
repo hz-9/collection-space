@@ -1,0 +1,17 @@
+{
+  "include": [
+    // "leetcode/typescript/**/*.ts",
+    "src/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS",
+    "rootDir": "./",
+    "lib": [ "ESNext", "dom" ],
+    "outDir": "dist",
+    "sourceMap": true,
+  },
+}
