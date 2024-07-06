@@ -4,8 +4,9 @@
 
 | Path                     | Plan                                         |
 | ------------------------ | -------------------------------------------- |
-| ci&cd                    | some ci&cd scripts.                          |
-| data-structure           | some data-structure class                    |
-| docker-envs              | some docker-compose scripts.                 |
-| test-space/{libraryName} | Test spaces for various component libraries. |
+| ci&cd                    | Some ci&cd scripts.                          |
+| data-structure           | Some data-structure class                    |
+| docker-envs              | Some docker-compose scripts.                 |
 | handwritten-code         | A handwritten example.                       |
+| practice                 | Some practice projects.                      |
+| test-space/{libraryName} | Test spaces for various component libraries. |
