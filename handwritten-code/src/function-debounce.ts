@@ -2,7 +2,7 @@
  * @Author       : Chen Zhen
  * @Date         : 2024-04-20 19:36:19
  * @LastEditors  : Chen Zhen
- * @LastEditTime : 2024-06-16 10:52:54
+ * @LastEditTime : 2024-07-06 11:17:37
  */
 
 /**
@@ -15,10 +15,15 @@
  * @param {number} delay - 等待时间
  */
 export function debounce(func: () => any, delay: number): () => void {
-  let timer: number | NodeJS.Timeout | undefined = undefined;
+  let timer: number | NodeJS.Timeout | undefined = undefined
 
   return function() {
+    const context = this
+    const args = arguments
+
     clearTimeout(timer)
-    timer = setTimeout(func, delay)
+    timer = setTimeout(() => {
+      func.apply(context, args)
+    }, delay)
   }
 }
