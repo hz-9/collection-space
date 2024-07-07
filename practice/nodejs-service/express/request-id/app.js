@@ -3,7 +3,11 @@ var express = require('express');
 var path = require('path');
 var logger = require('morgan');
 
+var { middleware, get } = require('./rid.middleware')
+
 var app = express();
+
+app.use(middleware)
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -11,6 +15,8 @@ app.use(express.urlencoded({ extended: false }));
 
 var indexRouter = express.Router();
 indexRouter.get('/', function(req, res, next) {
+  const rid = get('rid');
+  console.log('rid:', rid);
   res.send('This is the express service.');
 });
 app.use('/', indexRouter);

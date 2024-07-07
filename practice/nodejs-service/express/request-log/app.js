@@ -1,26 +1,20 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var logger = require('morgan');
-// require('./with-morgan')
 
-var log4js = require('log4js');
-require('./with-log4js')
-
-var indexRouter = require('./routes/index');
+const { getMiddleware } = require('./middleware/morgan.middleware.js')
 
 var app = express();
 
-// var newLogFormat = '[HZ-9] :pid - :timestamp :level [:marker] :req[host] - ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms ":user-agent"'
-// app.use(logger(newLogFormat));
-
-var logger = log4js.getLogger('default');
-var requestFormat = ':remote-addr - ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms ":user-agent"'
-app.use(log4js.connectLogger(logger, { format: requestFormat  }));
+app.use(getMiddleware());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+var indexRouter = express.Router();
+indexRouter.get('/', function(req, res, next) {
+  res.send('This is the express service.');
+});
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler

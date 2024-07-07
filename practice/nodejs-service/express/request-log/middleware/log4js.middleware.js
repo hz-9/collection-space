@@ -1,9 +1,3 @@
-/**
- * @Author       : Chen Zhen
- * @Date         : 2024-07-06 18:11:00
- * @LastEditors  : Chen Zhen
- * @LastEditTime : 2024-07-06 18:20:12
- */
 var log4js = require('log4js');
 
 log4js.configure({
@@ -21,6 +15,13 @@ log4js.configure({
       },
   },
   categories: {
-      default: { appenders: ['default'], level: 'info' }
+    default: { appenders: ['default'], level: 'info' }
   }
 });
+
+exports.getMiddleware = () => {
+  var logger = log4js.getLogger('default');
+  var requestFormat = ':remote-addr - ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms ":user-agent"'
+  
+  return log4js.connectLogger(logger, { format: requestFormat  })
+}

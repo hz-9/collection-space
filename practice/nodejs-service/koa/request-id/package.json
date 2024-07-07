@@ -1,0 +1,12 @@
+{
+  "name": "template",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./app.js"
+  },
+  "dependencies": {
+    "cls-hooked": "^4.2.2",
+    "koa": "^2.15.3"
+  }
+}
