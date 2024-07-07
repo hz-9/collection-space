@@ -6,7 +6,7 @@
 | ---------- | ------- |
 | Node.js    | 20.13.0 |
 | pnpm       | 9.1.0   |
-| Egg        | 3.15.0  |
+| Nest       | ^10.0.0 |
 | TypeScript | 5.3.3   |
 
 ## Install
@@ -18,5 +18,5 @@ pnpm install
 ## Start
 
 ``` sh
-npm run dev
+npm run start
 ```
