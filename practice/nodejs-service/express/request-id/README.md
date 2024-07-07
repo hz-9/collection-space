@@ -1,4 +1,4 @@
-# Template for express
+# Template for Express
 
 ## Environment
 
@@ -17,5 +17,5 @@ npm install
 ## Start
 
 ``` sh
-npm start
+npm run start
 ```
