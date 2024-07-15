@@ -15,5 +15,11 @@ services:
     volumes:
       - ../temp/nexus/data:/nexus-data
 
+    # # 适应在较小内存环境可以正常运行。
+    # mem_limit: 2g
+    # environment:
+    #   INSTALL4J_ADD_VM_PARAMS: -Xms128m -Xmx512m -XX:MaxDirectMemorySize=512m -Djava.util.prefs.userRoot=/nexus-data/javaprefs
+
+
 networks:
   all:
