@@ -1,17 +1,19 @@
-# Jenkins Docker 镜像部署示例
+# Jenkins Docker Image Deploy Demo
 
-## 说明
+[文档](./README.zh-CN.md)
 
-支持在安装了 Docker 与 Docker compose plugin 的服务器或个人终端中启动 `Jenkins` 实例。
+## Description
 
-确保部署服务器，已安装了 `Docker`，否则请查看 [安装 Docker & Docker Desktop](TODO)。
+Supports starting a `Jenkins` instance on a server or personal terminal with Docker and Docker Compose plugin installed.
 
-在运行前请关注 `volumes` 参数内的路径，处于当前脚本收藏集时，使用同级 `./temp` 文件夹用以存放数据卷，但用于实际使用时，建议切换为 `/usr/公司名-项目名称/envs` 文件夹用以存放数据卷。
+This example requires the installation of `Docker` and `Docker Compose`. If not installed, refer to [Overview of Docker Desktop](https://docs.docker.com/desktop/).
 
-## 尝试启动
+Before running, pay attention to the paths in the `volumes` parameter. When in the current script collection, use the sibling `./temp` folder to store volumes. However, for actual usage, it is recommended to switch to the `/usr/project-name/envs` folder to store volumes.
 
-在此文件所在路径下运行 `./bin/up.sh`，启动后，请根据 [Jenkins 安装](http://47.92.86.108:11001/software/install/jenkins.html#%E5%AE%89%E8%A3%85) 文档进行操作初始化。
+## Start
 
-## 尝试关闭
+Run `./bin/up.sh` to start in the current file path.
 
-在此文件所在路径下运行 `./bin/down.sh`
+## Shutdown
+
+Run `./bin/down.sh` in the current file path.
