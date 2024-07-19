@@ -27,9 +27,6 @@ downloadFile "${winDownloadUrl}" "${winDownloadDir}/${pacakgeName}"
 unzipDir "${winDownloadDir}/${pacakgeName}/${winDownloadName}.zip"
 rm -rf   "${winDownloadDir}/${pacakgeName}/${winDownloadName}.zip"
 
-# mkdir -p "${winDownloadDir}"
-# mv       "${winDownloadDir}/cache/*" "${winDownloadDir}/${pacakgeName}"
-
 # ----------   Export Version    ----------
 setVersion "${winDownloadDir}" "${version1}-${version2}-${version3}"
 
