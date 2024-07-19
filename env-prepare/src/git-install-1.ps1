@@ -1,11 +1,12 @@
-if (-not ([Net.ServicePointManager]::SecurityProtocol).ToString().Contains([Net.SecurityProtocolType]::Tls12)) {
-  [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol.toString() + ', ' + [Net.SecurityProtocolType]::Tls12
+. "$PSScriptRoot\.utils\index.ps1"
+
+. "$PSScriptRoot\git-install-base.ps1"
+
+downloadFile $downloadUrl $downloadPath $filename
+
+if (Test-Path "$downloadPath\$filename") {
+  & "$downloadPath\$filename"
+} else {
+  Write-Host "$downloadPath\$filename not found."
 }
 
-. "./git-install-common.ps1"
-
-Start-BitsTransfer -Source $downloadUrl -Destination "$downloadPath\$filename"
-
-& "$downloadPath\$filename" 
-
-echo "Please continue run 'git-install-2.ps1'"

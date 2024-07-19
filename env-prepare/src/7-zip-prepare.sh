@@ -1,10 +1,7 @@
 #!/bin/bash
 
-source ./.utils/base-paramter.sh
-source ./.utils/log-message.sh
-source ./.utils/download-file.sh
-source ./.utils/tar-dir.sh
-source ./.utils/version.sh
+CURRENT_DIR=$(cd "$(dirname "$0")" || exit;pwd)
+source "${CURRENT_DIR}/.utils/index.sh"
 
 # Software name and version
 softwareName="7-Zip Preparer"
@@ -17,7 +14,7 @@ downloadDir=$PROJECT_FOLDER/temp/$pacakgeName
 downloadUrl="https://www.7-zip.org/a/7z${softwareVersion/./}-x64.msi"
 
 # ---------- Prepare log message ---------- 
-printPrepareLogMessage "${softwareName}"
+startLog "${softwareName}"
 
 # ----------    Download file    ---------- 
 rm -rf "${downloadDir}" && mkdir -p "${downloadDir}"
@@ -31,4 +28,4 @@ zipDir   "${downloadDir}"
 rm -rf   "${downloadDir}"
 
 # ----------   Complete message  ----------
-printCompleteLogMessage "${softwareName}"
+completeLog "${softwareName}"

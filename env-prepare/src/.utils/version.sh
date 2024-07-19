@@ -16,7 +16,7 @@ getVersion() {
 
   if [ -f "${file}" ];then
     version=$(cat "${file}")
-    echo "${version}"
+    echo "Get version: ${version}"
   else
     echo "Not found ${file}"
     exit 1
