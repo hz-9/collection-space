@@ -3,9 +3,11 @@
 zipDir() {
   tarDir=$1
 
+  echo "tarDir: ${tarDir}"
+
   pwd_=$(pwd)
-  dirName=$(dirname "${tarDir%\?*}")
-  baseName=$(basename "${tarDir%\?*}")
+  dirName=$(dirname "${tarDir}")
+  baseName=$(basename "${tarDir}")
 
   echo ""
   cd "${dirName}" || exit

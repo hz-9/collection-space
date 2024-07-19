@@ -30,7 +30,7 @@ unzipDir $tarPath
 
 # ----------   Read   Version    ----------
 $softwareVersion="$(getVersion $dirPath)"
-Write-Host "SoftwareVersion: $softwareVersion"
+Write-Host "Version: $softwareVersion"
 
 # ----------  Install Package    ----------
 $packagePath="$dirPath\gdal-$softwareVersion-winx64"

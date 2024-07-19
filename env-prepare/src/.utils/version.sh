@@ -11,8 +11,12 @@ setVersion() {
 
 getVersion() {
   dir=$1
+  filename=$2
+  if [ -z "${filename}" ]; then
+    filename="version.txt"
+  fi
 
-  file="${dir}/version.txt"
+  file="${dir}/${filename}"
 
   if [ -f "${file}" ];then
     version=$(cat "${file}")

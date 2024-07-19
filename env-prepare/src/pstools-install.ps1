@@ -1,7 +1,7 @@
 . "$PSScriptRoot\.utils\index.ps1"
 
 # # Software name and version
-$softwareName="jq Installer"
+$softwareName="PsTools Installer"
 
 $downloadUrl=$args[0]
 
@@ -12,7 +12,7 @@ if ($null -eq $downloadUrl) {
 }
 
 # Download parameters
-$downloadDir="$DOWNLOAD_FOLDER\$CURRENT_DATE_S\jq"
+$downloadDir="$DOWNLOAD_FOLDER\$CURRENT_DATE_S\pstools"
 $packageName="$(urlToName $downloadUrl)"
 
 Write-Host "pacakgeName: $packageName"
@@ -33,20 +33,20 @@ $softwareVersion="$(getVersion $dirPath)"
 Write-Host "Version: $softwareVersion"
 
 # ----------  Install Package    ----------
-$packagePath="$dirPath\jq-windows-amd64.exe"
+$packagePath="$dirPath\pstools-$softwareVersion"
 
-$installDir="$WIN_PROGRAM_FILES\jq\jq-$softwareVersion-win-amd64"
-if (Test-Path $installDir) {
+$installDir="$WIN_PROGRAM_FILES\pstools\pstools-$softwareVersion"
+if (Test-Path "$WIN_PROGRAM_FILES\pstools") {
   # ...
 } else {
-  New-Item -ItemType Directory -Force -Path $installDir | Out-Null
+  New-Item -ItemType Directory -Force -Path "$WIN_PROGRAM_FILES\pstools" | Out-Null
 }
 
 Write-Host "From: $packagePath"
 Write-Host "To  : $installDir"
-Move-Item  -Path $packagePath -Destination "$installDir/jq.exe"
+Move-Item  -Path $packagePath -Destination $installDir
 
-setMachineEnvPath "JQ_PATH" "$installDir"
+setMachineEnvPath "PSTOOLS_PATH" "$installDir"
 
 # ----------   Complete message  ----------
 completeLog "$softwareName"

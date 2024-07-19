@@ -30,7 +30,7 @@ unzipDir $tarPath
 
 # ----------   Read   Version    ----------
 $softwareVersion="$(getVersion $dirPath)".Replace(".", "")
-Write-Host "SoftwareVersion: $softwareVersion"
+Write-Host "Version: $softwareVersion"
 
 # ----------  Install Package    ----------
 $packagePath="$dirPath\7z$softwareVersion-x64.msi"
