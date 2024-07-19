@@ -1,7 +1,7 @@
 . "$PSScriptRoot\.utils\index.ps1"
 
 # # Software name and version
-$softwareName="7-Zip Installer"
+$softwareName="GDAL Installer"
 
 $downloadUrl=$args[0]
 
@@ -12,7 +12,7 @@ if ($null -eq $downloadUrl) {
 }
 
 # Download parameters
-$downloadDir="$DOWNLOAD_FOLDER\$CURRENT_DATE_S\7-zip"
+$downloadDir="$DOWNLOAD_FOLDER\$CURRENT_DATE_S\GDAL"
 $packageName="$(urlToName $downloadUrl)"
 
 Write-Host "pacakgeName: $packageName"
@@ -29,17 +29,25 @@ $dirPath=$tarPath.Replace(".zip", "")
 unzipDir $tarPath
 
 # ----------   Read   Version    ----------
-$softwareVersion="$(getVersion $dirPath)".Replace(".", "")
+$softwareVersion="$(getVersion $dirPath)"
 Write-Host "SoftwareVersion: $softwareVersion"
 
 # ----------  Install Package    ----------
-$packagePath="$dirPath\7z$softwareVersion-x64.msi"
-$packageName_=$packageName.Replace(".zip", "")
-$installDir="$WIN_PROGRAM_FILES\7-Zip\$($packageName_)"
+$packagePath="$dirPath\gdal-$softwareVersion-winx64"
 
-installByMsiexec $packagePath $installDir
+if (Test-Path "$WIN_PROGRAM_FILES\GDAL") {
+  # ...
+} else {
+  New-Item -ItemType Directory -Force -Path "$WIN_PROGRAM_FILES\GDAL" | Out-Null
+}
 
-setMachineEnvPath "7ZIP_PATH" "$installDir"
+$installDir="$WIN_PROGRAM_FILES\GDAL\gdal-$softwareVersion-winx64"
+
+Write-Host "From: $packagePath"
+Write-Host "To  : $installDir"
+Move-Item -Path $packagePath -Destination $installDir
+
+setMachineEnvPath "GDAL_PATH" "$installDir\bin\gdal\apps"
 
 # ----------   Complete message  ----------
 completeLog "$softwareName"

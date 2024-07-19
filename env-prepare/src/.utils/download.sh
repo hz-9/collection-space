@@ -18,7 +18,7 @@ downloadFile() {
   fi
 
   if [ ! -d "${downloadDir}" ]; then
-    mkdikr -p "${downloadDir}"
+    mkdir -p "${downloadDir}"
   fi
 
   absolutionPath="${downloadDir}/${downloadFilename}"
@@ -26,6 +26,7 @@ downloadFile() {
   echo "File: ${absolutionPath}"
   echo "Url:  ${downloadUrl}"
   curl -L -o "${absolutionPath}" "${downloadUrl}"
+  # wget -c -O "${absolutionPath}" "${downloadUrl}"
   echo ""
 
   echo "Download ${downloadFilename} complete."
