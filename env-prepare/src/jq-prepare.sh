@@ -4,7 +4,7 @@ CURRENT_DIR=$(cd "$(dirname "$0")" || exit;pwd)
 source "${CURRENT_DIR}/.utils/index.sh"
 
 # Software name and version
-softwareName="GDAL Preparer"
+softwareName="jq Preparer"
 
 version="1.7.1"  # jq Version
 

@@ -9,8 +9,6 @@ if ($null -eq $env:HOMEPATH) {
   $DOWNLOAD_FOLDER="$env:HOMEPATH\Downloads"
 }
 
-echo "DOWNLOAD_FOLDER: $DOWNLOAD_FOLDER"
-
 $CURRENT_TIMESTAMP=Get-Date -Format 'yyyy-MM-ddTHH:mm:ss'
 $CURRENT_TIMESTAMP_S=Get-Date -Format 'yyyyMMddHHmmss'
 

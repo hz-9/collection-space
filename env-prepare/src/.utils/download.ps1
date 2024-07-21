@@ -31,10 +31,10 @@ Function downloadFile {
   Write-Host "File: $absolutionPath"
   Write-Host "Url:  $downloadUrl"
 
-  try {
+  if ($PSVersionTable.PSEdition -eq "Desktop") {
     $wc = New-Object System.Net.WebClient
     $wc.DownloadFile($downloadUrl,$absolutionPath)
-  } catch {
+  } else {
     Write-Host "Not found Start-BitsTransfer, use curl."
     curl -L -o "$absolutionPath" "$downloadUrl"
   }
