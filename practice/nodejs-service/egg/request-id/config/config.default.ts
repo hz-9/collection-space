@@ -1,3 +1,5 @@
+import fs from 'fs'
+import path from 'path'
 import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg';
 
 export default (appInfo: EggAppInfo) => {
@@ -13,6 +15,10 @@ export default (appInfo: EggAppInfo) => {
   // add your special config in here
   const bizConfig = {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
+  };
+
+  config.siteFile = {
+    '/favicon.ico': fs.readFileSync(path.join(__dirname, '../public', 'favicon.ico')),
   };
 
   // the return config will combines to EggAppConfig

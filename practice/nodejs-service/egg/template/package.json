@@ -7,9 +7,9 @@
     "typescript": true
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-template",
+    "start": "egg-bin dev --port 3002",
+    "start:prod": "egg-scripts start --daemon --title=egg-server-template",
     "stop": "egg-scripts stop --title=egg-server-template",
-    "dev": "egg-bin dev --port 3000",
     "test:local": "egg-bin test -p",
     "test": "npm run lint -- --fix && npm run test:local",
     "cov": "egg-bin cov -p",

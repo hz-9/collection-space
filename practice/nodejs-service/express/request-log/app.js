@@ -15,6 +15,9 @@ var indexRouter = express.Router();
 indexRouter.get('/', function(req, res, next) {
   res.send('This is the express service.');
 });
+app.use('/favicon.ico', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'favicon.ico'));
+});
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler

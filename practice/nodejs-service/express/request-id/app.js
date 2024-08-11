@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var logger = require('morgan');
 
-var { middleware, get } = require('./rid.middleware')
+var { middleware, get } = require('./middleware/rid.middleware')
 
 var app = express();
 
@@ -18,6 +18,9 @@ indexRouter.get('/', function(req, res, next) {
   const rid = get('rid');
   console.log('rid:', rid);
   res.send('This is the express service.');
+});
+app.use('/favicon.ico', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'favicon.ico'));
 });
 app.use('/', indexRouter);
 
