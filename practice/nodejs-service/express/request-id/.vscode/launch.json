@@ -10,8 +10,10 @@
       ],
       "program": "${workspaceFolder}/bin/www",
       "env": {
+        "DEBUG": "express:*",
         "DEBUG_CLS_HOOKED": "true"
-      }
+      },
+      "console": "integratedTerminal"
     }
   ]
 }

@@ -2,19 +2,24 @@
  * @Author       : Chen Zhen
  * @Date         : 2024-07-06 23:31:08
  * @LastEditors  : Chen Zhen
- * @LastEditTime : 2024-08-13 01:06:40
+ * @LastEditTime : 2024-08-13 01:04:29
  */
 const fs = require("fs");
 const path = require("path");
 const Koa = require("koa");
 const Router = require("@koa/router");
-
-const { middleware } = require('./middleware/log4js.middleware')
-
+const { crossDomainRouter } = require("./cross-domain/index");
 const app = new Koa();
 
 // logger
-app.use(middleware);
+app.use(async (ctx, next) => {
+  const start = Date.now();
+
+  await next();
+
+  const ms = Date.now() - start;
+  console.log(`${ctx.method} ${ctx.url} - ${ms} ms`);
+});
 
 // response
 const router = new Router();
@@ -26,6 +31,12 @@ router
   .get("/", async (ctx, next) => {
     ctx.body = "This is the koa service.";
   });
+
+router.use(
+  "/cross-domain",
+  crossDomainRouter.routes(),
+  crossDomainRouter.allowedMethods()
+);
 
 app.use(router.routes()).use(router.allowedMethods());
 

@@ -8,11 +8,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/bin/www",
-      "env": {
-        "DEBUG": "express:*"
-      },
-      "console": "integratedTerminal"
+      "program": "${workspaceFolder}/app.js"
     }
   ]
 }
