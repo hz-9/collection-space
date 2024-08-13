@@ -1,6 +1,6 @@
 {
-  "name": "bar",
+  "name": "home",
   "eggModule": {
-    "name": "bar"
+    "name": "home"
   }
 }

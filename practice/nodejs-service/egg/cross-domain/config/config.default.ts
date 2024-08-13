@@ -10,7 +10,7 @@ export default (appInfo: EggAppInfo) => {
   config.keys = appInfo.name + '_1720324213796_4631';
 
   // add your egg config in here
-  config.middleware = [ 'rid' ];
+  config.middleware = [];
 
   // add your special config in here
   const bizConfig = {
@@ -19,6 +19,25 @@ export default (appInfo: EggAppInfo) => {
 
   config.siteFile = {
     '/favicon.ico': fs.readFileSync(path.join(__dirname, '../public', 'favicon.ico')),
+  };
+
+  config.security = {
+    csrf: {
+      enable: false,
+    },
+    domainWhiteList: [ '*' ],
+  };
+
+  config.cors = {
+    /**
+     * Docs: https://github.com/koajs/cors?tab=readme-ov-file#corsoptions
+     */
+
+    origin: ctx => {
+      if (ctx.originalUrl === '/cross-domain/cors') return '*';
+      return undefined;
+    },
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
   };
 
   // the return config will combines to EggAppConfig
