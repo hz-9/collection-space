@@ -5,6 +5,8 @@ import * as path from 'path';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // app.enableCors();
+
   app
     .getHttpAdapter()
     .useStaticAssets(path.resolve(__dirname, '../', 'public'));
