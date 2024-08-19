@@ -1,0 +1,4 @@
+
+nginx/logs
+nginx/website/web
+# !nginx/website/web/index.html

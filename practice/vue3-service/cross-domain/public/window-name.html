@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style href="./common.css"></style>
+    <style>
+      #name {
+        width: -webkit-fill-available;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div>After 3 seconds, jump to</div>
+    <div id="msg"></div>
+    <div>window.name is</div>
+    <div class="">
+      <textarea id="name" rows="10"></textarea>
+    </div>
+
+    <script>
+      window.onload = function () {
+        let inSameDomain = false
+
+        try {
+          window.parent.window.name
+          inSameDomain = true
+        } catch (error) {
+          console.error(error)
+        }
+
+        setTimeout(() => {
+          let msg2 = `{}`
+          try {
+            const info = JSON.parse(window.name)
+            msg2 = JSON.stringify(info, undefined, 2)
+
+            if (inSameDomain) {
+              document.getElementById('msg').textContent =
+                `'${location.protocol}//${info.toHost}/window-name.html'`
+            } else {
+              document.getElementById('msg').textContent =
+                `'${location.protocol}//${info.fromHost}/window-name.html'`
+
+              info.msg = `This is iframe, send to parent: ${new Date().toLocaleString()}`
+              window.name = JSON.stringify(info)
+              msg2 = JSON.stringify(info, undefined, 2)
+            }
+          } catch (error) {
+            msg2 = `{}`
+          }
+          document.getElementById('name').textContent = msg2
+        }, 0)
+      }
+    </script>
+  </body>
+</html>

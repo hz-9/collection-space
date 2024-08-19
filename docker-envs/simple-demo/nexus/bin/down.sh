@@ -1,5 +1,5 @@
 #!/bin/bash
 
-root=$(cd `dirname $0`; dirname `pwd`)
+root=$(cd "$(dirname "$0")" || exit; dirname "$(pwd)")
 
-docker-compose -p nexus -f ${root}/compose/docker-compose.yml down --rmi local
+docker-compose -p nexus -f "${root}/compose/docker-compose.yml" down --rmi local

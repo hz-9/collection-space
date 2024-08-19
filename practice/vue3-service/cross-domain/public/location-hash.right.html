@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Location Hash Left iframe</title>
+
+    <style href="./common.css"></style>
+  </head>
+  <body>
+    <script src="./receive-msglist.js"></script>
+    <script src="./location-hash.js"></script>
+    <script>
+      window.from = 'right'
+      window.to = 'left'
+      window.toParentMsg = function (sendMsg) {
+        const iframe = document.createElement('iframe')
+        iframe.style.display = 'none'
+        iframe.src = `${location.protocol}//${location.hostname}:${callbackPort}/location-hash.middle.html#to-left-${sendMsg.msg}`
+        document.body.appendChild(iframe)
+        iframe.onload = function () {
+          setTimeout(() => {
+            document.body.removeChild(iframe)
+          }, 50)
+        }
+      }
+    </script>
+  </body>
+</html>
