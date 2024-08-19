@@ -42,8 +42,10 @@ const handleChange = (newInfo: Service) => {
 const connectService = async (service: Service = list.value[0]) => {
   serviceStatus.value = ServiceStatus.loading
 
+  const url = new URL(service.baseUrl)
+
   axios
-    .get(`${service.baseUrl}/cross-domain/cors`)
+    .get(`${url.origin}/cross-domain/cors`)
     .then(() => {
       serviceStatus.value = ServiceStatus.success
     })

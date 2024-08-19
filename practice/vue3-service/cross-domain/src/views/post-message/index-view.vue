@@ -41,8 +41,9 @@ const sendToIframe = (website: Website) => {
 }
 
 const messageCallback = (e: MessageEvent) => {
-  const data = JSON.parse(e.data)
-  if (data.type === 'callback') {
+  const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data
+
+  if (data.type === 'msg') {
     msgList.value.push({
       type: 'receive',
       msg: data.msg

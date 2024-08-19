@@ -3,11 +3,65 @@ version: "3"
 services:
   nginx:
     platform: linux/amd64
-    image: nginx:1.27-alpine
+    build: 
+      context: ../../../vue3-service/cross-domain
+      dockerfile: ./dockerfile
     restart: always
     ports:
-      - 5174-5179:5174-5179
+      - 5173-5179:5173-5179
+    networks:
+      all:
+        aliases:
+          - nginx
     volumes:
-      - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ../nginx/logs:/var/log/nginx
-      - ../nginx/website:/website
+  express:
+    platform: linux/amd64
+    build: 
+      context: ../../../nodejs-service/express/cross-domain
+      dockerfile: ./dockerfile
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      all:
+        aliases:
+          - express
+  koa:
+    platform: linux/amd64
+    build: 
+      context: ../../../nodejs-service/koa/cross-domain
+      dockerfile: ./dockerfile
+    restart: always
+    ports:
+      - 3001:3001
+    networks:
+      all:
+        aliases:
+          - koa
+  egg:
+    platform: linux/amd64
+    build: 
+      context: ../../../nodejs-service/egg/cross-domain
+      dockerfile: ./dockerfile
+    restart: always
+    ports:
+      - 3002:3002
+    networks:
+      all:
+        aliases:
+          - egg
+  nest:
+    platform: linux/amd64
+    build: 
+      context: ../../../nodejs-service/nest/cross-domain
+      dockerfile: ./dockerfile
+    restart: always
+    ports:
+      - 3003:3003
+    networks:
+      all:
+        aliases:
+          - nest
+networks:
+  all:
