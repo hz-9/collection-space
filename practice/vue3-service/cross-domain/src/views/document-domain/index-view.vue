@@ -42,6 +42,9 @@ const sendToIframe = () => {
   })
 }
 
+const inExampleDomain = location.hostname.includes('example.com')
+const exampleUrl = `${location.protocol}//www.example.com:${location.port}/document-domain`
+
 onMounted(() => {
   window.receiveMsgFromParent = (data: SendInfo) => {
     const receiveInfo: SendInfo = data
@@ -81,23 +84,32 @@ const handleChange = () => {
   <div>
     <multi-tabs title="Document.domain" :list="list" @change="handleChange">
       <template v-slot:content="{ info }">
-        <two-page @left-click="sendToIframe" @right-click="sendToParent">
-          <template v-slot:left>
-            <left-mock-iframe :msgList="msgList"></left-mock-iframe>
-          </template>
+        <template v-if="inExampleDomain">
+          <two-page @left-click="sendToIframe" @right-click="sendToParent">
+            <template v-slot:left>
+              <left-mock-iframe :msgList="msgList"></left-mock-iframe>
+            </template>
 
-          <template v-slot:right>
-            <iframe
-              ref="iframe"
-              class="iframe"
-              :src="info.baseUrl"
-              width="100%"
-              height="500"
-              frameborder="0"
-              scrolling="no"
-            ></iframe>
-          </template>
-        </two-page>
+            <template v-slot:right>
+              <iframe
+                ref="iframe"
+                class="iframe"
+                :src="info.baseUrl"
+                width="100%"
+                height="500"
+                frameborder="0"
+                scrolling="no"
+              ></iframe>
+            </template>
+          </two-page>
+        </template>
+        <template v-else>
+          please visit <a :href="exampleUrl">{{ exampleUrl }}</a
+          >.
+          <br />
+          Of course, you need to set the hosts file to point a.example.com and www.example.com to
+          127.0.0.1.
+        </template>
       </template>
     </multi-tabs>
   </div>
