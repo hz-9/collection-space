@@ -64,6 +64,6 @@ watch(chooseOne, () => {
 .extra {
   position: absolute;
   right: 6px;
-  top: 6px;
+  bottom: 6px;
 }
 </style>

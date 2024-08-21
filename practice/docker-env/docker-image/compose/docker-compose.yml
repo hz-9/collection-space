@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+  express:
+    platform: linux/amd64
+    build: 
+      context: ../../../nodejs-service/express/docker-image
+      dockerfile: ./dockerfile
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      all:
+        aliases:
+          - express
+  koa:
+    platform: linux/amd64
+    build: 
+      context: ../../../nodejs-service/koa/docker-image
+      dockerfile: ./dockerfile
+    restart: always
+    ports:
+      - 3001:3001
+    networks:
+      all:
+        aliases:
+          - koa
+  egg:
+    platform: linux/amd64
+    build: 
+      context: ../../../nodejs-service/egg/docker-image
+      dockerfile: ./dockerfile
+    restart: always
+    ports:
+      - 3002:3002
+    networks:
+      all:
+        aliases:
+          - egg
+  nest:
+    platform: linux/amd64
+    build: 
+      context: ../../../nodejs-service/nest/docker-image
+      dockerfile: ./dockerfile
+    restart: always
+    ports:
+      - 3003:3003
+    networks:
+      all:
+        aliases:
+          - nest
+networks:
+  all:

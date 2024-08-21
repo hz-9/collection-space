@@ -192,11 +192,11 @@ const handleStart = async () => {
   background-color: #fff;
 }
 
-.steps >>> .ant-steps-item-title,
-.steps >>> .ant-steps-icon {
+.steps :deep() .ant-steps-item-title,
+.steps :deep() .ant-steps-icon {
   color: #fff !important;
 }
-.steps >>> .ant-steps-item-icon {
+.steps :deep() .ant-steps-item-icon {
   border-color: #fff !important;
 }
 </style>

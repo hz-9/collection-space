@@ -5,7 +5,7 @@
 ``` sh
 cd ./practice/docker-env/cross-domain
 
-./bin/up.sh
+bash ./bin/up.sh
 ```
 
 ## Stop
@@ -13,5 +13,5 @@ cd ./practice/docker-env/cross-domain
 ``` sh
 cd ./practice/docker-env/cross-domain
 
-./bin/down.sh
+bash ./bin/down.sh
 ```

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { type Website } from '../../types'
 
 import MultiTabs from '../../components/multi-tabs.vue'
@@ -55,7 +55,7 @@ onMounted(() => {
   window.addEventListener('message', messageCallback)
 })
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   window.removeEventListener('message', messageCallback)
 })
 

@@ -53,7 +53,7 @@ const handleRightClick = () => {
   width: 50%;
 }
 
-.right >>> iframe {
+.right :deep() iframe {
   background: #fff;
 }
 
@@ -64,7 +64,7 @@ const handleRightClick = () => {
   right: 6px;
 }
 
-.left >>> .iframe {
+.left :deep() .iframe {
   color: #000;
   background: #fff;
   display: flex;
