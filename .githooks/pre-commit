@@ -1,5 +1,4 @@
 #!/bin/bash
 
-echo "Build env-prepare scripts... !!!"
-
-pwd
+# Build env-prepare scripts.
+bash env-prepare/utils/_merge_with_source.sh

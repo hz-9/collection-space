@@ -23,11 +23,17 @@ function merge_script {
   done < "${main_dir}/$script"
 }
 
+echo "Env Prepare scripts is building..."
+
 for file in "$main_dir"/*; do
   if [[ "$(basename "$file")" != _* ]]; then
       output_file="${output_dir}/$(basename "$file")"
       echo "#!/bin/bash" >> "$output_file"
       echo "" >> "$output_file"
       merge_script "$(basename "$file")"
+
+      echo "  > $(basename "$file")"
   fi
 done
+
+echo "Env Prepare scripts build completed."
