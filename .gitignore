@@ -5,4 +5,7 @@ lib
 temp
 docs
 !docs/api
+!env-prepare/dist
 node_modules
+
+!.git/hooks/pre-commit

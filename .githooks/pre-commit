@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# 检查是否有未格式化的代码
+if ! git diff --cached --quiet; then
+    echo "有未格式化的代码，请先格式化代码再提交。"
+    exit 1
+fi
+
+# 其他检查逻辑...
+
+echo "Build env-prepare scripts... !!!"
+
+pwd
