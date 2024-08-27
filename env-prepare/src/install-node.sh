@@ -36,7 +36,7 @@ pm2Home="${HOME}/.pm2"
 inChina=$(get_param '--in-china')
 
 if [[ ! -f "$nvmHome/README.md" ]]; then
-  echo "nvm ${nvmHome} is installing."
+  echo "nvm ${nvmHome} is installing..."
   echo ""
 
   curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | bash
@@ -49,7 +49,7 @@ else
 fi
 
 if [[ ! -d "$nodeHome" ]]; then
-  echo "Node.js ${nodeVersion} is installing."
+  echo "Node.js ${nodeVersion} is installing..."
   echo ""
 
   if [[ "$inChina" == "true" ]]; then
@@ -64,7 +64,7 @@ else
 fi
 
 installPM2() {
-  echo "PM2 ${pm2Version} is installing."
+  echo "PM2 ${pm2Version} is installing..."
   echo ""
 
   if [[ "$inChina" == "true" ]]; then
