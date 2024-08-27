@@ -19,6 +19,5 @@
 挂载 `git hook`。
 
 ``` sh
-cp ./.githooks/* ./.git/hooks/
-chmod +x ./.git/hooks/pre-commit
+cp ./.githooks/* ./.git/hooks/ && chmod +x ./.git/hooks/pre-commit
 ```
