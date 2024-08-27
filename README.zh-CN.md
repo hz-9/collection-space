@@ -19,6 +19,6 @@
 挂载 `git hook`。
 
 ``` sh
-git config advice.ignoredHook false
 cp ./.githooks/* ./.git/hooks/
+chmod +x ./.git/hooks/pre-commit
 ```
