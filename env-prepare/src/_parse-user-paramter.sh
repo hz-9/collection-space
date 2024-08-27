@@ -37,8 +37,10 @@
     echo ""
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
-      local name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
-      local value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
+      local name
+      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
+      local value
+      value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
       
       if [[ ${#name} -gt 16 ]]; then
         printf "   %s\n" "$name"
@@ -56,8 +58,10 @@
     local key="$1"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
-      local name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
-      local value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
+      local name
+      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
+      local value
+      value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
       
       if [[ "$name" == "$key" ]]; then
         return 0
@@ -71,8 +75,10 @@
     local key="$1"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
-      local name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
-      local value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
+      local name
+      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
+      local value
+      value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
       
       if [[ "$name" == "$key" ]]; then
         echo "$value"

@@ -52,8 +52,10 @@ SHELL_DES="Install 'docker-ce' 'docker-compose'."
     echo ""
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
-      local name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
-      local value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
+      local name
+      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
+      local value
+      value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
       
       if [[ ${#name} -gt 16 ]]; then
         printf "   %s\n" "$name"
@@ -71,8 +73,10 @@ SHELL_DES="Install 'docker-ce' 'docker-compose'."
     local key="$1"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
-      local name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
-      local value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
+      local name
+      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
+      local value
+      value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
       
       if [[ "$name" == "$key" ]]; then
         return 0
@@ -86,8 +90,10 @@ SHELL_DES="Install 'docker-ce' 'docker-compose'."
     local key="$1"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
-      local name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
-      local value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
+      local name
+      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
+      local value
+      value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
       
       if [[ "$name" == "$key" ]]; then
         echo "$value"
@@ -106,9 +112,12 @@ SHELL_DES="Install 'docker-ce' 'docker-compose'."
     echo "Default paramters:"
     echo ""
 
+    # shellcheck disable=SC2153
     for PARAMTER in "${PARAMTERS[@]}"; do
-      local name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
-      local value=$(awk -F "$_m_" '{ for (i=4; i<=4; i++) print $i }' <<< "$PARAMTER")
+      local name
+      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
+      local value
+      value=$(awk -F "$_m_" '{ for (i=4; i<=4; i++) print $i }' <<< "$PARAMTER")
 
       if [[ ${#name} -gt 16 ]]; then
         printf "   %s\n" "$name"
@@ -126,7 +135,8 @@ SHELL_DES="Install 'docker-ce' 'docker-compose'."
     local key="$1"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
-      local name=$(awk -F "${_m_}" '{ for (i=1; i<=1; i++) print $i }' <<<"$PARAMTER")
+      local name
+      name=$(awk -F "${_m_}" '{ for (i=1; i<=1; i++) print $i }' <<<"$PARAMTER")
 
       if [[ "$name" == "$key" ]]; then
         return 0
@@ -140,8 +150,10 @@ SHELL_DES="Install 'docker-ce' 'docker-compose'."
     local key="$1"
 
     for PARAMTER in "${PARAMTERS[@]}"; do
-      local name=$(awk -F "${_m_}" '{ for (i=1; i<=1; i++) print $i }' <<<"$PARAMTER")
-      local default=$(awk -F "${_m_}" '{ for (i=4; i<=4; i++) print $i }' <<<"$PARAMTER")
+      local name
+      name=$(awk -F "${_m_}" '{ for (i=1; i<=1; i++) print $i }' <<<"$PARAMTER")
+      local default
+      default=$(awk -F "${_m_}" '{ for (i=4; i<=4; i++) print $i }' <<<"$PARAMTER")
 
       if [[ "$name" == "$key" ]]; then
         echo "$default"
@@ -155,9 +167,12 @@ SHELL_DES="Install 'docker-ce' 'docker-compose'."
     local key="$1"
 
     for PARAMTER in "${PARAMTERS[@]}"; do
-      local name=$(awk -F "${_m_}" '{ for (i=1; i<=1; i++) print $i }' <<<"$PARAMTER")
-      local alias=$(awk -F $_m_ '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
-      local default=$(awk -F "${_m_}" '{ for (i=4; i<=4; i++) print $i }' <<<"$PARAMTER")
+      local name
+      name=$(awk -F "${_m_}" '{ for (i=1; i<=1; i++) print $i }' <<<"$PARAMTER")
+      local alias
+      alias=$(awk -F $_m_ '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
+      local default
+      default=$(awk -F "${_m_}" '{ for (i=4; i<=4; i++) print $i }' <<<"$PARAMTER")
 
       if [[ "$name" == "$key" ]]; then
         if has_user_param "$name"; then
@@ -179,10 +194,14 @@ SHELL_DES="Install 'docker-ce' 'docker-compose'."
     echo "$SHELL_DES"
     echo ""
     for PARAMTER in "${PARAMTERS[@]}"; do
-      local name=$(awk -F $_m_ '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
-      local alias=$(awk -F $_m_ '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
-      local msg=$(awk -F $_m_ '{ for (i=3; i<=3; i++) print $i }' <<< "$PARAMTER")
-      local default=$(awk -F $_m_ '{ for (i=4; i<=4; i++) print $i }' <<< "$PARAMTER")
+      local name
+      name=$(awk -F $_m_ '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
+      local alias
+      alias=$(awk -F $_m_ '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
+      local msg
+      msg=$(awk -F $_m_ '{ for (i=3; i<=3; i++) print $i }' <<< "$PARAMTER")
+      local default
+      default=$(awk -F $_m_ '{ for (i=4; i<=4; i++) print $i }' <<< "$PARAMTER")
 
       if [[ -n "$alias" ]]; then
         name+=",$alias"
@@ -214,8 +233,10 @@ SHELL_DES="Install 'docker-ce' 'docker-compose'."
     echo ""
 
     for PARAMTER in "${PARAMTERS[@]}"; do
-      local name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
-      local value=$(get_param "$name")
+      local name
+      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
+      local value
+      value=$(get_param "$name")
 
       if [[ ${#name} -gt 16 ]]; then
         printf "   %s\n" "$name"
@@ -242,9 +263,12 @@ dockerVersion=$(get_param '--docker-version')
 inChina=$(get_param '--in-china')
 
 installOnUbuntu() {
-  local ubuntuRelease=$(lsb_release -rs)
-  local ubuntuCodename=$(lsb_release -cs)
-  local ubuntuVersion=$(lsb_release -is | tr '[:upper:]' '[:lower:]').${ubuntuRelease}~${ubuntuCodename}
+  local ubuntuRelease
+  ubuntuRelease=$(lsb_release -rs)
+  local ubuntuCodename
+  ubuntuCodename=$(lsb_release -cs)
+  local ubuntuVersion
+  ubuntuVersion=$(lsb_release -is | tr '[:upper:]' '[:lower:]').${ubuntuRelease}~${ubuntuCodename}
 
   # step 1: Install necessary system tools
   sudo apt-get -y update

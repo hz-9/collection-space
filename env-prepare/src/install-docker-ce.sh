@@ -26,9 +26,12 @@ dockerVersion=$(get_param '--docker-version')
 inChina=$(get_param '--in-china')
 
 installOnUbuntu() {
-  local ubuntuRelease=$(lsb_release -rs)
-  local ubuntuCodename=$(lsb_release -cs)
-  local ubuntuVersion=$(lsb_release -is | tr '[:upper:]' '[:lower:]').${ubuntuRelease}~${ubuntuCodename}
+  local ubuntuRelease
+  ubuntuRelease=$(lsb_release -rs)
+  local ubuntuCodename
+  ubuntuCodename=$(lsb_release -cs)
+  local ubuntuVersion
+  ubuntuVersion=$(lsb_release -is | tr '[:upper:]' '[:lower:]').${ubuntuRelease}~${ubuntuCodename}
 
   # step 1: Install necessary system tools
   sudo apt-get -y update
