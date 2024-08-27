@@ -19,5 +19,6 @@ For the service under the `practice/nodejs-service` path, you can access the API
 Bind `git hooks`.
 
 ``` sh
+git config advice.ignoredHook false
 cp ./.githooks/* ./.git/hooks/
 ```
