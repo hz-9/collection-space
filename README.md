@@ -19,6 +19,5 @@ For the service under the `practice/nodejs-service` path, you can access the API
 Bind `git hooks`.
 
 ``` sh
-cp ./.githooks/* ./.git/hooks/
-chmod +x ./.git/hooks/pre-commit
+cp ./.githooks/* ./.git/hooks/ && chmod +x ./.git/hooks/pre-commit
 ```
