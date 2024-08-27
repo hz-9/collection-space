@@ -89,9 +89,9 @@ else
 fi
 
 echo ""
-echo "nvm  version : $(nvm -v)"
-echo "Node version : $(node -v)"
-echo "npm  version : $(npm -v)"
-echo "PM2  version : $(pm2 -v)"
+echo "    nvm             : $(nvm -v)"
+echo "    Node            : $(node -v)"
+echo "    npm             : $(npm -v)"
+echo "    PM2             : $(pm2 -v)"
 echo ""
 echo "Install complete."
