@@ -8,19 +8,15 @@ PARAMTERS=(
 )
 
 SHELL_NAME="Docker CE Installer"
+SHELL_DESC="Install 'docker-ce' 'docker-compose'."
 
-SHELL_DES="Install 'docker-ce' 'docker-compose'."
+source ./_console.sh
 
 source ./_parse-user-paramter.sh
 
 source ./_parse-paramter.sh
 
-if [[ $(get_param '--help') == "true" ]]; then
-  print_help
-  exit 0
-else
-  print_param
-fi
+print_help_or_param
 
 dockerVersion=$(get_param '--docker-version')
 inChina=$(get_param '--in-china')
@@ -100,7 +96,7 @@ else
 fi
 
 echo ""
-echo "    Docker CE       : $(docker --version | awk '{print $3}' | sed 's/,//')"
-echo "    Docker compose  : $(docker compose version | awk '{print $4}')"
+console_key_value "Docker CE"      "$(docker --version | awk '{print $3}' | sed 's/,//')"
+console_key_value "Docker compose" "$(docker compose version | awk '{print $4}')"
 echo ""
 echo "Install complete."

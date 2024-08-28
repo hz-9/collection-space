@@ -33,8 +33,7 @@
   }
 
   print_user_param() {
-    echo "User paramters:"
-    echo ""
+    console_title "User paramters:"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
       local name
@@ -42,12 +41,7 @@
       local value
       value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
       
-      if [[ ${#name} -gt 16 ]]; then
-        printf "   %s\n" "$name"
-        printf "   %-16s: %s\n" "" "$value"
-      else
-        printf "   %-16s: %s\n" "$name" "$value"
-      fi
+      console_key_value "$name" "$value"
     done
     echo ""
 

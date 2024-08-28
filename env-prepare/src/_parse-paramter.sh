@@ -2,8 +2,7 @@
 {
 
   print_default_param() {
-    echo "Default paramters:"
-    echo ""
+    console_title "Default paramters:"
 
     # shellcheck disable=SC2153
     for PARAMTER in "${PARAMTERS[@]}"; do
@@ -12,14 +11,9 @@
       local value
       value=$(awk -F "$_m_" '{ for (i=4; i<=4; i++) print $i }' <<< "$PARAMTER")
 
-      if [[ ${#name} -gt 16 ]]; then
-        printf "   %s\n" "$name"
-        printf "   %-16s: %s\n" "" "$value"
-      else
-        printf "   %-16s: %s\n" "$name" "$value"
-      fi
+      console_key_value "$name" "$value"
     done
-    echo ""
+    console_empty_line
 
     return 1
   }
@@ -50,6 +44,7 @@
 
       if [[ "$name" == "$key" ]]; then
         echo "$default"
+        break
       fi
     done
 
@@ -75,6 +70,7 @@
         else
           echo "$(get_param_default $name)"
         fi
+        break
       fi
     done
 
@@ -82,10 +78,10 @@
   }
 
   print_help() {
-    echo "$SHELL_NAME"
-    echo ""
-    echo "$SHELL_DES"
-    echo ""
+    console_name
+
+    console_desc
+
     for PARAMTER in "${PARAMTERS[@]}"; do
       local name
       name=$(awk -F $_m_ '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
@@ -101,29 +97,22 @@
       fi
       local defaultStr=''
       if [[ -n "$default" ]]; then
-        defaultStr=" (default: $default)"
+        defaultStr=" (Default is '$default')"
       fi
       
-      if [[ ${#name} -gt 16 ]]; then
-        printf "   %s\n" "$name"
-        printf "   %-16s: %s\n" "" "$msg$defaultStr"
-      else
-        printf "   %-16s: %s\n" "$name" "$msg$defaultStr"
-      fi
-      
+      console_key_value "$name" "$msg$defaultStr"
     done
-    echo ""
+    console_empty_line
 
     return 1
   }
 
   print_param() {
-    echo "$SHELL_NAME"
-    echo ""
-    echo "$SHELL_DES"
-    echo ""
-    echo "Paramters:"
-    echo ""
+    console_name
+
+    console_desc
+
+    console_title "Paramters:"
 
     for PARAMTER in "${PARAMTERS[@]}"; do
       local name
@@ -131,16 +120,19 @@
       local value
       value=$(get_param "$name")
 
-      if [[ ${#name} -gt 16 ]]; then
-        printf "   %s\n" "$name"
-        printf "   %-16s: %s\n" "" "$value"
-      else
-        printf "   %-16s: %s\n" "$name" "$value"
-      fi
+      console_key_value "${name//--/}" "$value"
     done
-    echo ""
+    console_empty_line
 
     return 1
   }
 
+  print_help_or_param() {
+    if [[ $(get_param '--help') == "true" ]]; then
+      print_help
+      exit 0
+    else
+      print_param
+    fi
+  }
 }

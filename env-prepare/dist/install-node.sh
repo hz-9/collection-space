@@ -12,8 +12,57 @@ PARAMTERS=(
 )
 
 SHELL_NAME="Node.js Installer"
+SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
 
-SHELL_DES="Install 'nvn' 'node.js' and 'pm2'."
+# build from ./_console.sh
+{
+  console_name() {
+    echo "$SHELL_NAME"
+    echo ""
+  }
+
+  console_desc() {
+    if [[ -n "$SHELL_DESC" ]]; then
+      echo "$SHELL_DESC"
+      echo ""
+    fi
+  }
+
+  console_title() {
+    local title="$1"
+
+    echo "$title"
+    echo ""
+  }
+
+  console_key_value() {
+    local key="$1"
+    local value="$2"
+
+    if [[ ${#key} -gt 16 ]]; then
+      printf "   %s\n" "$key"
+      printf "   %-16s: %s\n" "" "$value"
+    else
+      printf "   %-16s: %s\n" "$key" "$value"
+    fi
+
+    return 1
+  }
+
+  console_empty_line() {
+    echo ""
+  }
+
+  console() {
+    local message="$1"
+    echo "$message"
+  }
+
+  console_content() {
+    local message="$1"
+    printf "   %s\n" "$message"
+  }
+}
 
 # build from ./_parse-user-paramter.sh
 {
@@ -50,8 +99,7 @@ SHELL_DES="Install 'nvn' 'node.js' and 'pm2'."
   }
 
   print_user_param() {
-    echo "User paramters:"
-    echo ""
+    console_title "User paramters:"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
       local name
@@ -59,12 +107,7 @@ SHELL_DES="Install 'nvn' 'node.js' and 'pm2'."
       local value
       value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
       
-      if [[ ${#name} -gt 16 ]]; then
-        printf "   %s\n" "$name"
-        printf "   %-16s: %s\n" "" "$value"
-      else
-        printf "   %-16s: %s\n" "$name" "$value"
-      fi
+      console_key_value "$name" "$value"
     done
     echo ""
 
@@ -111,8 +154,7 @@ SHELL_DES="Install 'nvn' 'node.js' and 'pm2'."
 {
 
   print_default_param() {
-    echo "Default paramters:"
-    echo ""
+    console_title "Default paramters:"
 
     # shellcheck disable=SC2153
     for PARAMTER in "${PARAMTERS[@]}"; do
@@ -121,14 +163,9 @@ SHELL_DES="Install 'nvn' 'node.js' and 'pm2'."
       local value
       value=$(awk -F "$_m_" '{ for (i=4; i<=4; i++) print $i }' <<< "$PARAMTER")
 
-      if [[ ${#name} -gt 16 ]]; then
-        printf "   %s\n" "$name"
-        printf "   %-16s: %s\n" "" "$value"
-      else
-        printf "   %-16s: %s\n" "$name" "$value"
-      fi
+      console_key_value "$name" "$value"
     done
-    echo ""
+    console_empty_line
 
     return 1
   }
@@ -159,6 +196,7 @@ SHELL_DES="Install 'nvn' 'node.js' and 'pm2'."
 
       if [[ "$name" == "$key" ]]; then
         echo "$default"
+        break
       fi
     done
 
@@ -184,6 +222,7 @@ SHELL_DES="Install 'nvn' 'node.js' and 'pm2'."
         else
           echo "$(get_param_default $name)"
         fi
+        break
       fi
     done
 
@@ -191,10 +230,10 @@ SHELL_DES="Install 'nvn' 'node.js' and 'pm2'."
   }
 
   print_help() {
-    echo "$SHELL_NAME"
-    echo ""
-    echo "$SHELL_DES"
-    echo ""
+    console_name
+
+    console_desc
+
     for PARAMTER in "${PARAMTERS[@]}"; do
       local name
       name=$(awk -F $_m_ '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
@@ -210,29 +249,22 @@ SHELL_DES="Install 'nvn' 'node.js' and 'pm2'."
       fi
       local defaultStr=''
       if [[ -n "$default" ]]; then
-        defaultStr=" (default: $default)"
+        defaultStr=" (Default is '$default')"
       fi
       
-      if [[ ${#name} -gt 16 ]]; then
-        printf "   %s\n" "$name"
-        printf "   %-16s: %s\n" "" "$msg$defaultStr"
-      else
-        printf "   %-16s: %s\n" "$name" "$msg$defaultStr"
-      fi
-      
+      console_key_value "$name" "$msg$defaultStr"
     done
-    echo ""
+    console_empty_line
 
     return 1
   }
 
   print_param() {
-    echo "$SHELL_NAME"
-    echo ""
-    echo "$SHELL_DES"
-    echo ""
-    echo "Paramters:"
-    echo ""
+    console_name
+
+    console_desc
+
+    console_title "Paramters:"
 
     for PARAMTER in "${PARAMTERS[@]}"; do
       local name
@@ -240,26 +272,24 @@ SHELL_DES="Install 'nvn' 'node.js' and 'pm2'."
       local value
       value=$(get_param "$name")
 
-      if [[ ${#name} -gt 16 ]]; then
-        printf "   %s\n" "$name"
-        printf "   %-16s: %s\n" "" "$value"
-      else
-        printf "   %-16s: %s\n" "$name" "$value"
-      fi
+      console_key_value "${name//--/}" "$value"
     done
-    echo ""
+    console_empty_line
 
     return 1
   }
 
+  print_help_or_param() {
+    if [[ $(get_param '--help') == "true" ]]; then
+      print_help
+      exit 0
+    else
+      print_param
+    fi
+  }
 }
 
-if [[ $(get_param '--help') == "true" ]]; then
-  print_help
-  exit 0
-else
-  print_param
-fi
+print_help_or_param
 
 nvmVersion=$(get_param '--nvm-version')
 nvmHome="${HOME}/.nvm"
@@ -326,9 +356,9 @@ else
 fi
 
 echo ""
-echo "    nvm             : $(nvm -v)"
-echo "    Node            : $(node -v)"
-echo "    npm             : $(npm -v)"
-echo "    PM2             : $(pm2 -v)"
+console_key_value "nvm" "$(nvm -v)"
+console_key_value "Node" "$(node -v)"
+console_key_value "npm" "$(npm -v)"
+console_key_value "PM2" "$(pm2 -v)"
 echo ""
 echo "Install complete."

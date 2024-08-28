@@ -15,11 +15,3 @@
 For the service under the `practice/nodejs-service` path, you can access the API interface published on [APIfox](https://apifox.com/apidoc/shared-b220fa2f-dc80-4283-9dee-311a22e04d03).
 
 [Prepare environment scripts.]: ./env-prepare
-
-## Init
-
-Bind `git hooks`.
-
-``` sh
-cp ./.githooks/* ./.git/hooks/ && chmod +x ./.git/hooks/*
-```

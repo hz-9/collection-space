@@ -10,19 +10,15 @@ PARAMTERS=(
 )
 
 SHELL_NAME="Node.js Installer"
+SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
 
-SHELL_DES="Install 'nvn' 'node.js' and 'pm2'."
+source ./_console.sh
 
 source ./_parse-user-paramter.sh
 
 source ./_parse-paramter.sh
 
-if [[ $(get_param '--help') == "true" ]]; then
-  print_help
-  exit 0
-else
-  print_param
-fi
+print_help_or_param
 
 nvmVersion=$(get_param '--nvm-version')
 nvmHome="${HOME}/.nvm"
@@ -89,9 +85,9 @@ else
 fi
 
 echo ""
-echo "    nvm             : $(nvm -v)"
-echo "    Node            : $(node -v)"
-echo "    npm             : $(npm -v)"
-echo "    PM2             : $(pm2 -v)"
+console_key_value "nvm" "$(nvm -v)"
+console_key_value "Node" "$(node -v)"
+console_key_value "npm" "$(npm -v)"
+console_key_value "PM2" "$(pm2 -v)"
 echo ""
 echo "Install complete."
