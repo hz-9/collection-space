@@ -7,7 +7,7 @@ PARAMTERS=(
 
   "--nvm-version${_m_}${_m_}Nvm version.${_m_}v0.40.0"
   "--node-version${_m_}${_m_}Node.js version.${_m_}v18.20.3"
-  "--pm2-version${_m_}${_m_}PM2 version.${_m_}^5.4.2"
+  "--pm2-version${_m_}${_m_}PM2 version.${_m_}5.4.2"
   "--in-china${_m_}${_m_}Use the Chinese mirror.${_m_}false"
 )
 
