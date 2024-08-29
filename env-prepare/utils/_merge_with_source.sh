@@ -24,7 +24,7 @@ function merge_script {
 }
 
 echo "Env Prepare scripts is building..."
-
+echo ""
 for file in "$main_dir"/*; do
   if [[ "$(basename "$file")" != _* ]] && [[ "$(basename "$file")" != *.test.sh ]]; then
       output_file="${output_dir}/$(basename "$file")"
@@ -36,4 +36,5 @@ for file in "$main_dir"/*; do
   fi
 done
 
+echo ""
 echo "Env Prepare scripts build completed."

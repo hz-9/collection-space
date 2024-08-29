@@ -5,6 +5,8 @@ _m_='__@@__'
 
 PARAMTERS=(
   "--help${_m_}-h${_m_}Print help message.${_m_}false"
+  "--debug${_m_}${_m_}Print debug message.${_m_}false"
+
   "--nvm-version${_m_}${_m_}Nvm version.${_m_}v0.40.0"
   "--node-version${_m_}${_m_}Node.js version.${_m_}v18.20.3"
   "--pm2-version${_m_}${_m_}PM2 version.${_m_}^5.4.2"
@@ -16,23 +18,39 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
 
 # build from ./_console.sh
 {
+  RED='\033[0;31m'
+  GREEN='\033[0;32m'
+  YELLOW='\033[0;33m'
+  BLUE='\033[0;34m'
+  PURPLE='\033[0;35m'
+  CYAN='\033[0;36m'
+  WHITE='\033[0;37m'
+  NC='\033[0m' # no color
+
+  get_current_time_ms() {
+    # local seconds
+    # local nanoseconds
+    # seconds=$(date +%s)
+    # nanoseconds=$(date +%N)
+    # echo $((seconds * 1000 + nanoseconds / 1000000))
+    local seconds
+    seconds=$(date +%s)
+    echo $((seconds * 1000))
+  }
+
   console_name() {
-    echo "$SHELL_NAME"
-    echo ""
+    printf "\n${PURPLE}%s${NC}\n\n" "$SHELL_NAME"
   }
 
   console_desc() {
     if [[ -n "$SHELL_DESC" ]]; then
-      echo "$SHELL_DESC"
-      echo ""
+      printf "  ${NC}%s${NC}\n\n" "$SHELL_DESC"
     fi
   }
 
   console_title() {
     local title="$1"
-
-    echo "$title"
-    echo ""
+    printf "  ${CYAN}%s${NC}\n\n" "$title"
   }
 
   console_key_value() {
@@ -40,27 +58,56 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
     local value="$2"
 
     if [[ ${#key} -gt 16 ]]; then
-      printf "   %s\n" "$key"
-      printf "   %-16s: %s\n" "" "$value"
+      printf "    ${GREEN}%s${NC}\n" "$key"
+      printf "    ${GREEN}%-16s${NC}: %s\n" "" "$value"
     else
-      printf "   %-16s: %s\n" "$key" "$value"
+      printf "    ${GREEN}%-16s${NC}: %s\n" "$key" "$value"
     fi
 
     return 1
   }
 
   console_empty_line() {
-    echo ""
+    printf "\n"
   }
 
   console() {
-    local message="$1"
-    echo "$message"
+    printf "%s\n" "$1"
   }
 
   console_content() {
-    local message="$1"
-    printf "   %s\n" "$message"
+    printf "    %s\n" "$1"
+  }
+
+  tempTime=$(get_current_time_ms)
+  console_content_starting() {
+    tempTime=$(get_current_time_ms)
+    printf "    %s" "$1"
+  }
+
+  console_content_complete() {
+    local currentTime
+    currentTime=$(get_current_time_ms)
+    local timeDiff
+    timeDiff=$((currentTime - tempTime))
+  
+    printf " ${GREEN}%s${NC} %s${NC}\n" "Done." "(${timeDiff} ms)"
+  }
+
+  console_content_emptystr() {
+    printf "%s\n" ""
+  }
+
+  console_end() {
+    printf "  ${CYAN}%s${NC}\n\n" "$1"
+  }
+
+  get_redirect_output() {
+    if [ "$(get_param '--debug')" == 'false' ]; then
+      echo "&> /dev/null"
+    else
+      echo ""
+    fi
   }
 }
 
@@ -302,63 +349,98 @@ pm2Home="${HOME}/.pm2"
 
 inChina=$(get_param '--in-china')
 
-if [[ ! -f "$nvmHome/README.md" ]]; then
-  echo "nvm ${nvmHome} is installing..."
-  echo ""
+# ------------------------------------------------------------
 
-  curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | bash
+console_title "Install nvm"
+
+if [[ ! -f "$nvmHome/README.md" ]]; then
+  console_content_starting "nvm '${nvmHome}' is installing..."
+
+  if [ "$(get_param '--debug')" == 'true' ]; then
+    curl    -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | bash
+  else
+    curl -s -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | bash &> /dev/null
+  fi
+
+  console_content_complete
   source "${nvmHome}/nvm.sh"
 else
-  echo "nvm ${nvmHome} is already installed."
-  echo ""
-
+  console_content "nvm ${nvmHome} is already installed."
   source "${nvmHome}/nvm.sh"
 fi
 
-if [[ ! -d "$nodeHome" ]]; then
-  echo "Node.js ${nodeVersion} is installing..."
-  echo ""
+console_key_value "nvm" "$(nvm -v)"
+console_empty_line
 
+# ------------------------------------------------------------
+
+console_title "Install Node.js"
+
+if [[ ! -d "$nodeHome" ]]; then
   if [[ "$inChina" == "true" ]]; then
     export NVM_NODEJS_ORG_MIRROR=https://npmmirror.com/mirrors/node/
     export NVM_IOJS_ORG_MIRROR=https://mirrors.huaweicloud.com/iojs/
-    echo "Use the Chinese mirror."
+    console_content "Node.js source registry use the Chinese mirror."
+  else
+    console_content "Node.js source registry use the Default mirror."
   fi
-  nvm install "$nodeVersion"
+
+  console_content_starting "Node.js ${nodeVersion} is installing..."
+
+  # nvm install "$nodeVersion"
+  eval "nvm install $nodeVersion        $(get_redirect_output)"
+
+  console_content_complete
 else
-  echo "Node.js ${nodeVersion} is already installed."
-  echo ""
+  console_content "Node.js ${nodeVersion} is already installed."
 fi
 
-installPM2() {
-  echo "PM2 ${pm2Version} is installing..."
-  echo ""
+console_key_value "Node" "$(node -v)"
+console_key_value "npm" "$(npm -v)"
+console_empty_line
 
+# ------------------------------------------------------------
+
+console_title "Install pm2 and pm2-logrotate"
+
+installPM2() {
   if [[ "$inChina" == "true" ]]; then
     npm config set registry https://registry.npmmirror.com/
-    echo "Use the Chinese mirror."
+    console_content "npm registry use the Chinese mirror."
+  else
+    console_content "npm registry use the Default mirror."
   fi
-  npm install -g pm2@"$pm2Version"
-  pm2 ping
-  pm2 startup
-  pm2 install pm2-logrotate
-  pm2 set pm2-logrotate:max_size 100M
+
+  console_content_starting "pm2 ${pm2Version} is installing..."
+  # npm install -g pm2@"$pm2Version"
+  eval "npm install -g pm2@$pm2Version        $(get_redirect_output)"
+  # pm2 ping
+  eval "pm2 ping                              $(get_redirect_output)"
+  console_content_complete
+
+  # pm2 startup
+  eval "pm2 startup                           $(get_redirect_output)"
+  console_content "pm2 startup is done."
+
+  console_content_starting "pm2-logrotate is installing..."
+  # pm2 install pm2-logrotate
+  eval "pm2 install pm2-logrotate             $(get_redirect_output)"
+  # pm2 set pm2-logrotate:max_size 100M
+  eval "pm2 set pm2-logrotate:max_size 100M   $(get_redirect_output)"
+  console_content_complete
 }
 
 if [[ ! -d "$pm2Home" ]]; then
   installPM2
 elif [[ $(pm2 -v) != "$pm2Version" ]]; then
-  echo "PM2 $(pm2 -v) is not the version you want."
-  echo ""
+  console_content "PM2 $(pm2 -v) is not the version you want."
   installPM2
 else
-  echo "PM2 $(pm2 -v) is already installed."
+  console_content "PM2 $(pm2 -v) is already installed."
 fi
 
-echo ""
-console_key_value "nvm" "$(nvm -v)"
-console_key_value "Node" "$(node -v)"
-console_key_value "npm" "$(npm -v)"
-console_key_value "PM2" "$(pm2 -v)"
-echo ""
-echo "Install complete."
+console_empty_line
+
+# ------------------------------------------------------------
+
+console_end  "Install complete."

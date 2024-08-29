@@ -5,6 +5,8 @@ _m_='__@@__'
 
 PARAMTERS=(
   "--help${_m_}-h${_m_}Print help message.${_m_}false"
+  "--debug${_m_}${_m_}Print debug message.${_m_}false"
+
   "--docker-version${_m_}${_m_}Docker CE version.${_m_}27.1.2-1"
   "--in-china${_m_}${_m_}Use the Chinese mirror.${_m_}false"
 )
@@ -14,23 +16,39 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
 
 # build from ./_console.sh
 {
+  RED='\033[0;31m'
+  GREEN='\033[0;32m'
+  YELLOW='\033[0;33m'
+  BLUE='\033[0;34m'
+  PURPLE='\033[0;35m'
+  CYAN='\033[0;36m'
+  WHITE='\033[0;37m'
+  NC='\033[0m' # no color
+
+  get_current_time_ms() {
+    # local seconds
+    # local nanoseconds
+    # seconds=$(date +%s)
+    # nanoseconds=$(date +%N)
+    # echo $((seconds * 1000 + nanoseconds / 1000000))
+    local seconds
+    seconds=$(date +%s)
+    echo $((seconds * 1000))
+  }
+
   console_name() {
-    echo "$SHELL_NAME"
-    echo ""
+    printf "\n${PURPLE}%s${NC}\n\n" "$SHELL_NAME"
   }
 
   console_desc() {
     if [[ -n "$SHELL_DESC" ]]; then
-      echo "$SHELL_DESC"
-      echo ""
+      printf "  ${NC}%s${NC}\n\n" "$SHELL_DESC"
     fi
   }
 
   console_title() {
     local title="$1"
-
-    echo "$title"
-    echo ""
+    printf "  ${CYAN}%s${NC}\n\n" "$title"
   }
 
   console_key_value() {
@@ -38,27 +56,56 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
     local value="$2"
 
     if [[ ${#key} -gt 16 ]]; then
-      printf "   %s\n" "$key"
-      printf "   %-16s: %s\n" "" "$value"
+      printf "    ${GREEN}%s${NC}\n" "$key"
+      printf "    ${GREEN}%-16s${NC}: %s\n" "" "$value"
     else
-      printf "   %-16s: %s\n" "$key" "$value"
+      printf "    ${GREEN}%-16s${NC}: %s\n" "$key" "$value"
     fi
 
     return 1
   }
 
   console_empty_line() {
-    echo ""
+    printf "\n"
   }
 
   console() {
-    local message="$1"
-    echo "$message"
+    printf "%s\n" "$1"
   }
 
   console_content() {
-    local message="$1"
-    printf "   %s\n" "$message"
+    printf "    %s\n" "$1"
+  }
+
+  tempTime=$(get_current_time_ms)
+  console_content_starting() {
+    tempTime=$(get_current_time_ms)
+    printf "    %s" "$1"
+  }
+
+  console_content_complete() {
+    local currentTime
+    currentTime=$(get_current_time_ms)
+    local timeDiff
+    timeDiff=$((currentTime - tempTime))
+  
+    printf " ${GREEN}%s${NC} %s${NC}\n" "Done." "(${timeDiff} ms)"
+  }
+
+  console_content_emptystr() {
+    printf "%s\n" ""
+  }
+
+  console_end() {
+    printf "  ${CYAN}%s${NC}\n\n" "$1"
+  }
+
+  get_redirect_output() {
+    if [ "$(get_param '--debug')" == 'false' ]; then
+      echo "&> /dev/null"
+    else
+      echo ""
+    fi
   }
 }
 
@@ -292,82 +339,137 @@ print_help_or_param
 dockerVersion=$(get_param '--docker-version')
 inChina=$(get_param '--in-china')
 
-installOnUbuntu() {
-  local ubuntuRelease
-  ubuntuRelease=$(lsb_release -rs)
-  local ubuntuCodename
-  ubuntuCodename=$(lsb_release -cs)
-  local ubuntuVersion
-  ubuntuVersion=$(lsb_release -is | tr '[:upper:]' '[:lower:]').${ubuntuRelease}~${ubuntuCodename}
+# ------------------------------------------------------------
 
-  # step 1: Install necessary system tools
-  sudo apt-get -y update
-  sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+# build from ./_install-docker-ce.ubuntu.sh
+{
 
-  if [[ "$inChina" == "true" ]]; then
-    dockerRegistry="https://mirrors.aliyun.com/docker-ce/linux/ubuntu"
-    echo "Use the Chinese mirror."
-  else
-    dockerRegistry="https://download.docker.com/linux/ubuntu"
-    echo "Use the Official mirror."
-  fi
+  installOnUbuntu() {
+    # ------------------------------------------------------------
 
-  # step 2: Install GPG certificate
-  if [ ! -f '/etc/apt/keyrings/docker.asc' ]; then
-    sudo install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL $dockerRegistry/gpg -o /etc/apt/keyrings/docker.asc
-    sudo chmod a+r /etc/apt/keyrings/docker.asc
-  fi
+    console_title "Install docker-ce on Ubuntu"
 
-  # Step 3: Write software source information
-  if [ ! -f '/etc/apt/sources.list.d/docker.list' ]; then
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $dockerRegistry \
-      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |
-      sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
-  fi
+    local ubuntuRelease
+    ubuntuRelease=$(lsb_release -rs)
+    local ubuntuCodename
+    ubuntuCodename=$(lsb_release -cs)
+    local ubuntuVersion
+    ubuntuVersion=$(lsb_release -is | tr '[:upper:]' '[:lower:]').${ubuntuRelease}~${ubuntuCodename}
 
-  # Step 4: Update
-  sudo apt-get -y update
+    console_key_value "OS Version" "$ubuntuVersion"
 
-  # View all versions of Docker CE
-  # apt-cache madison docker-ce
-
-  if dpkg-query -W -f='${Status}' docker-ce 2>/dev/null | grep -q "ok installed"; then
-    local installedVersion
-    installedVersion=$(docker --version | awk '{print $3}' | sed 's/,//')
-    local dockerBaseVersion
-    dockerBaseVersion=${dockerVersion//-1/}
-
-    if [[ "$installedVersion" != "$dockerBaseVersion" ]]; then
-      echo "Docker CE ${installedVersion} is not the version you want."
-      echo ""
-      sudo apt-get -y remove docker-ce
-      echo "Docker CE ${dockerVersion} is installing..."
-      echo ""
-      sudo apt-get -y install "docker-ce=5:$dockerVersion~$ubuntuVersion"
+    if [[ "$inChina" == "true" ]]; then
+      dockerRegistry="https://mirrors.aliyun.com/docker-ce/linux/ubuntu"
+      console_content "Docker source registry use the Chinese mirror."
     else
-      echo "Docker CE ${dockerVersion} is already installed."
-      echo ""
+      dockerRegistry="https://download.docker.com/linux/ubuntu"
+      console_content "Docker source registry use the Official mirror."
     fi
-  else
-    echo "Docker CE ${dockerVersion} is installing..."
-    echo ""
-    sudo apt-get -y install "docker-ce=5:$dockerVersion~$ubuntuVersion"
-  fi
+
+    # ------------------------------------------------------------
+
+    # step 1: Install necessary system tools
+    console_content_starting "The necessary system tools is installing..."
+
+    # sudo apt-get -y update
+    # sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+    eval "sudo apt-get -y update $(get_redirect_output)"
+    eval "sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common $(get_redirect_output)"
+
+    console_content_complete
+
+    # ------------------------------------------------------------
+
+    # step 2: Install GPG certificate
+    if [ ! -f '/etc/apt/keyrings/docker.asc' ]; then
+      sudo install -m 0755 -d /etc/apt/keyrings
+      curl -fsSL $dockerRegistry/gpg -o /etc/apt/keyrings/docker.asc
+      sudo chmod a+r /etc/apt/keyrings/docker.asc
+      console_content "The GPG certificate is installed."
+    else
+      console_content "The GPG certificate is already installed."
+    fi
+
+    # ------------------------------------------------------------
+
+    # Step 3: Write software source information
+    if [ ! -f '/etc/apt/sources.list.d/docker.list' ]; then
+      echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $dockerRegistry \
+        $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |
+        sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+
+      console_content "The software source information is written."
+    else
+      console_content "The software source information is already written."
+    fi
+
+    # ------------------------------------------------------------
+
+    # Step 4: Update
+    console_content_starting "The software source information is updating..."
+
+    # sudo apt-get -y update
+    eval "sudo apt-get -y update $(get_redirect_output)"
+
+    console_content_complete
+
+    # View all versions of Docker CE
+    # apt-cache madison docker-ce
+
+    # ------------------------------------------------------------
+
+    installDocker() {
+      console_content_starting "Docker CE '5:$dockerVersion~$ubuntuVersion' is installing..."
+
+      # sudo apt-get -y install "docker-ce=5:$dockerVersion~$ubuntuVersion"
+      eval "sudo apt-get -y install docker-ce=5:$dockerVersion~$ubuntuVersion $(get_redirect_output)"
+
+      console_content_complete
+    }
+
+    uninstallDocker() {
+      console_content_starting "Docker CE $1 is removing..."
+
+      # sudo apt-get -y remove docker-ce
+      eval "sudo apt-get -y remove docker-ce $(get_redirect_output)"
+
+      console_content_complete
+    }
+
+    if dpkg-query -W -f='${Status}' docker-ce 2>/dev/null | grep -q "ok installed"; then
+      local installedVersion
+      installedVersion=$(apt-cache policy docker-ce | grep 'Installed' | awk '{print $2}')
+      local dockerBaseVersion
+      dockerBaseVersion="5:$dockerVersion~$ubuntuVersion"
+
+      if [[ "$installedVersion" != "$dockerBaseVersion" ]]; then
+        console_content "Docker CE ${installedVersion} is not the version you want."
+        uninstallDocker "$installedVersion"
+        installDocker
+      else
+        console_content "Docker CE ${dockerVersion} is already installed."
+      fi
+    else
+      installDocker
+    fi
+  }
+
 }
 
+# ------------------------------------------------------------
+
 if grep -qi 'ubuntu' /etc/os-release; then
-  echo "Current is Ubuntu OS."
-  echo ""
   installOnUbuntu
 else
   echo "Not support this OS."
   exit 1
 fi
 
-echo ""
 console_key_value "Docker CE"      "$(docker --version | awk '{print $3}' | sed 's/,//')"
 console_key_value "Docker compose" "$(docker compose version | awk '{print $4}')"
-echo ""
-echo "Install complete."
+console_empty_line
+
+# ------------------------------------------------------------
+
+console_end "Install complete."

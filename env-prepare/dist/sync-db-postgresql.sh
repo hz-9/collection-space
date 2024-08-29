@@ -28,30 +28,44 @@ PARAMTERS=(
   "--to-ssh-private-key${_m_}${_m_}The private key file of the SSH tunnel.${_m_}"
 )
 
-# TODO use passwordless ssh tunnel
-
 SHELL_NAME="PostgreSQL Sync Tooler"
 SHELL_DESC="Sync PostgreSQL database."
 
 # build from ./_console.sh
 {
+  RED='\033[0;31m'
+  GREEN='\033[0;32m'
+  YELLOW='\033[0;33m'
+  BLUE='\033[0;34m'
+  PURPLE='\033[0;35m'
+  CYAN='\033[0;36m'
+  WHITE='\033[0;37m'
+  NC='\033[0m' # no color
+
+  get_current_time_ms() {
+    # local seconds
+    # local nanoseconds
+    # seconds=$(date +%s)
+    # nanoseconds=$(date +%N)
+    # echo $((seconds * 1000 + nanoseconds / 1000000))
+    local seconds
+    seconds=$(date +%s)
+    echo $((seconds * 1000))
+  }
+
   console_name() {
-    echo "$SHELL_NAME"
-    echo ""
+    printf "\n${PURPLE}%s${NC}\n\n" "$SHELL_NAME"
   }
 
   console_desc() {
     if [[ -n "$SHELL_DESC" ]]; then
-      echo "$SHELL_DESC"
-      echo ""
+      printf "  ${NC}%s${NC}\n\n" "$SHELL_DESC"
     fi
   }
 
   console_title() {
     local title="$1"
-
-    echo "$title"
-    echo ""
+    printf "  ${CYAN}%s${NC}\n\n" "$title"
   }
 
   console_key_value() {
@@ -59,27 +73,56 @@ SHELL_DESC="Sync PostgreSQL database."
     local value="$2"
 
     if [[ ${#key} -gt 16 ]]; then
-      printf "   %s\n" "$key"
-      printf "   %-16s: %s\n" "" "$value"
+      printf "    ${GREEN}%s${NC}\n" "$key"
+      printf "    ${GREEN}%-16s${NC}: %s\n" "" "$value"
     else
-      printf "   %-16s: %s\n" "$key" "$value"
+      printf "    ${GREEN}%-16s${NC}: %s\n" "$key" "$value"
     fi
 
     return 1
   }
 
   console_empty_line() {
-    echo ""
+    printf "\n"
   }
 
   console() {
-    local message="$1"
-    echo "$message"
+    printf "%s\n" "$1"
   }
 
   console_content() {
-    local message="$1"
-    printf "   %s\n" "$message"
+    printf "    %s\n" "$1"
+  }
+
+  tempTime=$(get_current_time_ms)
+  console_content_starting() {
+    tempTime=$(get_current_time_ms)
+    printf "    %s" "$1"
+  }
+
+  console_content_complete() {
+    local currentTime
+    currentTime=$(get_current_time_ms)
+    local timeDiff
+    timeDiff=$((currentTime - tempTime))
+  
+    printf " ${GREEN}%s${NC} %s${NC}\n" "Done." "(${timeDiff} ms)"
+  }
+
+  console_content_emptystr() {
+    printf "%s\n" ""
+  }
+
+  console_end() {
+    printf "  ${CYAN}%s${NC}\n\n" "$1"
+  }
+
+  get_redirect_output() {
+    if [ "$(get_param '--debug')" == 'false' ]; then
+      echo "&> /dev/null"
+    else
+      echo ""
+    fi
   }
 }
 
@@ -310,7 +353,7 @@ SHELL_DESC="Sync PostgreSQL database."
 
 print_help_or_param
 
-debug=$(get_param '--debug')
+# debug=$(get_param '--debug')
 
 dbVersion=$(get_param '--db-version')
 
@@ -367,13 +410,12 @@ dockerImage="postgres:$dbVersion-alpine"
 console_key_value "Docker image" "$dockerImage"
 console_empty_line
 
-console_content "Image $dockerImage is pulling..."
-if [ "$debug" == 'true' ]; then
-  docker pull "$dockerImage" --platform linux/amd64
-else
-  docker pull "$dockerImage" --platform linux/amd64 &> /dev/null
-fi
-console_content "Image $dockerImage is pulling...done."
+console_content_starting "Image $dockerImage is pulling..."
+
+# docker pull $dockerImage --platform linux/amd64
+eval "docker pull $dockerImage --platform linux/amd64 $(get_redirect_output)"
+
+console_content_complete
 console_empty_line
 
 # ------------------------------------------------------------
@@ -420,20 +462,19 @@ syncDockerImage="hz-9/sync-db-postgresql:$dbVersion-alpine"
 console_key_value "Sync image" "$syncDockerImage"
 console_empty_line
 
-console_content "Image $syncDockerImage is building..."
-if [ "$debug" == 'true' ]; then
-  docker build -t "$syncDockerImage" -f "$tempDockerfile" "$temp"
-else
-  docker build -t "$syncDockerImage" -f "$tempDockerfile" "$temp" &>/dev/null
-fi
-console_content "Image $syncDockerImage is building...done."
+console_content_starting "Image $syncDockerImage is building..."
+
+# docker build -t "$syncDockerImage" -f "$tempDockerfile" "$temp"
+eval "docker build -t '$syncDockerImage' -f '$tempDockerfile' '$temp' $(get_redirect_output)"
+
+console_content_complete
 console_empty_line
 
 # ------------------------------------------------------------
 
 console_title "Sync by $syncDockerImage"
 
-console_content "Syncing data from $fromHostname to $toHostname..."
+console_content_starting "Syncing data from $fromHostname to $toHostname..."
 
 syncCommand="""
 if [ -n '$fromSshTunnel' ]; then
@@ -454,45 +495,42 @@ psql    -h $toHostname   -p $toPort   -U $toUsername   -d $toRootDatabase -c 'CR
 psql    -h $toHostname   -p $toPort   -U $toUsername   -d $toDatabase      < '/data-backup/$syncFile'
 """
 
-# echo $syncCommand
+# docker run --rm \
+#   -e "POSTGRES_DB=postgres" \
+#   -e "POSTGRES_USER=postgres" \
+#   -e "POSTGRES_PASSWORD=12345678" \
+#   -v "$temp/backup:/data-backup" \
+#   -v "$temp/from-ssh-private-key:/root/.ssh/from-ssh-private-key" \
+#   -v "$temp/to-ssh-private-key:/root/.ssh/to-ssh-private-key" \
+#   "$syncDockerImage" \
+#   bash -c "$syncCommand"
+eval """
+docker run --rm \
+  -e 'POSTGRES_DB=postgres' \
+  -e 'POSTGRES_USER=postgres' \
+  -e 'POSTGRES_PASSWORD=12345678' \
+  -v '$temp/backup:/data-backup' \
+  -v '$temp/from-ssh-private-key:/root/.ssh/from-ssh-private-key' \
+  -v '$temp/to-ssh-private-key:/root/.ssh/to-ssh-private-key' \
+  '$syncDockerImage' \
+  bash -c \"$syncCommand\" $(get_redirect_output)
+"""
 
-if [ "$debug" == 'true' ]; then
-  docker run --rm \
-    -e "POSTGRES_DB=postgres" \
-    -e "POSTGRES_USER=postgres" \
-    -e "POSTGRES_PASSWORD=12345678" \
-    -v "$temp/backup:/data-backup" \
-    -v "$temp/from-ssh-private-key:/root/.ssh/from-ssh-private-key" \
-    -v "$temp/to-ssh-private-key:/root/.ssh/to-ssh-private-key" \
-    "$syncDockerImage" \
-    bash -c "$syncCommand"
-else
-  docker run --rm \
-    -e "POSTGRES_DB=postgres" \
-    -e "POSTGRES_USER=postgres" \
-    -e "POSTGRES_PASSWORD=12345678" \
-    -v "$temp/backup:/data-backup" \
-    -v "$temp/from-ssh-private-key:/root/.ssh/from-ssh-private-key" \
-    -v "$temp/to-ssh-private-key:/root/.ssh/to-ssh-private-key" \
-    "$syncDockerImage" \
-    bash -c "$syncCommand" &>/dev/null
-fi
-
-console_content "Syncing data from $fromHostname to $toHostname...done."
+console_content_complete
 console_empty_line
 
 # ------------------------------------------------------------
 
 console_title "Delete sync docker image"
 
-console_content "Image $syncDockerImage is deleting..."
-if [ "$debug" == 'true' ]; then
-  docker rmi "$syncDockerImage"
-else
-  docker rmi "$syncDockerImage" &>/dev/null
-fi
-console_content "Image $syncDockerImage is deleting...done."
+console_content_starting "Image $syncDockerImage is deleting..."
+
+# docker rmi "$syncDockerImage"
+eval "docker rmi '$syncDockerImage' $(get_redirect_output)"
+
+console_content_complete
 console_empty_line
 
-console_empty_line
-echo "Sync complete."
+# ------------------------------------------------------------
+
+console_end "Sync complete."

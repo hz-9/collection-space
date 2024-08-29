@@ -3,6 +3,8 @@ _m_='__@@__'
 
 PARAMTERS=(
   "--help${_m_}-h${_m_}Print help message.${_m_}false"
+  "--debug${_m_}${_m_}Print debug message.${_m_}false"
+
   "--nvm-version${_m_}${_m_}Nvm version.${_m_}v0.40.0"
   "--node-version${_m_}${_m_}Node.js version.${_m_}v18.20.3"
   "--pm2-version${_m_}${_m_}PM2 version.${_m_}^5.4.2"
@@ -31,63 +33,98 @@ pm2Home="${HOME}/.pm2"
 
 inChina=$(get_param '--in-china')
 
-if [[ ! -f "$nvmHome/README.md" ]]; then
-  echo "nvm ${nvmHome} is installing..."
-  echo ""
+# ------------------------------------------------------------
 
-  curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | bash
+console_title "Install nvm"
+
+if [[ ! -f "$nvmHome/README.md" ]]; then
+  console_content_starting "nvm '${nvmHome}' is installing..."
+
+  if [ "$(get_param '--debug')" == 'true' ]; then
+    curl    -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | bash
+  else
+    curl -s -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | bash &> /dev/null
+  fi
+
+  console_content_complete
   source "${nvmHome}/nvm.sh"
 else
-  echo "nvm ${nvmHome} is already installed."
-  echo ""
-
+  console_content "nvm ${nvmHome} is already installed."
   source "${nvmHome}/nvm.sh"
 fi
 
-if [[ ! -d "$nodeHome" ]]; then
-  echo "Node.js ${nodeVersion} is installing..."
-  echo ""
+console_key_value "nvm" "$(nvm -v)"
+console_empty_line
 
+# ------------------------------------------------------------
+
+console_title "Install Node.js"
+
+if [[ ! -d "$nodeHome" ]]; then
   if [[ "$inChina" == "true" ]]; then
     export NVM_NODEJS_ORG_MIRROR=https://npmmirror.com/mirrors/node/
     export NVM_IOJS_ORG_MIRROR=https://mirrors.huaweicloud.com/iojs/
-    echo "Use the Chinese mirror."
+    console_content "Node.js source registry use the Chinese mirror."
+  else
+    console_content "Node.js source registry use the Default mirror."
   fi
-  nvm install "$nodeVersion"
+
+  console_content_starting "Node.js ${nodeVersion} is installing..."
+
+  # nvm install "$nodeVersion"
+  eval "nvm install $nodeVersion        $(get_redirect_output)"
+
+  console_content_complete
 else
-  echo "Node.js ${nodeVersion} is already installed."
-  echo ""
+  console_content "Node.js ${nodeVersion} is already installed."
 fi
 
-installPM2() {
-  echo "PM2 ${pm2Version} is installing..."
-  echo ""
+console_key_value "Node" "$(node -v)"
+console_key_value "npm" "$(npm -v)"
+console_empty_line
 
+# ------------------------------------------------------------
+
+console_title "Install pm2 and pm2-logrotate"
+
+installPM2() {
   if [[ "$inChina" == "true" ]]; then
     npm config set registry https://registry.npmmirror.com/
-    echo "Use the Chinese mirror."
+    console_content "npm registry use the Chinese mirror."
+  else
+    console_content "npm registry use the Default mirror."
   fi
-  npm install -g pm2@"$pm2Version"
-  pm2 ping
-  pm2 startup
-  pm2 install pm2-logrotate
-  pm2 set pm2-logrotate:max_size 100M
+
+  console_content_starting "pm2 ${pm2Version} is installing..."
+  # npm install -g pm2@"$pm2Version"
+  eval "npm install -g pm2@$pm2Version        $(get_redirect_output)"
+  # pm2 ping
+  eval "pm2 ping                              $(get_redirect_output)"
+  console_content_complete
+
+  # pm2 startup
+  eval "pm2 startup                           $(get_redirect_output)"
+  console_content "pm2 startup is done."
+
+  console_content_starting "pm2-logrotate is installing..."
+  # pm2 install pm2-logrotate
+  eval "pm2 install pm2-logrotate             $(get_redirect_output)"
+  # pm2 set pm2-logrotate:max_size 100M
+  eval "pm2 set pm2-logrotate:max_size 100M   $(get_redirect_output)"
+  console_content_complete
 }
 
 if [[ ! -d "$pm2Home" ]]; then
   installPM2
 elif [[ $(pm2 -v) != "$pm2Version" ]]; then
-  echo "PM2 $(pm2 -v) is not the version you want."
-  echo ""
+  console_content "PM2 $(pm2 -v) is not the version you want."
   installPM2
 else
-  echo "PM2 $(pm2 -v) is already installed."
+  console_content "PM2 $(pm2 -v) is already installed."
 fi
 
-echo ""
-console_key_value "nvm" "$(nvm -v)"
-console_key_value "Node" "$(node -v)"
-console_key_value "npm" "$(npm -v)"
-console_key_value "PM2" "$(pm2 -v)"
-echo ""
-echo "Install complete."
+console_empty_line
+
+# ------------------------------------------------------------
+
+console_end  "Install complete."
