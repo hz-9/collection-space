@@ -41,9 +41,9 @@ if [[ ! -f "$nvmHome/README.md" ]]; then
   console_content_starting "nvm '${nvmHome}' is installing..."
 
   if [ "$(get_param '--debug')" == 'true' ]; then
-    curl    -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | bash
+    curl    -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | METHOD=git bash
   else
-    curl -s -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | bash &> /dev/null
+    curl -s -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | METHOD=git bash &> /dev/null
   fi
 
   console_content_complete
