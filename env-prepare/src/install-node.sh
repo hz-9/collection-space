@@ -123,6 +123,9 @@ else
   console_content "PM2 $(pm2 -v) is already installed."
 fi
 
+console_key_value "pm2" "$(pm2 -v)"
+console_key_value "pm2-logrotate" "$(pm2 info pm2-logrotate | grep 'version' | head -n 1 | awk '{print $4}')"
+
 console_empty_line
 
 # ------------------------------------------------------------

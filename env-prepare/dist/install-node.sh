@@ -91,7 +91,7 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
     local timeDiff
     timeDiff=$((currentTime - tempTime))
   
-    printf " ${GREEN}%s${NC} %s${NC}\n" "Done." "(${timeDiff} ms)"
+    printf " ${GREEN}%s${NC} %s${NC}\n" "done." "(${timeDiff} ms)"
   }
 
   console_content_emptystr() {
@@ -438,6 +438,9 @@ elif [[ $(pm2 -v) != "$pm2Version" ]]; then
 else
   console_content "PM2 $(pm2 -v) is already installed."
 fi
+
+console_key_value "pm2" "$(pm2 -v)"
+console_key_value "pm2-logrotate" "$(pm2 info pm2-logrotate | grep 'version' | head -n 1 | awk '{print $4}')"
 
 console_empty_line
 

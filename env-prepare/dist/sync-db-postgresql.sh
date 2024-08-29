@@ -106,7 +106,7 @@ SHELL_DESC="Sync PostgreSQL database."
     local timeDiff
     timeDiff=$((currentTime - tempTime))
   
-    printf " ${GREEN}%s${NC} %s${NC}\n" "Done." "(${timeDiff} ms)"
+    printf " ${GREEN}%s${NC} %s${NC}\n" "done." "(${timeDiff} ms)"
   }
 
   console_content_emptystr() {
