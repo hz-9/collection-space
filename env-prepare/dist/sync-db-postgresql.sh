@@ -130,7 +130,7 @@ SHELL_DESC="Sync PostgreSQL database."
 {
   USER_PARAMTERS=()
 
-  parse_user_params() {
+  parse_user_param() {
     while [[ "$#" -gt 0 ]]; do
       case $1 in
       --*=*)
@@ -141,13 +141,9 @@ SHELL_DESC="Sync PostgreSQL database."
       --*)
         key="$1"
         if [[ -n "$2" && "$2" != --* ]]; then
-          # USER_PARAM_KEYS+=("$key")
-          # USER_PARAM_VALUES+=("$2")
           USER_PARAMTERS+=("$key${_m_}$2")
           shift
         else
-          # USER_PARAM_KEYS+=("$key")
-          # USER_PARAM_VALUES+=(true)
           USER_PARAMTERS+=("$key${_m_}true")
         fi
         ;;
@@ -164,12 +160,15 @@ SHELL_DESC="Sync PostgreSQL database."
     console_title "User paramters:"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
+      local split
+      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+
       local name
-      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
+      name="${split[0]}"
       local value
-      value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
+      value="${split[1]}"
       
-      console_key_value "$name" "$value"
+      console_key_value "${name//--/}" "$value"
     done
     echo ""
 
@@ -180,11 +179,12 @@ SHELL_DESC="Sync PostgreSQL database."
     local key="$1"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
+      local split
+      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+
       local name
-      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
-      local value
-      value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
-      
+      name="${split[0]}"
+
       if [[ "$name" == "$key" ]]; then
         return 0
       fi
@@ -197,11 +197,14 @@ SHELL_DESC="Sync PostgreSQL database."
     local key="$1"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
+      local split
+      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+
       local name
-      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
+      name="${split[0]}"
       local value
-      value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
-      
+      value="${split[1]}"
+
       if [[ "$name" == "$key" ]]; then
         echo "$value"
       fi
@@ -209,7 +212,7 @@ SHELL_DESC="Sync PostgreSQL database."
     return
   }
 
-  parse_user_params "$@"
+  parse_user_param "$@"
 }
 
 # build from ./_parse-paramter.sh
@@ -220,12 +223,15 @@ SHELL_DESC="Sync PostgreSQL database."
 
     # shellcheck disable=SC2153
     for PARAMTER in "${PARAMTERS[@]}"; do
-      local name
-      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
-      local value
-      value=$(awk -F "$_m_" '{ for (i=4; i<=4; i++) print $i }' <<< "$PARAMTER")
+      local split
+      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
 
-      console_key_value "$name" "$value"
+      local name
+      name="${split[0]}"
+      local value
+      value="${split[3]}"
+
+      console_key_value "${name//--/}" "$value"
     done
     console_empty_line
 
@@ -236,8 +242,11 @@ SHELL_DESC="Sync PostgreSQL database."
     local key="$1"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
+      local split
+      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+
       local name
-      name=$(awk -F "${_m_}" '{ for (i=1; i<=1; i++) print $i }' <<<"$PARAMTER")
+      name="${split[0]}"
 
       if [[ "$name" == "$key" ]]; then
         return 0
@@ -247,42 +256,28 @@ SHELL_DESC="Sync PostgreSQL database."
     return 1
   }
 
-  get_param_default() {
-    local key="$1"
-
-    for PARAMTER in "${PARAMTERS[@]}"; do
-      local name
-      name=$(awk -F "${_m_}" '{ for (i=1; i<=1; i++) print $i }' <<<"$PARAMTER")
-      local default
-      default=$(awk -F "${_m_}" '{ for (i=4; i<=4; i++) print $i }' <<<"$PARAMTER")
-
-      if [[ "$name" == "$key" ]]; then
-        echo "$default"
-        break
-      fi
-    done
-
-    return
-  }
-
   get_param() {
     local key="$1"
 
     for PARAMTER in "${PARAMTERS[@]}"; do
+      local split
+      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+
       local name
-      name=$(awk -F "${_m_}" '{ for (i=1; i<=1; i++) print $i }' <<<"$PARAMTER")
-      local alias
-      alias=$(awk -F $_m_ '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
-      local default
-      default=$(awk -F "${_m_}" '{ for (i=4; i<=4; i++) print $i }' <<<"$PARAMTER")
+      name="${split[0]}"
 
       if [[ "$name" == "$key" ]]; then
+        local alias
+        alias="${split[1]}"
+        local default
+        default="${split[3]}"
+
         if has_user_param "$name"; then
-          echo "$(get_user_param $name)"
+          get_user_param "$name"
         elif has_user_param "$alias"; then
-          echo "$(get_user_param $alias)"
+          get_user_param "$alias"
         else
-          echo "$(get_param_default $name)"
+          echo "$default"
         fi
         break
       fi
@@ -297,14 +292,17 @@ SHELL_DESC="Sync PostgreSQL database."
     console_desc
 
     for PARAMTER in "${PARAMTERS[@]}"; do
+      local split
+      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+
       local name
-      name=$(awk -F $_m_ '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
+      name="${split[0]}"
       local alias
-      alias=$(awk -F $_m_ '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
+      alias="${split[1]}"
       local msg
-      msg=$(awk -F $_m_ '{ for (i=3; i<=3; i++) print $i }' <<< "$PARAMTER")
+      msg="${split[2]}"
       local default
-      default=$(awk -F $_m_ '{ for (i=4; i<=4; i++) print $i }' <<< "$PARAMTER")
+      default="${split[3]}"
 
       if [[ -n "$alias" ]]; then
         name+=",$alias"
@@ -329,8 +327,11 @@ SHELL_DESC="Sync PostgreSQL database."
     console_title "Paramters:"
 
     for PARAMTER in "${PARAMTERS[@]}"; do
+      local split
+      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+
       local name
-      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
+      name="${split[0]}"
       local value
       value=$(get_param "$name")
 
@@ -398,10 +399,12 @@ console_title "Docker environment"
 
 if docker --version &>/dev/null; then
   console_content "Docker has been installed."
+  console_empty_line
   console_key_value "Docker CE" "$(docker --version | awk '{print $3}' | sed 's/,//')"
   console_key_value "Docker compose" "$(docker compose version | awk '{print $4}')"
 else
   console_content "Docker has not been installed."
+  console_empty_line
   exit 1
 fi
 

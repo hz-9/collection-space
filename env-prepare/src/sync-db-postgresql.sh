@@ -82,10 +82,12 @@ console_title "Docker environment"
 
 if docker --version &>/dev/null; then
   console_content "Docker has been installed."
+  console_empty_line
   console_key_value "Docker CE" "$(docker --version | awk '{print $3}' | sed 's/,//')"
   console_key_value "Docker compose" "$(docker compose version | awk '{print $4}')"
 else
   console_content "Docker has not been installed."
+  console_empty_line
   exit 1
 fi
 

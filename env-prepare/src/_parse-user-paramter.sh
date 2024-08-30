@@ -2,7 +2,7 @@
 {
   USER_PARAMTERS=()
 
-  parse_user_params() {
+  parse_user_param() {
     while [[ "$#" -gt 0 ]]; do
       case $1 in
       --*=*)
@@ -13,13 +13,9 @@
       --*)
         key="$1"
         if [[ -n "$2" && "$2" != --* ]]; then
-          # USER_PARAM_KEYS+=("$key")
-          # USER_PARAM_VALUES+=("$2")
           USER_PARAMTERS+=("$key${_m_}$2")
           shift
         else
-          # USER_PARAM_KEYS+=("$key")
-          # USER_PARAM_VALUES+=(true)
           USER_PARAMTERS+=("$key${_m_}true")
         fi
         ;;
@@ -36,12 +32,15 @@
     console_title "User paramters:"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
+      local split
+      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+
       local name
-      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
+      name="${split[0]}"
       local value
-      value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
+      value="${split[1]}"
       
-      console_key_value "$name" "$value"
+      console_key_value "${name//--/}" "$value"
     done
     echo ""
 
@@ -52,11 +51,12 @@
     local key="$1"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
+      local split
+      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+
       local name
-      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
-      local value
-      value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
-      
+      name="${split[0]}"
+
       if [[ "$name" == "$key" ]]; then
         return 0
       fi
@@ -69,11 +69,14 @@
     local key="$1"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
+      local split
+      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+
       local name
-      name=$(awk -F "$_m_" '{ for (i=1; i<=1; i++) print $i }' <<< "$PARAMTER")
+      name="${split[0]}"
       local value
-      value=$(awk -F "$_m_" '{ for (i=2; i<=2; i++) print $i }' <<< "$PARAMTER")
-      
+      value="${split[1]}"
+
       if [[ "$name" == "$key" ]]; then
         echo "$value"
       fi
@@ -81,5 +84,5 @@
     return
   }
 
-  parse_user_params "$@"
+  parse_user_param "$@"
 }

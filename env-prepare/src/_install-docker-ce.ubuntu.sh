@@ -15,7 +15,8 @@
 
     console_key_value "OS Version" "$ubuntuVersion"
 
-    if [[ "$inChina" == "true" ]]; then
+    # shellcheck disable=SC2154
+    if [[ "${inChina}" == "true" ]]; then
       dockerRegistry="https://mirrors.aliyun.com/docker-ce/linux/ubuntu"
       console_content "Docker source registry use the Chinese mirror."
     else
@@ -77,6 +78,7 @@
     # ------------------------------------------------------------
 
     installDocker() {
+      # shellcheck disable=SC2154
       console_content_starting "Docker CE '5:$dockerVersion~$ubuntuVersion' is installing..."
 
       # sudo apt-get -y install "docker-ce=5:$dockerVersion~$ubuntuVersion"
