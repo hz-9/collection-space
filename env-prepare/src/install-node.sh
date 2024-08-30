@@ -131,3 +131,5 @@ console_empty_line
 # ------------------------------------------------------------
 
 console_end  "Install complete."
+
+console_content "Last please run 'source ~/.bashrc' to make the environment variables take effect."
