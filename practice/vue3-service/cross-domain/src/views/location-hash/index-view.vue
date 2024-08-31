@@ -56,9 +56,16 @@ const handleChange = () => {
 
 <template>
   <div>
-    <multi-tabs title="LocationHash" :list="list" @change="handleChange">
+    <multi-tabs
+      title="LocationHash"
+      :list="list"
+      @change="handleChange"
+    >
       <template v-slot:content>
-        <two-page @left-click="sendToRight" @right-click="sendToLeft">
+        <two-page
+          @left-click="sendToRight"
+          @right-click="sendToLeft"
+        >
           <template v-slot:left>
             <iframe
               ref="leftIframe"

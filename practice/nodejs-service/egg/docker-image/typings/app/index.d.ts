@@ -2,6 +2,6 @@
 // Do not modify this file!!!!!!!!!
 /* eslint-disable */
 
-import 'egg';
-export * from 'egg';
-export as namespace Egg;
+import 'egg'
+export * from 'egg'
+export as namespace Egg

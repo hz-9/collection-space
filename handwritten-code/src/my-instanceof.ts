@@ -2,17 +2,17 @@
  * @Author       : Chen Zhen
  * @Date         : 2024-04-20 19:36:19
  * @LastEditors  : Chen Zhen
- * @LastEditTime : 2024-04-20 19:37:14
+ * @LastEditTime : 2024-08-31 15:30:30
  */
 
 /**
  *
- * 模拟实现 instanceof 关键字
+ * Simulate the implementation of the 'instanceof' keyword.
  *
- * @param left - instanceof 左侧参数
- * @param right - instanceof 右侧参数
+ * @param left - The left-hand side parameter of 'instanceof'.
+ * @param right - The right-hand side parameter of 'instanceof'.
  *
- * @returns 类型判断结果
+ * @returns The result of the type check.
  */
 export function myInstanceof(left: any, right: any): boolean {
   if (right === null || (typeof right !== 'object' && typeof right !== 'function')) {
@@ -22,7 +22,7 @@ export function myInstanceof(left: any, right: any): boolean {
   let r = right.prototype
   let l = left.__proto__
 
-  // 若找不到就到一直循环到父类型或祖类型
+  // If not found, keep looping until the parent type or ancestor type is reached.
   while (true) {
     if (l === null) {
       return false
@@ -31,6 +31,6 @@ export function myInstanceof(left: any, right: any): boolean {
       return true
     }
 
-    l = l.__proto__ // 获取祖类型的__proto__
+    l = l.__proto__ // Get the __proto__ of the ancestor type.
   }
 }

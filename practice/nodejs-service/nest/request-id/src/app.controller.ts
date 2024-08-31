@@ -4,10 +4,10 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-07-07 23:00:40
  */
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get } from '@nestjs/common'
+import { AppService } from './app.service'
 
-import { get } from './middleware/rid.middleware';
+import { get } from './middleware/rid.middleware'
 
 @Controller()
 export class AppController {
@@ -15,7 +15,7 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    console.log('rid: ', get('rid'));
-    return this.appService.getHello();
+    console.log('rid: ', get('rid'))
+    return this.appService.getHello()
   }
 }

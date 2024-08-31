@@ -5,23 +5,23 @@
  * @LastEditTime : 2024-07-07 14:47:14
  */
 
-import { Context } from 'egg';
+import { Context } from 'egg'
 
-import { ns, set } from '../utils/http-content';
+import { ns, set } from '../utils/http-content'
 
-let id = 0;
+let id = 0
 
 const generateRId = () => {
-  id += 1;
-  return `${id}`;
-};
+  id += 1
+  return `${id}`
+}
 
 export default function ridMiddleware(): any {
   return async (_ctx: Context, next: () => Promise<any>) => {
     ns.run(() => {
-      const rid = generateRId();
-      set('rid', rid);
-      next();
-    });
-  };
+      const rid = generateRId()
+      set('rid', rid)
+      next()
+    })
+  }
 }

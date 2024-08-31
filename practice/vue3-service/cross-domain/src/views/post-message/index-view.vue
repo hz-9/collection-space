@@ -11,12 +11,12 @@ import type { MessageLog, SendInfo } from '../../types/index'
 const list = ref<Website[]>([
   {
     name: 'Same Domain',
-    baseUrl: `${location.protocol}//${location.hostname}:${location.port}/post-message.html`
+    baseUrl: `${location.protocol}//${location.hostname}:${location.port}/post-message.html`,
   },
   {
     name: 'Diff Domain',
-    baseUrl: `${location.protocol}//${location.hostname}:5175/post-message.html`
-  }
+    baseUrl: `${location.protocol}//${location.hostname}:5175/post-message.html`,
+  },
 ])
 
 const msgList = ref<MessageLog[]>([])
@@ -28,12 +28,12 @@ const sendToIframe = (website: Website) => {
     const msg = `This is parent, send to iframe: ${new Date().toLocaleString()}`
     const sendInfo: SendInfo = {
       type: 'msg',
-      msg
+      msg,
     }
 
     msgList.value.push({
       type: 'send',
-      msg
+      msg,
     })
 
     iframe.value.contentWindow?.postMessage(JSON.stringify(sendInfo), website.baseUrl)
@@ -46,7 +46,7 @@ const messageCallback = (e: MessageEvent) => {
   if (data.type === 'msg') {
     msgList.value.push({
       type: 'receive',
-      msg: data.msg
+      msg: data.msg,
     })
   }
 }
@@ -63,7 +63,7 @@ const sendToParent = (website: Website) => {
   if (iframe.value) {
     const sendInfo: SendInfo = {
       type: 'callback',
-      msg: ''
+      msg: '',
     }
     iframe.value.contentWindow?.postMessage(JSON.stringify(sendInfo), website.baseUrl)
   }
@@ -76,9 +76,16 @@ const handleChange = () => {
 
 <template>
   <div>
-    <multi-tabs title="PostMessage" :list="list" @change="handleChange">
+    <multi-tabs
+      title="PostMessage"
+      :list="list"
+      @change="handleChange"
+    >
       <template v-slot:content="{ info }">
-        <two-page @left-click="sendToIframe(info)" @right-click="sendToParent(info)">
+        <two-page
+          @left-click="sendToIframe(info)"
+          @right-click="sendToParent(info)"
+        >
           <template v-slot:left>
             <left-mock-iframe :msgList="msgList"></left-mock-iframe>
           </template>

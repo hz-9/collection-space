@@ -4,29 +4,29 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-08-13 01:06:40
  */
-const fs = require("fs");
-const path = require("path");
-const Koa = require("koa");
-const Router = require("@koa/router");
+const fs = require('fs')
+const path = require('path')
+const Koa = require('koa')
+const Router = require('@koa/router')
 
 const { middleware } = require('./middleware/log4js.middleware')
 
-const app = new Koa();
+const app = new Koa()
 
 // logger
-app.use(middleware);
+app.use(middleware)
 
 // response
-const router = new Router();
+const router = new Router()
 router
-  .get("/favicon.ico", async (ctx, next) => {
-    ctx.type = "image/x-icon";
-    ctx.body = fs.readFileSync(path.join(__dirname, "public", "favicon.ico"));
+  .get('/favicon.ico', async (ctx, next) => {
+    ctx.type = 'image/x-icon'
+    ctx.body = fs.readFileSync(path.join(__dirname, 'public', 'favicon.ico'))
   })
-  .get("/", async (ctx, next) => {
-    ctx.body = "This is the koa service.";
-  });
+  .get('/', async (ctx, next) => {
+    ctx.body = 'This is the koa service.'
+  })
 
-app.use(router.routes()).use(router.allowedMethods());
+app.use(router.routes()).use(router.allowedMethods())
 
-app.listen(3001);
+app.listen(3001)

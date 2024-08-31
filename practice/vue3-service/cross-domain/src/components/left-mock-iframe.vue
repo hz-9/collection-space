@@ -20,7 +20,12 @@ const logList = computed(() => {
     <div class="iframe-content">
       <ul>
         <template v-if="logList.length">
-          <li v-for="(item, index) in logList" :key="index">{{ item.type }}: {{ item.msg }}</li>
+          <li
+            v-for="(item, index) in logList"
+            :key="index"
+          >
+            {{ item.type }}: {{ item.msg }}
+          </li>
         </template>
         <template v-else>
           <li>Please click the button to send message.</li>

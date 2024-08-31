@@ -11,12 +11,12 @@
 
 ## Install
 
-``` sh
+```sh
 pnpm install
 ```
 
 ## Start
 
-``` sh
+```sh
 npm run start
 ```

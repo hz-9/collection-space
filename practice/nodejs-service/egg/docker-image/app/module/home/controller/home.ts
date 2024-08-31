@@ -1,18 +1,18 @@
-import { EggLogger } from 'egg';
-import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum } from '@eggjs/tegg';
+import { EggLogger } from 'egg'
+import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum } from '@eggjs/tegg'
 
 @HTTPController({
   path: '/',
 })
 export class HomeController {
   @Inject()
-  logger: EggLogger;
+  logger: EggLogger
 
   @HTTPMethod({
     method: HTTPMethodEnum.GET,
     path: '/',
   })
   async index() {
-    return 'This is the egg service.';
+    return 'This is the egg service.'
   }
 }

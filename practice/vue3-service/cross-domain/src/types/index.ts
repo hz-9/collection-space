@@ -7,7 +7,7 @@ export enum ServiceStatus {
   init,
   loading,
   success,
-  error
+  error,
 }
 
 export interface Website {

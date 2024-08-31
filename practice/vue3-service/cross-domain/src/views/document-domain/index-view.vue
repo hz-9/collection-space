@@ -11,12 +11,12 @@ import type { MessageLog, SendInfo } from '../../types/index'
 const list = ref<Website[]>([
   {
     name: 'Same Domain',
-    baseUrl: `${location.protocol}//${location.hostname}:${location.port}/set-domain.html`
+    baseUrl: `${location.protocol}//${location.hostname}:${location.port}/set-domain.html`,
   },
   {
     name: 'Diff Domain',
-    baseUrl: `${location.protocol}//a.example.com:${location.port}/set-domain.html`
-  }
+    baseUrl: `${location.protocol}//a.example.com:${location.port}/set-domain.html`,
+  },
 ])
 
 const msgList = ref<MessageLog[]>([])
@@ -28,11 +28,11 @@ const sendToIframe = () => {
     const msg = `This is parent, send to iframe: ${new Date().toLocaleString()}`
     const sendInfo: SendInfo = {
       type: 'msg',
-      msg
+      msg,
     }
     msgList.value.push({
       type: 'send',
-      msg
+      msg,
     })
 
     const receiveMsg = iframe.value?.contentWindow?.receiveMsg
@@ -51,7 +51,7 @@ onMounted(() => {
     if (receiveInfo.type === 'msg') {
       msgList.value.push({
         type: 'receive',
-        msg: receiveInfo.msg
+        msg: receiveInfo.msg,
       })
     }
   }
@@ -66,7 +66,7 @@ const sendToParent = () => {
   if (iframe.value) {
     const sendInfo: SendInfo = {
       type: 'callback',
-      msg: ''
+      msg: '',
     }
     const receiveMsg = iframe.value?.contentWindow?.receiveMsg
     if (receiveMsg) {
@@ -82,10 +82,17 @@ const handleChange = () => {
 
 <template>
   <div>
-    <multi-tabs title="Document.domain" :list="list" @change="handleChange">
+    <multi-tabs
+      title="Document.domain"
+      :list="list"
+      @change="handleChange"
+    >
       <template v-slot:content="{ info }">
         <template v-if="inExampleDomain">
-          <two-page @left-click="sendToIframe" @right-click="sendToParent">
+          <two-page
+            @left-click="sendToIframe"
+            @right-click="sendToParent"
+          >
             <template v-slot:left>
               <left-mock-iframe :msgList="msgList"></left-mock-iframe>
             </template>
@@ -104,11 +111,11 @@ const handleChange = () => {
           </two-page>
         </template>
         <template v-else>
-          please visit <a :href="exampleUrl">{{ exampleUrl }}</a
-          >.
+          please visit
+          <a :href="exampleUrl">{{ exampleUrl }}</a>
+          .
           <br />
-          Of course, you need to set the hosts file to point a.example.com and www.example.com to
-          127.0.0.1.
+          Of course, you need to set the hosts file to point a.example.com and www.example.com to 127.0.0.1.
         </template>
       </template>
     </multi-tabs>

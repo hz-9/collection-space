@@ -13,26 +13,26 @@ import RequestView from '../../components/request-view.vue'
 const list = ref<Service[]>([
   {
     name: 'Express',
-    baseUrl: `${location.protocol}//${location.hostname}:3000`
+    baseUrl: `${location.protocol}//${location.hostname}:3000`,
   },
   {
     name: 'Koa.js',
-    baseUrl: `${location.protocol}//${location.hostname}:3001`
+    baseUrl: `${location.protocol}//${location.hostname}:3001`,
   },
   {
     name: 'Egg.js',
-    baseUrl: `${location.protocol}//${location.hostname}:3002`
+    baseUrl: `${location.protocol}//${location.hostname}:3002`,
   },
   {
     name: 'Nest.js',
-    baseUrl: `${location.protocol}//${location.hostname}:3003`
-  }
+    baseUrl: `${location.protocol}//${location.hostname}:3003`,
+  },
 ])
 
 const requestHandle = async (options: AxiosRequestConfig) => {
   const result = await axios.request({
     ...options,
-    adapter: jsonpAdapter
+    adapter: jsonpAdapter,
   })
   return result.data
 }
@@ -63,7 +63,11 @@ onMounted(() => {
 
 <template>
   <div>
-    <multi-tabs title="Jsonp" :list="list" @change="handleChange">
+    <multi-tabs
+      title="Jsonp"
+      :list="list"
+      @change="handleChange"
+    >
       <template v-slot:extra>
         <template v-if="serviceStatus === ServiceStatus.success">
           <check-circle-outlined style="color: #52c41a" />
@@ -84,8 +88,7 @@ onMounted(() => {
           :method="'GET'"
           :url="'/cross-domain/jsonp'"
           :request-handle="requestHandle"
-        >
-        </request-view>
+        ></request-view>
       </template>
     </multi-tabs>
   </div>

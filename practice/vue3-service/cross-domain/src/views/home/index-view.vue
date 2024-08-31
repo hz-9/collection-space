@@ -14,8 +14,8 @@
             <RouterLink to="/cors">CORS</RouterLink>
           </td>
           <td>
-            Cross-Origin Resource Sharing (CORS) is a mechanism that allows browsers to request
-            resources from a different origin.
+            Cross-Origin Resource Sharing (CORS) is a mechanism that allows browsers to request resources from a
+            different origin.
           </td>
         </tr>
         <tr>
@@ -23,35 +23,28 @@
             <RouterLink to="/proxy">Proxy</RouterLink>
           </td>
           <td>
-            A proxy server acts as an intermediary, forwarding requests and responses to enable
-            cross-origin access.
+            A proxy server acts as an intermediary, forwarding requests and responses to enable cross-origin access.
           </td>
         </tr>
         <tr>
           <td class="left">
             <RouterLink to="/jsonp">Jsonp</RouterLink>
           </td>
-          <td>
-            JSONP is a technique that uses dynamically inserted script tags to make cross-origin
-            requests.
-          </td>
+          <td>JSONP is a technique that uses dynamically inserted script tags to make cross-origin requests.</td>
         </tr>
         <tr>
           <td class="left">
             <RouterLink to="/post-message">postMessage</RouterLink>
           </td>
-          <td>
-            The postMessage method allows for safe cross-origin communication between Window
-            objects.
-          </td>
+          <td>The postMessage method allows for safe cross-origin communication between Window objects.</td>
         </tr>
         <tr>
           <td class="left">
             <RouterLink to="/document-domain">document.domain</RouterLink>
           </td>
           <td>
-            Setting document.domain to the same value in different windows allows for cross-origin
-            communication within the same top-level domain.
+            Setting document.domain to the same value in different windows allows for cross-origin communication within
+            the same top-level domain.
           </td>
         </tr>
         <tr>
@@ -59,8 +52,7 @@
             <RouterLink to="/window-name">window.name</RouterLink>
           </td>
           <td>
-            The window.name property can be used to share data between different origins by
-            navigating between them.
+            The window.name property can be used to share data between different origins by navigating between them.
           </td>
         </tr>
         <tr>
@@ -68,8 +60,7 @@
             <RouterLink to="/location-hash">location.hash</RouterLink>
           </td>
           <td>
-            Using the location.hash property, different windows can communicate by changing the URL
-            fragment identifier.
+            Using the location.hash property, different windows can communicate by changing the URL fragment identifier.
           </td>
         </tr>
       </tbody>

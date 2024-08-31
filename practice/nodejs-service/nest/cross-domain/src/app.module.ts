@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { CrossDomainModule } from './cross-domain/cross-domain.module';
+import { Module } from '@nestjs/common'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+import { CrossDomainModule } from './cross-domain/cross-domain.module'
 
 @Module({
   imports: [CrossDomainModule],

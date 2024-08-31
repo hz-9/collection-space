@@ -23,17 +23,27 @@ const handleRightClick = () => {
   <div class="content">
     <div class="left">
       <h3>{{ leftTitle ?? 'Left' }}</h3>
-      <a-button class="button" size="small" type="primary" @click="handleLeftClick">{{
-        leftButton ?? 'To right.'
-      }}</a-button>
+      <a-button
+        class="button"
+        size="small"
+        type="primary"
+        @click="handleLeftClick"
+      >
+        {{ leftButton ?? 'To right.' }}
+      </a-button>
 
       <slot name="left" />
     </div>
     <div class="right">
       <h3>{{ rightTitle ?? 'Right' }}</h3>
-      <a-button class="button" size="small" type="primary" @click="handleRightClick">{{
-        rightButton ?? 'To left.'
-      }}</a-button>
+      <a-button
+        class="button"
+        size="small"
+        type="primary"
+        @click="handleRightClick"
+      >
+        {{ rightButton ?? 'To left.' }}
+      </a-button>
 
       <slot name="right" />
     </div>

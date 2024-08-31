@@ -2,7 +2,8 @@
   "root": true,
   "extends": [
     "eslint-config-egg/typescript",
-    "eslint-config-egg/lib/rules/enforce-node-prefix"
+    "eslint-config-egg/lib/rules/enforce-node-prefix",
+    "plugin:prettier/recommended"
   ],
   "rules": {
     "jsdoc/check-tag-names": [

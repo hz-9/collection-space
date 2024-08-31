@@ -1,5 +1,5 @@
-import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
-import type { NextFunction, Request, Response } from 'express';
+import { Injectable, Logger, NestMiddleware } from '@nestjs/common'
+import type { NextFunction, Request, Response } from 'express'
 
 /**
  *
@@ -10,27 +10,27 @@ import type { NextFunction, Request, Response } from 'express';
  */
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-  private _logger: Logger = new Logger('Request');
+  private _logger: Logger = new Logger('Request')
 
   public use(request: Request, response: Response, next: NextFunction): void {
-    const sT = Date.now();
+    const sT = Date.now()
 
-    const { method, originalUrl, httpVersion } = request;
-    const userAgent = request.get('user-agent');
+    const { method, originalUrl, httpVersion } = request
+    const userAgent = request.get('user-agent')
 
-    const host = request.get('host');
+    const host = request.get('host')
 
     response.on('finish', () => {
-      const { statusCode } = response;
-      const contentLength = response.get('content-length');
+      const { statusCode } = response
+      const contentLength = response.get('content-length')
 
-      const t: number = Date.now() - sT;
+      const t: number = Date.now() - sT
 
       this._logger.log(
-        `${host} - "${method} ${originalUrl} HTTP/${httpVersion}" ${statusCode} ${contentLength} ${t} ms "${userAgent}"`,
-      );
-    });
+        `${host} - "${method} ${originalUrl} HTTP/${httpVersion}" ${statusCode} ${contentLength} ${t} ms "${userAgent}"`
+      )
+    })
 
-    next();
+    next()
   }
 }

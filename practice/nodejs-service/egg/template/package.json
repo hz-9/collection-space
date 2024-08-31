@@ -31,13 +31,15 @@
     "egg-tracer": "^2.0.0"
   },
   "devDependencies": {
+    "@eggjs/tsconfig": "1",
     "@types/mocha": "10",
     "@types/node": "20",
-    "@eggjs/tsconfig": "1",
     "egg-bin": "6",
     "egg-mock": "5",
     "eslint": "8",
     "eslint-config-egg": "13",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "typescript": "5.3.3"
   },
   "engines": {

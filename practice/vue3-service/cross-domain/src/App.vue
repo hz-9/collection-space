@@ -5,13 +5,20 @@ import MainContent from './components/main-content.vue'
 const router = useRouter()
 
 const handleToHome = () => {
-  router.push({ name: 'Home'})
+  router.push({ name: 'Home' })
 }
 </script>
 
 <template>
   <header>
-    <img alt="HZ-9" class="logo" src="@/assets/LOGO透明.png" width="125" height="125" @click="handleToHome"/>
+    <img
+      alt="HZ-9"
+      class="logo"
+      src="@/assets/LOGO-opacity.png"
+      width="125"
+      height="125"
+      @click="handleToHome"
+    />
     <!-- <img alt="HZ-9" class="logo" src="@/assets/logo.jpg" width="125" height="125" @click="handleToHome"/> -->
 
     <div class="wrapper">

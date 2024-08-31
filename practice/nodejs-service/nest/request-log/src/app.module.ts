@@ -4,11 +4,11 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-07-07 18:05:59
  */
-import { Module, MiddlewareConsumer } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { Module, MiddlewareConsumer } from '@nestjs/common'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
 
-import { LoggerMiddleware } from './logger.middleware';
+import { LoggerMiddleware } from './logger.middleware'
 
 @Module({
   imports: [],
@@ -17,6 +17,6 @@ import { LoggerMiddleware } from './logger.middleware';
 })
 export class AppModule {
   public configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
+    consumer.apply(LoggerMiddleware).forRoutes('*')
   }
 }

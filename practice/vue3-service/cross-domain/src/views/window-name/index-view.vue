@@ -26,26 +26,26 @@ enum IframeStatus {
   /**
    * Receive data from iframe.
    */
-  Receive = 'receive'
+  Receive = 'receive',
 }
 
 const items = ref<StepProps[]>([
   {
     title: 'Init',
-    status: 'process'
+    status: 'process',
   },
   {
     title: 'Send',
-    status: 'wait'
+    status: 'wait',
   },
   {
     title: 'Callback',
-    status: 'wait'
+    status: 'wait',
   },
   {
     title: 'Receive',
-    status: 'wait'
-  }
+    status: 'wait',
+  },
 ])
 
 const iframeStatus = ref<IframeStatus>(IframeStatus.Init)
@@ -87,7 +87,7 @@ const loadSameDomain = () =>
         type: 'msg',
         msg: `This is parent, send to iframe: ${new Date().toLocaleString()}`,
         fromHost: location.host,
-        toHost: `${location.hostname}:5175`
+        toHost: `${location.hostname}:5175`,
       }
 
       iframe.value.src = src1
@@ -162,14 +162,25 @@ const handleStart = async () => {
 
 <template>
   <div>
-    <multi-tabs title="Window.name" :list="list">
+    <multi-tabs
+      title="Window.name"
+      :list="list"
+    >
       <template v-slot:extra>
-        <a-button size="small" type="primary" @click="handleStart" :disabled="running"
-          >Start Request.</a-button
+        <a-button
+          size="small"
+          type="primary"
+          @click="handleStart"
+          :disabled="running"
         >
+          Start Request.
+        </a-button>
       </template>
       <template v-slot:content>
-        <a-steps class="steps" :items="items"></a-steps>
+        <a-steps
+          class="steps"
+          :items="items"
+        ></a-steps>
 
         <div class="">Iframe status: {{ iframeStatus }}</div>
 

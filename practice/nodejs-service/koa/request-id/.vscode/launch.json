@@ -5,9 +5,7 @@
       "type": "node",
       "request": "launch",
       "name": "Debug Service",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
+      "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/app.js"
     }
   ]

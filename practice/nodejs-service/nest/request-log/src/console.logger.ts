@@ -4,12 +4,12 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-07-07 18:10:36
  */
-import { ConsoleLogger, Injectable, LogLevel } from '@nestjs/common';
+import { ConsoleLogger, Injectable, LogLevel } from '@nestjs/common'
 
 @Injectable()
 export class MyConsoleLogger extends ConsoleLogger {
   protected formatPid(pid: number): string {
-    return `[HZ-9] ${pid}  - `;
+    return `[HZ-9] ${pid}  - `
   }
 
   protected formatMessage(
@@ -18,17 +18,10 @@ export class MyConsoleLogger extends ConsoleLogger {
     pidMessage: string,
     formattedLogLevel: string,
     contextMessage: string,
-    timestampDiff: string,
+    timestampDiff: string
   ) {
-    const msg = super.formatMessage(
-      logLevel,
-      message,
-      pidMessage,
-      formattedLogLevel,
-      contextMessage,
-      timestampDiff,
-    );
+    const msg = super.formatMessage(logLevel, message, pidMessage, formattedLogLevel, contextMessage, timestampDiff)
 
-    return `${msg}`;
+    return `${msg}`
   }
 }

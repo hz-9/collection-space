@@ -22,13 +22,17 @@ watch(chooseOne, () => {
 
     <div class="service">
       <a-space>
-        <template v-for="(item, index) in list" :key="index">
+        <template
+          v-for="(item, index) in list"
+          :key="index"
+        >
           <a-button
             :type="chooseOne === item ? 'primary' : undefined"
             @click="chooseOne = item"
             size="small"
-            >{{ item.name }}</a-button
           >
+            {{ item.name }}
+          </a-button>
         </template>
       </a-space>
 
@@ -38,7 +42,10 @@ watch(chooseOne, () => {
     </div>
 
     <div class="content">
-      <slot name="content" :info="chooseOne"></slot>
+      <slot
+        name="content"
+        :info="chooseOne"
+      ></slot>
     </div>
   </div>
 </template>

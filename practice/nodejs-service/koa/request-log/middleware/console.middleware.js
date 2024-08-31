@@ -6,7 +6,7 @@
  */
 const logToken = {
   timestamp: () => {
-    function pad2 (num) {
+    function pad2(num) {
       var str = String(num)
       return (str.length === 1 ? '0' : '') + str
     }
@@ -26,17 +26,22 @@ const logToken = {
 }
 
 exports.middleware = async (ctx, next) => {
-  const start = Date.now();
+  const start = Date.now()
 
   try {
-    await next();
+    await next()
 
-    const ms = Date.now() - start;
+    const ms = Date.now() - start
 
-    console.log(`[HZ-9] ${process.pid} - ${logToken.timestamp()} ${logToken.level()} [${logToken.marker()}] ${ctx.ip} - "${ctx.method} ${ctx.url} HTTP/${ctx.req.httpVersion}" ${ctx.response.status} ${ctx.response.length} ${ms} ms "${ctx.headers['user-agent']}"`)
+    console.log(
+      `[HZ-9] ${process.pid} - ${logToken.timestamp()} ${logToken.level()} [${logToken.marker()}] ${ctx.ip} - "${ctx.method} ${ctx.url} HTTP/${ctx.req.httpVersion}" ${ctx.response.status} ${ctx.response.length} ${ms} ms "${ctx.headers['user-agent']}"`
+    )
   } catch (error) {
-    const ms = Date.now() - start;
+    const ms = Date.now() - start
 
-    console.error(`[HZ-9] ${process.pid} - ${logToken.timestamp()} ${logToken.level()} [${logToken.marker()}] ${ctx.ip} - "${ctx.method} ${ctx.url} HTTP/${ctx.req.httpVersion}" ${ctx.response.status} ${ctx.response.length} ${ms} ms "${ctx.headers['user-agent']}"`, error)
+    console.error(
+      `[HZ-9] ${process.pid} - ${logToken.timestamp()} ${logToken.level()} [${logToken.marker()}] ${ctx.ip} - "${ctx.method} ${ctx.url} HTTP/${ctx.req.httpVersion}" ${ctx.response.status} ${ctx.response.length} ${ms} ms "${ctx.headers['user-agent']}"`,
+      error
+    )
   }
 }

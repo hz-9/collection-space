@@ -4,10 +4,10 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-07-06 23:07:02
  */
-var cls = require('cls-hooked');
+var cls = require('cls-hooked')
 
-var nsid = 'a6a29a6f-6747-4b5f-b99f-07ee96e32f88';
-var ns = cls.createNamespace(nsid);
+var nsid = 'a6a29a6f-6747-4b5f-b99f-07ee96e32f88'
+var ns = cls.createNamespace(nsid)
 
 let id = 0
 
@@ -19,9 +19,9 @@ const generateRId = () => {
 const middleware = (req, res, next) => {
   ns.run(() => {
     const rid = generateRId()
-    set('rid', rid);
+    set('rid', rid)
     next()
-  });
+  })
 }
 
 const get = (key, value) => ns.get(key, value)
@@ -31,4 +31,4 @@ module.exports = {
   middleware,
   get: get,
   set: set,
-};
+}

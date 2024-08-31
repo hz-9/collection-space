@@ -2,11 +2,11 @@
  * @Author       : Chen Zhen
  * @Date         : 2024-04-20 19:36:19
  * @LastEditors  : Chen Zhen
- * @LastEditTime : 2024-04-20 23:38:54
+ * @LastEditTime : 2024-08-31 15:39:06
  */
 
 /**
- * Promise 状态
+ * Promise status
  */
 enum PROMISE_STATUS {
   PENDING = 'pending',
@@ -14,13 +14,13 @@ enum PROMISE_STATUS {
   REJECTED = 'rejected',
 }
 
-type PromiseResolve<T = any> = (any?: T) => void
+type PromiseResolve<T = any> = (value?: T) => void
 
 type PromiseReject<T extends Error = Error> = (error?: T) => void
 
 type PromiseExecutor<R, E extends Error = Error> = (resolve: PromiseResolve<R>, reject: PromiseReject<E>) => void
 
-type PromiseOnFulfilled<T = any> = (any?: T) => any
+type PromiseOnFulfilled<T = any> = (value?: T) => any
 
 type PromiseOnRejected<T extends Error = Error> = (error?: T) => any
 
@@ -67,13 +67,13 @@ const resolvePromise = <R = any, E extends Error = TypeError>(
 
 /**
  * @class
- * 
- *  一个自己的 Promise 实现。
- * 
+ *
+ *  A custom Promise implementation.
+ *
  */
 export class MyPromise<R = any, E extends Error = Error> {
-  public PromiseResult?: R | E // 终值
-  public PromiseState: PROMISE_STATUS // 状态
+  public PromiseResult?: R | E // The final value
+  public PromiseState: PROMISE_STATUS // The status
 
   protected readonly resolve: PromiseResolve<R>
   protected readonly reject: PromiseReject<E>
@@ -83,7 +83,7 @@ export class MyPromise<R = any, E extends Error = Error> {
 
   public constructor(executor: PromiseExecutor<R, E>) {
     /**
-     * 初始化值
+     * Initialize values
      */
     this.PromiseState = PROMISE_STATUS.PENDING
     this.PromiseResult = undefined
@@ -121,10 +121,10 @@ export class MyPromise<R = any, E extends Error = Error> {
   }
 
   public then(onFulfilled: PromiseOnFulfilled<R>, onRejected?: PromiseOnRejected<E>) {
-    // 解决 onFufilled，onRejected 没有传值的问题
+    // Resolve the issue of missing onFulfilled and onRejected
     const onFulfilled_ = typeof onFulfilled === 'function' ? onFulfilled : (val) => val
 
-    //因为错误的值要让后面访问到，所以这里也要抛出个错误，不然会在之后 then 的 resolve 中捕获
+    // Throw an error here so that the subsequent resolve in then can catch it
     const onRejected_ =
       typeof onRejected === 'function'
         ? onRejected
@@ -183,11 +183,11 @@ export class MyPromise<R = any, E extends Error = Error> {
 
   public static resolve(value) {
     return new MyPromise((resolve, reject) => {
-      // 如果value是一个promise, 最终返回的promise的结果由value决定
+      // If value is a promise, the result of the returned promise is determined by value
       if (value instanceof MyPromise) {
         value.then(resolve, reject)
       } else {
-        // value不是promise, 返回的是成功的promise, 成功的值就是value
+        // If value is not a promise, the returned promise is fulfilled with the value
         resolve(value)
       }
     })
@@ -201,7 +201,7 @@ export class MyPromise<R = any, E extends Error = Error> {
 
   /**
    *
-   * 返回一个promise, 只有当数组中所有promise都成功才成功, 否则失败
+   * Returns a promise that is fulfilled with an array of all fulfilled values when all promises in the array are fulfilled, or rejected with the reason of the first rejected promise.
    *
    */
   public static all(promises: Array<MyPromise>) {
@@ -223,7 +223,7 @@ export class MyPromise<R = any, E extends Error = Error> {
 
   /**
    *
-   * 返回一个promise, 由第一个完成promise决定
+   * Returns a promise that is settled with the value or reason of the first settled promise.
    *
    */
   public static race(promises: Array<MyPromise>) {

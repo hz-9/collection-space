@@ -21,7 +21,7 @@ watch(requestUrl, () => {
 const handleRequest = async () => {
   const result = await props.requestHandle({
     method: props.method,
-    url: requestUrl.value
+    url: requestUrl.value,
   })
   responseData.value = result
 }
@@ -33,7 +33,14 @@ const handleRequest = async () => {
       <div class="label">URL</div>
       <div class="content">{{ method }}: {{ requestUrl }}</div>
 
-      <a-button class="button" type="primary" size="small" @click="handleRequest">Request</a-button>
+      <a-button
+        class="button"
+        type="primary"
+        size="small"
+        @click="handleRequest"
+      >
+        Request
+      </a-button>
     </div>
 
     <div class="section">

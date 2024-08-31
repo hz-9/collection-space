@@ -4,11 +4,11 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-07-07 23:00:01
  */
-import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MiddlewareConsumer, Module } from '@nestjs/common'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
 
-import { RidMiddleware } from './middleware/rid.middleware';
+import { RidMiddleware } from './middleware/rid.middleware'
 
 @Module({
   imports: [],
@@ -17,6 +17,6 @@ import { RidMiddleware } from './middleware/rid.middleware';
 })
 export class AppModule {
   public configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(RidMiddleware).forRoutes('*');
+    consumer.apply(RidMiddleware).forRoutes('*')
   }
 }
