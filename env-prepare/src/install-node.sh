@@ -40,6 +40,14 @@ console_title "Install nvm"
 if [[ ! -f "$nvmHome/README.md" ]]; then
   console_content_starting "nvm '${nvmHome}' is installing..."
 
+  # Check Git is installed
+  if ! command -v git &> /dev/null; then
+    echo "Not found Git, please install Git first."
+    exit 1
+  else
+    console_key_value "Git" "$(git --version | awk '{print $3}')"
+  fi
+
   if [ "$(get_param '--debug')" == 'true' ]; then
     curl    -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | METHOD=git bash
   else
@@ -59,6 +67,8 @@ console_empty_line
 # ------------------------------------------------------------
 
 console_title "Install Node.js"
+
+# 检查是否已经安装了 Git
 
 if [[ ! -d "$nodeHome" ]]; then
   if [[ "$inChina" == "true" ]]; then
