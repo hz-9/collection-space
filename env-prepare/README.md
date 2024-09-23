@@ -18,6 +18,18 @@ curl -o-  https://raw.githubusercontent.com/hz-9/collection-space/master/env-pre
 wget -qO- https://raw.githubusercontent.com/hz-9/collection-space/master/env-prepare/dist/install-git.sh | bash
 ```
 
+## Install 7Zip
+
+Support: `Ubuntu 22.04 64-bit`
+
+``` sh
+curl -o-  https://raw.githubusercontent.com/hz-9/collection-space/master/env-prepare/dist/install-7zip.sh | bash
+```
+
+``` sh
+wget -qO- https://raw.githubusercontent.com/hz-9/collection-space/master/env-prepare/dist/install-7zip.sh | bash
+```
+
 ## Install Node
 
 Support: `Ubuntu 22.04 64-bit`
