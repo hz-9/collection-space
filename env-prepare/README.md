@@ -6,6 +6,18 @@
 bash ./utils/_merge_with_source.sh
 ```
 
+## Install Git
+
+Support: `Ubuntu 22.04 64-bit`
+
+``` sh
+curl -o-  https://raw.githubusercontent.com/hz-9/collection-space/master/env-prepare/dist/install-git.sh | bash
+```
+
+``` sh
+wget -qO- https://raw.githubusercontent.com/hz-9/collection-space/master/env-prepare/dist/install-git.sh | bash
+```
+
 ## Install Node
 
 Support: `Ubuntu 22.04 64-bit`

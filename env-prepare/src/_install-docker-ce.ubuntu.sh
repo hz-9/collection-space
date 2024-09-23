@@ -27,11 +27,13 @@
     # ------------------------------------------------------------
 
     # step 1: Install necessary system tools
-    console_content_starting "The necessary system tools is installing..."
-
+    console_content_starting "Package list is updating..."
     # sudo apt-get -y update
-    # sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
     eval "sudo apt-get -y update $(get_redirect_output)"
+    console_content_complete
+
+    console_content_starting "The necessary system tools is installing..."
+    # sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
     eval "sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common $(get_redirect_output)"
 
     console_content_complete
@@ -65,11 +67,9 @@
     # ------------------------------------------------------------
 
     # Step 4: Update
-    console_content_starting "The software source information is updating..."
-
+    console_content_starting "Package list is updating..."
     # sudo apt-get -y update
     eval "sudo apt-get -y update $(get_redirect_output)"
-
     console_content_complete
 
     # View all versions of Docker CE

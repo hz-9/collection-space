@@ -61,6 +61,18 @@
     printf "    %s\n" "$1"
   }
 
+  console_sulines() {
+    # printf "    %s\n" "$1"
+    local msg=$1
+    _console_sub_lines() {
+      # shellcheck disable=SC2317
+      while IFS= read -r line; do
+        printf "      %s\n" "$line"
+      done
+    }
+    echo "$msg" | _console_sub_lines
+  }
+
   tempTime=$(get_current_time_ms)
   console_content_starting() {
     tempTime=$(get_current_time_ms)
