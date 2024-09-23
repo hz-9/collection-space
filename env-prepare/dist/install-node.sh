@@ -373,8 +373,6 @@ if [[ ! -f "$nvmHome/README.md" ]]; then
   if ! command -v git &> /dev/null; then
     echo "Not found Git, please install Git first."
     exit 1
-  else
-    console_key_value "Git" "$(git --version | awk '{print $3}')"
   fi
 
   if [ "$(get_param '--debug')" == 'true' ]; then
