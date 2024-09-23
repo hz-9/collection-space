@@ -11,11 +11,11 @@ bash ./utils/_merge_with_source.sh
 Support: `Ubuntu 22.04 64-bit`
 
 ``` sh
-curl -o-  https://raw.githubusercontent.com/hz-9/collection-space/master/env-prepare/dist/install-git.sh | bash
+curl -o-  https://raw.githubusercontent.com/hz-9/collection-space/refs/heads/master/env-prepare/dist/install-git.sh | bash
 ```
 
 ``` sh
-wget -qO- https://raw.githubusercontent.com/hz-9/collection-space/master/env-prepare/dist/install-git.sh | bash
+wget -qO- https://raw.githubusercontent.com/hz-9/collection-space/refs/heads/master/env-prepare/dist/install-git.sh | bash
 ```
 
 ## Install 7Zip
@@ -23,11 +23,11 @@ wget -qO- https://raw.githubusercontent.com/hz-9/collection-space/master/env-pre
 Support: `Ubuntu 22.04 64-bit`
 
 ``` sh
-curl -o-  https://raw.githubusercontent.com/hz-9/collection-space/master/env-prepare/dist/install-7zip.sh | bash
+curl -o-  https://raw.githubusercontent.com/hz-9/collection-space/refs/heads/master/env-prepare/dist/install-7zip.sh | bash
 ```
 
 ``` sh
-wget -qO- https://raw.githubusercontent.com/hz-9/collection-space/master/env-prepare/dist/install-7zip.sh | bash
+wget -qO- https://raw.githubusercontent.com/hz-9/collection-space/refs/heads/master/env-prepare/dist/install-7zip.sh | bash
 ```
 
 ## Install Node
@@ -35,11 +35,11 @@ wget -qO- https://raw.githubusercontent.com/hz-9/collection-space/master/env-pre
 Support: `Ubuntu 22.04 64-bit`
 
 ``` sh
-curl -o-  https://raw.githubusercontent.com/hz-9/collection-space/master/env-prepare/dist/install-node.sh | bash
+curl -o-  https://raw.githubusercontent.com/hz-9/collection-space/refs/heads/master/env-prepare/dist/install-node.sh | bash
 ```
 
 ``` sh
-wget -qO- https://raw.githubusercontent.com/hz-9/collection-space/master/env-prepare/dist/install-node.sh | bash
+wget -qO- https://raw.githubusercontent.com/hz-9/collection-space/refs/heads/master/env-prepare/dist/install-node.sh | bash
 ```
 
 In china.
@@ -57,11 +57,11 @@ wget -qO- https://gitee.com/hz-9/collection-space/raw/master/env-prepare/dist/in
 Support: `Ubuntu 22.04 64-bit`
 
 ``` sh
-curl -o-  https://raw.githubusercontent.com/hz-9/collection-space/master/env-prepare/dist/install-docker-ce.sh | bash
+curl -o-  https://raw.githubusercontent.com/hz-9/collection-space/refs/heads/master/env-prepare/dist/install-docker-ce.sh | bash
 ```
 
 ``` sh
-wget -qO- https://raw.githubusercontent.com/hz-9/collection-space/master/env-prepare/dist/install-docker-ce.sh | bash
+wget -qO- https://raw.githubusercontent.com/hz-9/collection-space/refs/heads/master/env-prepare/dist/install-docker-ce.sh | bash
 ```
 
 In china.
@@ -79,11 +79,11 @@ wget -qO- https://gitee.com/hz-9/collection-space/raw/master/env-prepare/dist/in
 Support: `Ubuntu 22.04 64-bit`
 
 ``` sh
-curl -o-  https://raw.githubusercontent.com/hz-9/collection-space/master/env-prepare/dist/sync-db-postgresql.sh | bash
+curl -o-  https://raw.githubusercontent.com/hz-9/collection-space/refs/heads/master/env-prepare/dist/sync-db-postgresql.sh | bash
 ```
 
 ``` sh
-wget -qO- https://raw.githubusercontent.com/hz-9/collection-space/master/env-prepare/dist/sync-db-postgresql.sh | bash
+wget -qO- https://raw.githubusercontent.com/hz-9/collection-space/refs/heads/master/env-prepare/dist/sync-db-postgresql.sh | bash
 ```
 
 In china.

@@ -383,7 +383,19 @@ else
   console_content "7Zip is already installed."
 fi
 
-console_key_value "7Zip" "$(7z | head -n 2 | tail -n 1 | awk '{print $3}')"
+get_7zip_version() {
+  local v1
+  v1=$(7z | head -n 2 | tail -n 1 | awk '{print $3}')
+  local v2
+  v2=$(7z | head -n 2 | tail -n 1 | awk '{print $2}')
+
+  if [[ "$v1" == "(x64)" ]]; then
+    echo "$v2"
+  else
+    echo "$v1"
+  fi
+}
+console_key_value "7Zip" "$(get_7zip_version)"
 console_empty_line
 
 # ------------------------------------------------------------
