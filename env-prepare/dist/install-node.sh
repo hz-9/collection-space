@@ -59,7 +59,7 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
     }
 
     judge_linux_system() {
-      if [[ "$__OS_NAME__" == "Linux" ]]; then
+      if [[ "$__OS_NAME__" == "Ubuntu" ]]; then
         return 0
       else
         return 1
@@ -77,6 +77,8 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
     judge_arch() {
       if [[ "$__OS_ARCH__" == "arm64" ]]; then
         echo "ARM64"
+      elif [[ "$__OS_ARCH__" == "x86_64" ]]; then
+        echo "AMD64"
       else
         echo "$__OS_ARCH__"
       fi
@@ -86,7 +88,7 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
       OS_NAME='Windows'
       IS_WINDOWS=true
     elif judge_linux_system; then
-      OS_NAME='Linux'
+      OS_NAME=$__OS_NAME__
       IS_LINUX=true
     elif judge_macos_system; then
       OS_NAME='MacOS'
@@ -129,6 +131,7 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
     echo "OS_NAME    : $OS_NAME"
     echo "OS_VERSION : $OS_VERS"
     echo "OS_ARCH    : $OS_ARCH"
+    echo "CURRENT_OS : $CURRENT_OS"
   }
 
   print_system_extra_info() {
@@ -137,6 +140,8 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
     echo "IS_LINUX   : $IS_LINUX"
     echo "IS_MACOS   : $IS_MACOS"
   }
+
+  # print_system_extra_info
 }
 
 # build from ./_console.sh
