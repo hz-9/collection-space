@@ -8,7 +8,7 @@ PARAMTERS=(
   "--git-version${_m_}${_m_}Git version. Default is lastest available.${_m_}"
 )
 
-SUPPORT_SYSTEM=(
+SUPPORT_OS_LIST=(
   "Ubuntu 20.04 AMD64"
 )
 
