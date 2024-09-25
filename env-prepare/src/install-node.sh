@@ -50,7 +50,7 @@ if [[ ! -f "$nvmHome/README.md" ]]; then
 
   # Check Git is installed
   if ! command -v git &> /dev/null; then
-    echo "Not found Git, please install Git first."
+    console_content_error "Not found Git, please install Git first."
     exit 1
   fi
 

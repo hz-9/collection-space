@@ -101,6 +101,8 @@
     done
     console_empty_line
 
+    console_support_os
+
     return 1
   }
 

@@ -63,14 +63,18 @@ SHELL_DESC="Sync PostgreSQL database."
     fi
   }
 
+  console_support_os() {
+    printf "  ${YELLOW}%s${NC}\n\n" "Supported operating systems:"
+    for os_info in "${SUPPORT_OS_LIST[@]}"; do
+      printf "    ${YELLOW}%s${NC}\n" "$os_info"
+    done
+    console_empty_line
+  }
+
   console_check_system() {
     if [[ "$IS_SUPPORT_OS" == false ]]; then
       printf "  ${RED}%s${NC}\n\n"   "This shell script does not support the current operating system. [$CURRENT_OS]"
-      printf "  ${YELLOW}%s${NC}\n\n" "Supported operating systems:"
-      for os_info in "${SUPPORT_OS_LIST[@]}"; do
-        printf "    ${YELLOW}%s${NC}\n" "$os_info"
-      done
-      console_empty_line
+      console_support_os
     
       exit 1
     else
@@ -134,6 +138,12 @@ SHELL_DESC="Sync PostgreSQL database."
     timeDiff=$((currentTime - tempTime))
 
     printf " ${GREEN}%s${NC} %s${NC}\n" "done." "(${timeDiff} ms)"
+  }
+
+  console_content_error() {
+    local msg=$1
+    printf " ${RED}%s${NC}\n" "error."
+    printf "    ${RED}%s${NC}\n" "Reason: \"${msg}\""
   }
 
   console_content_emptystr() {
@@ -344,6 +354,8 @@ SHELL_DESC="Sync PostgreSQL database."
       console_key_value "$name" "$msg$defaultStr"
     done
     console_empty_line
+
+    console_support_os
 
     return 1
   }
