@@ -8,8 +8,16 @@ PARAMTERS=(
   "--7zip-version${_m_}${_m_}7Zip version. Default is lastest available.${_m_}"
 )
 
+SUPPORT_OS_LIST=(
+  "Ubuntu 20.04 AMD64"
+  "Ubuntu 22.04 AMD64"
+  "Ubuntu 24.04 AMD64"
+)
+
 SHELL_NAME="7Zip Installer"
 SHELL_DESC="Install '7zip'."
+
+source ./_judge-system.sh
 
 source ./_console.sh
 

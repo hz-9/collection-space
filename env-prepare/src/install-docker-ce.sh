@@ -9,8 +9,16 @@ PARAMTERS=(
   "--in-china${_m_}${_m_}Use the Chinese mirror.${_m_}false"
 )
 
+SUPPORT_OS_LIST=(
+  "Ubuntu 20.04 AMD64"
+  "Ubuntu 22.04 AMD64"
+  "Ubuntu 24.04 AMD64"
+)
+
 SHELL_NAME="Docker CE Installer"
 SHELL_DESC="Install 'docker-ce' 'docker-compose'."
+
+source ./_judge-system.sh
 
 source ./_console.sh
 

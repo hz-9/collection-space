@@ -11,8 +11,16 @@ PARAMTERS=(
   "--in-china${_m_}${_m_}Use the Chinese mirror.${_m_}false"
 )
 
+SUPPORT_OS_LIST=(
+  "Ubuntu 20.04 AMD64"
+  "Ubuntu 22.04 AMD64"
+  "Ubuntu 24.04 AMD64"
+)
+
 SHELL_NAME="Node.js Installer"
 SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
+
+source ./_judge-system.sh
 
 source ./_console.sh
 

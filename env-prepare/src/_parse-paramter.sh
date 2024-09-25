@@ -74,6 +74,8 @@
 
     console_desc
 
+    console_check_system
+
     for PARAMTER in "${PARAMTERS[@]}"; do
       local split
       eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
@@ -106,6 +108,8 @@
     console_name
 
     console_desc
+
+    console_check_system
 
     console_title "Paramters:"
 

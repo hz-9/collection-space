@@ -8,8 +8,14 @@ PARAMTERS=(
   "--git-version${_m_}${_m_}Git version. Default is lastest available.${_m_}"
 )
 
+SUPPORT_SYSTEM=(
+  "Ubuntu 20.04 AMD64"
+)
+
 SHELL_NAME="Git Installer"
 SHELL_DESC="Install 'git'."
+
+source ./_judge-system.sh
 
 source ./_console.sh
 

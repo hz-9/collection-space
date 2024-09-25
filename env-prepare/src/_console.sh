@@ -30,6 +30,21 @@
     fi
   }
 
+  console_check_system() {
+    if [[ "$IS_SUPPORT_OS" == false ]]; then
+      printf "  ${RED}%s${NC}\n\n"   "This shell script does not support the current operating system. [$CURRENT_OS]"
+      printf "  ${YELLOW}%s${NC}\n\n" "Supported operating systems:"
+      for os_info in "${SUPPORT_OS_LIST[@]}"; do
+        printf "    ${YELLOW}%s${NC}\n" "$os_info"
+      done
+      console_empty_line
+    
+      exit 1
+    else
+      printf "  ${GREEN}%s${NC}\n\n" "This shell script supports the current operating system. [$CURRENT_OS]"
+    fi
+  }
+
   console_title() {
     local title="$1"
     printf "  ${CYAN}%s${NC}\n\n" "$title"
@@ -84,7 +99,7 @@
     currentTime=$(get_current_time_ms)
     local timeDiff
     timeDiff=$((currentTime - tempTime))
-  
+
     printf " ${GREEN}%s${NC} %s${NC}\n" "done." "(${timeDiff} ms)"
   }
 
