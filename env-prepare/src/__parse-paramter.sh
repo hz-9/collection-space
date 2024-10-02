@@ -74,8 +74,6 @@
 
     console_desc
 
-    console_check_system
-
     for PARAMTER in "${PARAMTERS[@]}"; do
       local split
       eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
@@ -100,6 +98,8 @@
       console_key_value "$name" "$msg$defaultStr"
     done
     console_empty_line
+
+    console_check_system
 
     console_support_os
 

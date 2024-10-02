@@ -5,7 +5,7 @@ PARAMTERS=(
   "--help${_m_}-h${_m_}Print help message.${_m_}false"
   "--debug${_m_}${_m_}Print debug message.${_m_}false"
 
-  "--nvm-version${_m_}${_m_}Nvm version.${_m_}v0.40.0"
+  "--nvm-version${_m_}${_m_}Nvm version.${_m_}v0.40.1"
   "--node-version${_m_}${_m_}Node.js version.${_m_}v18.20.3"
   "--pm2-version${_m_}${_m_}PM2 version.${_m_}5.4.2"
   "--in-china${_m_}${_m_}Use the Chinese mirror.${_m_}false"
@@ -15,18 +15,30 @@ SUPPORT_OS_LIST=(
   "Ubuntu 20.04 AMD64"
   "Ubuntu 22.04 AMD64"
   "Ubuntu 24.04 AMD64"
+
+  "Debian 11.9 AMD64"
+  "Debian 12.2 AMD64"
+
+  "Fedora 40 AMD64"
+
+  "RedHat 8.5 AMD64"
+  "RedHat 9.0 AMD64"
+
+  "AlibabaCloudLinux 3.2104 AMD64"
 )
 
 SHELL_NAME="Node.js Installer"
 SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
 
-source ./_judge-system.sh
+source ./__judge-system.sh
 
-source ./_console.sh
+source ./__console.sh
 
-source ./_parse-user-paramter.sh
+source ./__parse-user-paramter.sh
 
-source ./_parse-paramter.sh
+source ./__parse-paramter.sh
+
+source ./__install.common.sh
 
 print_help_or_param
 
@@ -51,13 +63,21 @@ if [[ ! -f "$nvmHome/README.md" ]]; then
   # Check Git is installed
   if ! command -v git &> /dev/null; then
     console_content_error "Not found Git, please install Git first."
+    console_empty_line
+
     exit 1
   fi
 
+  # if [ "$(get_param '--debug')" == 'true' ]; then
+  #   curl    -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | METHOD=git bash
+  # else
+  #   curl -s -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | METHOD=git bash &> /dev/null
+  # fi
+
   if [ "$(get_param '--debug')" == 'true' ]; then
-    curl    -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | METHOD=git bash
+    curl    -o- "https://raw.githubusercontent.com/nvm-sh/nvm/refs/tags/${nvmVersion}/install.sh" | METHOD=git bash
   else
-    curl -s -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | METHOD=git bash &> /dev/null
+    curl -s -o- "https://raw.githubusercontent.com/nvm-sh/nvm/refs/tags/${nvmVersion}/install.sh" | METHOD=git bash &> /dev/null
   fi
 
   console_content_complete

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# build from test-paramter.sh
+# import from test-paramter.sh
 _m_='__@@__'
 
 PARAMTERS=(
@@ -12,13 +12,18 @@ SUPPORT_OS_LIST=(
   "Ubuntu 20.04   AMD64"
   "Ubuntu 22.04   AMD64"
   "Ubuntu 24.04   AMD64"
-  # "MacOS  23.6.0  ARM64"
+  "Debian 11.9    AMD64"
+  "Debian 12.2    AMD64"
+  "MacOS  14.6.1  ARM64"
+  "Fedora 40      AMD64"
+  "RedHat 8.5     AMD64"
+  "RedHat 9.0     AMD64"
 )
 
-SHELL_NAME="Docker CE Installer"
-SHELL_DESC="Install 'docker-ce' 'docker-compose'."
+SHELL_NAME="Test Paramter"
+SHELL_DESC="Some description."
 
-# build from ./_judge-system.sh
+# import from ./__judge-system.sh
 {
   OS_NAME=''
   OS_VERS=''
@@ -31,23 +36,41 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
   IS_SUPPORT_OS=false
 
   judge_system() {
-    local __OS_NAME__
-    local __OS_VERS__
-    local __OS_ARCH__
+    local __BASE_OS_NAME__
+    local __BASE_OS_VERS__
+    local __BASE_OS_ARCH__
 
     if [ -f /etc/os-release ]; then
       . /etc/os-release
-      __OS_NAME__=$NAME
-      __OS_VERS__=$VERSION_ID
-      __OS_ARCH__=$(uname -m)
+      __BASE_OS_NAME__=$NAME
+      __BASE_OS_VERS__=$VERSION_ID
+      __BASE_OS_ARCH__=$(uname -m)
     else
-      __OS_NAME__=$(uname -s)
-      __OS_VERS__=$(uname -r)
-      __OS_ARCH__=$(uname -m)
+      __BASE_OS_NAME__=$(uname -s)
+      __BASE_OS_VERS__=$(uname -r)
+      __BASE_OS_ARCH__=$(uname -m)
     fi
 
+    # -------------------- judge os name --------------------
+
+    judge_name() {
+      if [[ "$__BASE_OS_NAME__" == "Debian GNU/Linux" ]]; then
+        echo "Debian"
+      elif [[ "$__BASE_OS_NAME__" == "Fedora Linux" ]]; then
+        echo "Fedora"
+      elif [[ "$__BASE_OS_NAME__" == "Alibaba Cloud Linux" ]]; then
+        echo "AlibabaCloudLinux"
+      elif [[ "$__BASE_OS_NAME__" == "Red Hat Enterprise Linux" ]]; then
+        echo "RedHat"
+      else
+        echo "$__BASE_OS_NAME__"
+      fi
+    }
+
     judge_window_system() {
-      if [[ "$__OS_NAME__" == "MINGW"* ]] || [[ "$__OS_NAME__" == "CYGWIN"* ]] || [[ "$__OS_NAME__" == "MSYS"* ]] || [[ "$__OS_NAME__" == "Windows_NT" ]]; then
+      local _OS_NAME
+      _OS_NAME=$(judge_name)
+      if [[ "$_OS_NAME" == "MINGW"* ]] || [[ "$_OS_NAME" == "CYGWIN"* ]] || [[ "$_OS_NAME" == "MSYS"* ]] || [[ "$_OS_NAME" == "Windows_NT" ]]; then
         return 0
       else
         return 1
@@ -55,7 +78,9 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
     }
 
     judge_linux_system() {
-      if [[ "$__OS_NAME__" == "Ubuntu" ]]; then
+      local _OS_NAME
+      _OS_NAME=$(judge_name)
+      if [[ "$_OS_NAME" == "Ubuntu" ]] || [[ "$_OS_NAME" == "Debian" ]] || [[ "$_OS_NAME" == "Fedora" ]] || [[ "$_OS_NAME" == "RedHat" ]] || [[ "$_OS_NAME" == "AlibabaCloudLinux" ]]; then
         return 0
       else
         return 1
@@ -63,20 +88,12 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
     }
 
     judge_macos_system() {
-      if [[ "$__OS_NAME__" == "Darwin" ]]; then
+      local _OS_NAME
+      _OS_NAME=$(judge_name)
+      if [[ "$_OS_NAME" == "Darwin" ]]; then
         return 0
       else
         return 1
-      fi
-    }
-
-    judge_arch() {
-      if [[ "$__OS_ARCH__" == "arm64" ]]; then
-        echo "ARM64"
-      elif [[ "$__OS_ARCH__" == "x86_64" ]]; then
-        echo "AMD64"
-      else
-        echo "$__OS_ARCH__"
       fi
     }
 
@@ -84,7 +101,7 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
       OS_NAME='Windows'
       IS_WINDOWS=true
     elif judge_linux_system; then
-      OS_NAME=$__OS_NAME__
+      OS_NAME=$(judge_name)
       IS_LINUX=true
     elif judge_macos_system; then
       OS_NAME='MacOS'
@@ -93,7 +110,35 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
       OS_NAME='Unknown'
     fi
 
-    OS_VERS=$__OS_VERS__
+    # -------------------- judge os version -----------------
+
+    judge_version() {
+      if [[ "$OS_NAME" == "MacOS" ]]; then
+        sw_vers -productVersion
+      elif [[ "$OS_NAME" == "Debian" ]]; then
+        cat /etc/debian_version
+      elif [[ "$OS_NAME" == "AlibabaCloudLinux" ]]; then
+        . /etc/os-release
+        echo "$PRETTY_NAME" | awk '{print $4}'
+      else
+        echo "$__BASE_OS_VERS__"
+      fi
+    }
+
+    OS_VERS=$(judge_version)
+
+    # -------------------- judge os arch --------------------
+
+    judge_arch() {
+      if [[ "$__BASE_OS_ARCH__" == "arm64" ]]; then
+        echo "ARM64"
+      elif [[ "$__BASE_OS_ARCH__" == "x86_64" ]]; then
+        echo "AMD64"
+      else
+        echo "$__BASE_OS_ARCH__"
+      fi
+    }
+
     OS_ARCH=$(judge_arch)
     CURRENT_OS="$OS_NAME $OS_VERS $OS_ARCH"
 
@@ -140,7 +185,7 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
   # print_system_extra_info
 }
 
-# build from ./_console.sh
+# import from ./__console.sh
 {
   RED='\033[0;31m'
   GREEN='\033[0;32m'
@@ -272,7 +317,7 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
   }
 }
 
-# build from ./_parse-user-paramter.sh
+# import from ./__parse-user-paramter.sh
 {
   USER_PARAMTERS=()
 
@@ -285,6 +330,20 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
         USER_PARAMTERS+=("$key${_m_}$value")
         ;;
       --*)
+        key="$1"
+        if [[ -n "$2" && "$2" != --* ]]; then
+          USER_PARAMTERS+=("$key${_m_}$2")
+          shift
+        else
+          USER_PARAMTERS+=("$key${_m_}true")
+        fi
+        ;;
+      -*=*)
+        key="${1%%=*}"
+        value="${1#*=}"
+        USER_PARAMTERS+=("$key${_m_}$value")
+        ;;
+      -*)
         key="$1"
         if [[ -n "$2" && "$2" != --* ]]; then
           USER_PARAMTERS+=("$key${_m_}$2")
@@ -361,7 +420,7 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
   parse_user_param "$@"
 }
 
-# build from ./_parse-paramter.sh
+# import from ./__parse-paramter.sh
 {
 
   print_default_param() {
@@ -437,8 +496,6 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
 
     console_desc
 
-    console_check_system
-
     for PARAMTER in "${PARAMTERS[@]}"; do
       local split
       eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
@@ -463,6 +520,8 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
       console_key_value "$name" "$msg$defaultStr"
     done
     console_empty_line
+
+    console_check_system
 
     console_support_os
 
@@ -503,6 +562,8 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
     fi
   }
 }
+
+print_system_extra_info
 
 print_help_or_param
 
