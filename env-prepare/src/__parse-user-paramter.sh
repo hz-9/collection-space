@@ -19,6 +19,20 @@
           USER_PARAMTERS+=("$key${_m_}true")
         fi
         ;;
+      -*=*)
+        key="${1%%=*}"
+        value="${1#*=}"
+        USER_PARAMTERS+=("$key${_m_}$value")
+        ;;
+      -*)
+        key="$1"
+        if [[ -n "$2" && "$2" != --* ]]; then
+          USER_PARAMTERS+=("$key${_m_}$2")
+          shift
+        else
+          USER_PARAMTERS+=("$key${_m_}true")
+        fi
+        ;;
       *)
         echo "Unknown option: $1"
         exit 1

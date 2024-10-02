@@ -29,11 +29,13 @@ PARAMTERS=(
 SHELL_NAME="PostgreSQL Sync Tooler"
 SHELL_DESC="Sync PostgreSQL database."
 
-source ./_console.sh
+# source ./__judge-system.sh
 
-source ./_parse-user-paramter.sh
+source ./__console.sh
 
-source ./_parse-paramter.sh
+source ./__parse-user-paramter.sh
+
+source ./__parse-paramter.sh
 
 print_help_or_param
 

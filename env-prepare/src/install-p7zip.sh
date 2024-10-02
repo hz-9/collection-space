@@ -5,7 +5,7 @@ PARAMTERS=(
   "--help${_m_}-h${_m_}Print help message.${_m_}false"
   "--debug${_m_}${_m_}Print debug message.${_m_}false"
 
-  "--git-version${_m_}${_m_}Git version. Default is lastest available.${_m_}"
+  "--7zip-version${_m_}${_m_}7Zip version. Default is lastest available.${_m_}"
   "--in-china${_m_}${_m_}Use the Chinese mirror.${_m_}false"
 )
 
@@ -25,8 +25,8 @@ SUPPORT_OS_LIST=(
   "AlibabaCloudLinux 3.2104 AMD64"
 )
 
-SHELL_NAME="Git Installer"
-SHELL_DESC="Install 'git'."
+SHELL_NAME="7Zip Installer"
+SHELL_DESC="Install '7zip'."
 
 source ./__judge-system.sh
 
@@ -40,23 +40,23 @@ source ./__install.common.sh
 
 print_help_or_param
 
-gitVersion=$(get_param '--git-version')
+z7Version=$(get_param '--7zip-version')
 
 inChina=$(get_param '--in-china')
 
 # ------------------------------------------------------------
 
-console_title "Install git"
+console_title "Install 7zip"
 
-if command -v git &>/dev/null; then
-  console_content "Git is already installed."
+if command -v 7z &> /dev/null; then
+  console_content "7Zip is already installed."
 else
   install_by_apt_get() {
     apt_get_update
 
-    local local="Git"
-    local name="git"
-    local version=$gitVersion
+    local local="7Zip"
+    local name="p7zip-full"
+    local version=$z7Version
 
     apt_get_install "$local" "$name" "$version"
   }
@@ -68,10 +68,15 @@ else
 
     dnf_update
 
-    local local="Git"
-    local name="git"
-    local version=$gitVersion
+    local local="7Zip"
+    local name="p7zip"
+    local version=$z7Version
     
+    dnf_install "$local" "$name" "$version"
+
+    local="7Zip Plugins"
+    name="p7zip-plugins"
+    version=$z7Version
     dnf_install "$local" "$name" "$version"
   }
 
@@ -85,7 +90,17 @@ else
   fi
 fi
 
-console_key_value "Git" "$(git --version | awk '{print $3}')"
+get_7zip_version() {
+  local v1
+  v1=$(7z | head -n 2 | tail -n 1 | awk '{print $3}')
+
+  if [[ "$v1" == "(x64)" ]]; then
+    v1=$(7z | head -n 2 | tail -n 1 | awk '{print $2}')
+  fi
+
+  echo "$v1"
+}
+console_key_value "7Zip" "$(get_7zip_version)"
 console_empty_line
 
 # ------------------------------------------------------------

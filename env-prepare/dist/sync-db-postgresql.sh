@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# build from sync-db-postgresql.sh
+# import from sync-db-postgresql.sh
 _m_='__@@__'
 
 PARAMTERS=(
@@ -31,7 +31,9 @@ PARAMTERS=(
 SHELL_NAME="PostgreSQL Sync Tooler"
 SHELL_DESC="Sync PostgreSQL database."
 
-# build from ./_console.sh
+# source ./__judge-system.sh
+
+# import from ./__console.sh
 {
   RED='\033[0;31m'
   GREEN='\033[0;32m'
@@ -163,7 +165,7 @@ SHELL_DESC="Sync PostgreSQL database."
   }
 }
 
-# build from ./_parse-user-paramter.sh
+# import from ./__parse-user-paramter.sh
 {
   USER_PARAMTERS=()
 
@@ -176,6 +178,20 @@ SHELL_DESC="Sync PostgreSQL database."
         USER_PARAMTERS+=("$key${_m_}$value")
         ;;
       --*)
+        key="$1"
+        if [[ -n "$2" && "$2" != --* ]]; then
+          USER_PARAMTERS+=("$key${_m_}$2")
+          shift
+        else
+          USER_PARAMTERS+=("$key${_m_}true")
+        fi
+        ;;
+      -*=*)
+        key="${1%%=*}"
+        value="${1#*=}"
+        USER_PARAMTERS+=("$key${_m_}$value")
+        ;;
+      -*)
         key="$1"
         if [[ -n "$2" && "$2" != --* ]]; then
           USER_PARAMTERS+=("$key${_m_}$2")
@@ -252,7 +268,7 @@ SHELL_DESC="Sync PostgreSQL database."
   parse_user_param "$@"
 }
 
-# build from ./_parse-paramter.sh
+# import from ./__parse-paramter.sh
 {
 
   print_default_param() {
@@ -328,8 +344,6 @@ SHELL_DESC="Sync PostgreSQL database."
 
     console_desc
 
-    console_check_system
-
     for PARAMTER in "${PARAMTERS[@]}"; do
       local split
       eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
@@ -354,6 +368,8 @@ SHELL_DESC="Sync PostgreSQL database."
       console_key_value "$name" "$msg$defaultStr"
     done
     console_empty_line
+
+    console_check_system
 
     console_support_os
 

@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# build from install-node.sh
+# import from install-node.sh
 _m_='__@@__'
 
 PARAMTERS=(
   "--help${_m_}-h${_m_}Print help message.${_m_}false"
   "--debug${_m_}${_m_}Print debug message.${_m_}false"
 
-  "--nvm-version${_m_}${_m_}Nvm version.${_m_}v0.40.0"
+  "--nvm-version${_m_}${_m_}Nvm version.${_m_}v0.40.1"
   "--node-version${_m_}${_m_}Node.js version.${_m_}v18.20.3"
   "--pm2-version${_m_}${_m_}PM2 version.${_m_}5.4.2"
   "--in-china${_m_}${_m_}Use the Chinese mirror.${_m_}false"
@@ -17,12 +17,22 @@ SUPPORT_OS_LIST=(
   "Ubuntu 20.04 AMD64"
   "Ubuntu 22.04 AMD64"
   "Ubuntu 24.04 AMD64"
+
+  "Debian 11.9 AMD64"
+  "Debian 12.2 AMD64"
+
+  "Fedora 40 AMD64"
+
+  "RedHat 8.5 AMD64"
+  "RedHat 9.0 AMD64"
+
+  "AlibabaCloudLinux 3.2104 AMD64"
 )
 
 SHELL_NAME="Node.js Installer"
 SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
 
-# build from ./_judge-system.sh
+# import from ./__judge-system.sh
 {
   OS_NAME=''
   OS_VERS=''
@@ -35,23 +45,41 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
   IS_SUPPORT_OS=false
 
   judge_system() {
-    local __OS_NAME__
-    local __OS_VERS__
-    local __OS_ARCH__
+    local __BASE_OS_NAME__
+    local __BASE_OS_VERS__
+    local __BASE_OS_ARCH__
 
     if [ -f /etc/os-release ]; then
       . /etc/os-release
-      __OS_NAME__=$NAME
-      __OS_VERS__=$VERSION_ID
-      __OS_ARCH__=$(uname -m)
+      __BASE_OS_NAME__=$NAME
+      __BASE_OS_VERS__=$VERSION_ID
+      __BASE_OS_ARCH__=$(uname -m)
     else
-      __OS_NAME__=$(uname -s)
-      __OS_VERS__=$(uname -r)
-      __OS_ARCH__=$(uname -m)
+      __BASE_OS_NAME__=$(uname -s)
+      __BASE_OS_VERS__=$(uname -r)
+      __BASE_OS_ARCH__=$(uname -m)
     fi
 
+    # -------------------- judge os name --------------------
+
+    judge_name() {
+      if [[ "$__BASE_OS_NAME__" == "Debian GNU/Linux" ]]; then
+        echo "Debian"
+      elif [[ "$__BASE_OS_NAME__" == "Fedora Linux" ]]; then
+        echo "Fedora"
+      elif [[ "$__BASE_OS_NAME__" == "Alibaba Cloud Linux" ]]; then
+        echo "AlibabaCloudLinux"
+      elif [[ "$__BASE_OS_NAME__" == "Red Hat Enterprise Linux" ]]; then
+        echo "RedHat"
+      else
+        echo "$__BASE_OS_NAME__"
+      fi
+    }
+
     judge_window_system() {
-      if [[ "$__OS_NAME__" == "MINGW"* ]] || [[ "$__OS_NAME__" == "CYGWIN"* ]] || [[ "$__OS_NAME__" == "MSYS"* ]] || [[ "$__OS_NAME__" == "Windows_NT" ]]; then
+      local _OS_NAME
+      _OS_NAME=$(judge_name)
+      if [[ "$_OS_NAME" == "MINGW"* ]] || [[ "$_OS_NAME" == "CYGWIN"* ]] || [[ "$_OS_NAME" == "MSYS"* ]] || [[ "$_OS_NAME" == "Windows_NT" ]]; then
         return 0
       else
         return 1
@@ -59,7 +87,9 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
     }
 
     judge_linux_system() {
-      if [[ "$__OS_NAME__" == "Ubuntu" ]]; then
+      local _OS_NAME
+      _OS_NAME=$(judge_name)
+      if [[ "$_OS_NAME" == "Ubuntu" ]] || [[ "$_OS_NAME" == "Debian" ]] || [[ "$_OS_NAME" == "Fedora" ]] || [[ "$_OS_NAME" == "RedHat" ]] || [[ "$_OS_NAME" == "AlibabaCloudLinux" ]]; then
         return 0
       else
         return 1
@@ -67,20 +97,12 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
     }
 
     judge_macos_system() {
-      if [[ "$__OS_NAME__" == "Darwin" ]]; then
+      local _OS_NAME
+      _OS_NAME=$(judge_name)
+      if [[ "$_OS_NAME" == "Darwin" ]]; then
         return 0
       else
         return 1
-      fi
-    }
-
-    judge_arch() {
-      if [[ "$__OS_ARCH__" == "arm64" ]]; then
-        echo "ARM64"
-      elif [[ "$__OS_ARCH__" == "x86_64" ]]; then
-        echo "AMD64"
-      else
-        echo "$__OS_ARCH__"
       fi
     }
 
@@ -88,7 +110,7 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
       OS_NAME='Windows'
       IS_WINDOWS=true
     elif judge_linux_system; then
-      OS_NAME=$__OS_NAME__
+      OS_NAME=$(judge_name)
       IS_LINUX=true
     elif judge_macos_system; then
       OS_NAME='MacOS'
@@ -97,7 +119,35 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
       OS_NAME='Unknown'
     fi
 
-    OS_VERS=$__OS_VERS__
+    # -------------------- judge os version -----------------
+
+    judge_version() {
+      if [[ "$OS_NAME" == "MacOS" ]]; then
+        sw_vers -productVersion
+      elif [[ "$OS_NAME" == "Debian" ]]; then
+        cat /etc/debian_version
+      elif [[ "$OS_NAME" == "AlibabaCloudLinux" ]]; then
+        . /etc/os-release
+        echo "$PRETTY_NAME" | awk '{print $4}'
+      else
+        echo "$__BASE_OS_VERS__"
+      fi
+    }
+
+    OS_VERS=$(judge_version)
+
+    # -------------------- judge os arch --------------------
+
+    judge_arch() {
+      if [[ "$__BASE_OS_ARCH__" == "arm64" ]]; then
+        echo "ARM64"
+      elif [[ "$__BASE_OS_ARCH__" == "x86_64" ]]; then
+        echo "AMD64"
+      else
+        echo "$__BASE_OS_ARCH__"
+      fi
+    }
+
     OS_ARCH=$(judge_arch)
     CURRENT_OS="$OS_NAME $OS_VERS $OS_ARCH"
 
@@ -144,7 +194,7 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
   # print_system_extra_info
 }
 
-# build from ./_console.sh
+# import from ./__console.sh
 {
   RED='\033[0;31m'
   GREEN='\033[0;32m'
@@ -276,7 +326,7 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
   }
 }
 
-# build from ./_parse-user-paramter.sh
+# import from ./__parse-user-paramter.sh
 {
   USER_PARAMTERS=()
 
@@ -289,6 +339,20 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
         USER_PARAMTERS+=("$key${_m_}$value")
         ;;
       --*)
+        key="$1"
+        if [[ -n "$2" && "$2" != --* ]]; then
+          USER_PARAMTERS+=("$key${_m_}$2")
+          shift
+        else
+          USER_PARAMTERS+=("$key${_m_}true")
+        fi
+        ;;
+      -*=*)
+        key="${1%%=*}"
+        value="${1#*=}"
+        USER_PARAMTERS+=("$key${_m_}$value")
+        ;;
+      -*)
         key="$1"
         if [[ -n "$2" && "$2" != --* ]]; then
           USER_PARAMTERS+=("$key${_m_}$2")
@@ -365,7 +429,7 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
   parse_user_param "$@"
 }
 
-# build from ./_parse-paramter.sh
+# import from ./__parse-paramter.sh
 {
 
   print_default_param() {
@@ -441,8 +505,6 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
 
     console_desc
 
-    console_check_system
-
     for PARAMTER in "${PARAMTERS[@]}"; do
       local split
       eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
@@ -467,6 +529,8 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
       console_key_value "$name" "$msg$defaultStr"
     done
     console_empty_line
+
+    console_check_system
 
     console_support_os
 
@@ -508,6 +572,102 @@ SHELL_DESC="Install 'nvn' 'node.js' and 'pm2'."
   }
 }
 
+# import from ./__install.common.sh
+{
+  apt_get_update() {
+    console_content_starting "Package list is updating..."
+    # sudo apt-get -y update
+    eval "sudo apt-get -y update $(get_redirect_output)"
+    console_content_complete
+  }
+
+  apt_get_install() {
+    local label="$1"
+    local name="$2"
+    local version="$3"
+
+    # shellcheck disable=SC2086,SC2155
+    local versions="$(apt-cache madison $name | awk '{print $3}')"
+
+    console_content_starting "$label is installing..."
+    if [[ -z "$version" ]]; then
+      # sudo apt-get -y install git
+      eval "sudo apt-get -y install $name $(get_redirect_output)"
+    else
+      # choose version
+      if echo "$versions" | grep -q "^${version}$"; then
+        # sudo apt-get install git="$gitVersion" -y
+        eval "sudo apt-get -y install $name=$version $(get_redirect_output)"
+      else
+        console_content_error "$label $version is not available."
+        console_content "Support versions:"
+        console_sulines "$versions"
+        console_empty_line
+        exit 1
+      fi
+    fi
+    console_content_complete
+  }
+
+  dnf_update() {
+    console_content_starting "Package list is updating..."
+    # sudo apt-get -y update
+    eval "sudo dnf makecache $(get_redirect_output)"
+    console_content_complete
+  }
+
+  dnf_add_epel_repo() {
+    local inChina="$1"
+    local version="$2"
+    local repoUrl
+
+    if [[ "$inChina" == "true" ]]; then
+      console_content "dnf registry use the Chinese mirror."
+
+      repoUrl="https://mirrors.aliyun.com/epel/epel-release-latest-$version.noarch.rpm"
+    else
+      console_content "dnf registry use the Default mirror."
+      repoUrl="https://dl.fedoraproject.org/pub/epel/epel-release-latest-$version.noarch.rpm"
+    fi
+
+    console_content_starting "Epel repo is installing..."
+    # sudo dnf install -y https://mirrors.aliyun.com/epel/epel-release-latest-8.noarch.rpm
+    eval "sudo dnf install -y $repoUrl $(get_redirect_output)"
+    console_content_complete
+  }
+
+  dnf_install() {
+    local label="$1"
+    local name="$2"
+    local version="$3"
+
+    # shellcheck disable=SC2086,SC2155
+    local versions="$(dnf list --showduplicates $name | awk '{print $2}' | tail -n +2)"
+    if echo "$versions" | grep -q "Packages"; then
+      versions=$(echo "$versions" | tail -n +2)
+    fi
+
+    console_content_starting "$label is installing..."
+    if [[ -z "$version" ]]; then
+      # sudo dnf -y install git
+      eval "sudo dnf -y install $name $(get_redirect_output)"
+    else
+      # choose version
+      if echo "$versions" | grep -q "^${version}$"; then
+        # sudo dnf install git="$gitVersion" -y
+        eval "sudo dnf -y install $name-$version $(get_redirect_output)"
+      else
+        console_content_error "$label $version is not available."
+        console_content "Support versions:"
+        console_sulines "$versions"
+        console_empty_line
+        exit 1
+      fi
+    fi
+    console_content_complete
+  }
+}
+
 print_help_or_param
 
 nvmVersion=$(get_param '--nvm-version')
@@ -531,13 +691,21 @@ if [[ ! -f "$nvmHome/README.md" ]]; then
   # Check Git is installed
   if ! command -v git &> /dev/null; then
     console_content_error "Not found Git, please install Git first."
+    console_empty_line
+
     exit 1
   fi
 
+  # if [ "$(get_param '--debug')" == 'true' ]; then
+  #   curl    -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | METHOD=git bash
+  # else
+  #   curl -s -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | METHOD=git bash &> /dev/null
+  # fi
+
   if [ "$(get_param '--debug')" == 'true' ]; then
-    curl    -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | METHOD=git bash
+    curl    -o- "https://raw.githubusercontent.com/nvm-sh/nvm/refs/tags/${nvmVersion}/install.sh" | METHOD=git bash
   else
-    curl -s -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${nvmVersion}/install.sh" | METHOD=git bash &> /dev/null
+    curl -s -o- "https://raw.githubusercontent.com/nvm-sh/nvm/refs/tags/${nvmVersion}/install.sh" | METHOD=git bash &> /dev/null
   fi
 
   console_content_complete

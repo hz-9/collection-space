@@ -16,7 +16,7 @@ function merge_script {
       local sourced_file="${BASH_REMATCH[1]}"
       merge_script "$sourced_file"
     elif [[ "$line" == "#!/bin/bash" ]]; then
-      echo "# build from $script" >> "$output_file"
+      echo "# import from $script" >> "$output_file"
     else
       echo "$line" >> "$output_file"
     fi

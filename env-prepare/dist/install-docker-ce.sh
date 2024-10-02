@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# build from install-docker-ce.sh
+# import from install-docker-ce.sh
 _m_='__@@__'
 
 PARAMTERS=(
   "--help${_m_}-h${_m_}Print help message.${_m_}false"
   "--debug${_m_}${_m_}Print debug message.${_m_}false"
 
-  "--docker-version${_m_}${_m_}Docker CE version.${_m_}27.1.2-1"
+  "--docker-version${_m_}${_m_}Docker CE version.${_m_}"
   "--in-china${_m_}${_m_}Use the Chinese mirror.${_m_}false"
 )
 
@@ -15,12 +15,22 @@ SUPPORT_OS_LIST=(
   "Ubuntu 20.04 AMD64"
   "Ubuntu 22.04 AMD64"
   "Ubuntu 24.04 AMD64"
+
+  "Debian 11.9 AMD64"
+  "Debian 12.2 AMD64"
+
+  "Fedora 40 AMD64"
+
+  "RedHat 8.5 AMD64"
+  "RedHat 9.0 AMD64"
+
+  "AlibabaCloudLinux 3.2104 AMD64"
 )
 
 SHELL_NAME="Docker CE Installer"
 SHELL_DESC="Install 'docker-ce' 'docker-compose'."
 
-# build from ./_judge-system.sh
+# import from ./__judge-system.sh
 {
   OS_NAME=''
   OS_VERS=''
@@ -33,23 +43,41 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
   IS_SUPPORT_OS=false
 
   judge_system() {
-    local __OS_NAME__
-    local __OS_VERS__
-    local __OS_ARCH__
+    local __BASE_OS_NAME__
+    local __BASE_OS_VERS__
+    local __BASE_OS_ARCH__
 
     if [ -f /etc/os-release ]; then
       . /etc/os-release
-      __OS_NAME__=$NAME
-      __OS_VERS__=$VERSION_ID
-      __OS_ARCH__=$(uname -m)
+      __BASE_OS_NAME__=$NAME
+      __BASE_OS_VERS__=$VERSION_ID
+      __BASE_OS_ARCH__=$(uname -m)
     else
-      __OS_NAME__=$(uname -s)
-      __OS_VERS__=$(uname -r)
-      __OS_ARCH__=$(uname -m)
+      __BASE_OS_NAME__=$(uname -s)
+      __BASE_OS_VERS__=$(uname -r)
+      __BASE_OS_ARCH__=$(uname -m)
     fi
 
+    # -------------------- judge os name --------------------
+
+    judge_name() {
+      if [[ "$__BASE_OS_NAME__" == "Debian GNU/Linux" ]]; then
+        echo "Debian"
+      elif [[ "$__BASE_OS_NAME__" == "Fedora Linux" ]]; then
+        echo "Fedora"
+      elif [[ "$__BASE_OS_NAME__" == "Alibaba Cloud Linux" ]]; then
+        echo "AlibabaCloudLinux"
+      elif [[ "$__BASE_OS_NAME__" == "Red Hat Enterprise Linux" ]]; then
+        echo "RedHat"
+      else
+        echo "$__BASE_OS_NAME__"
+      fi
+    }
+
     judge_window_system() {
-      if [[ "$__OS_NAME__" == "MINGW"* ]] || [[ "$__OS_NAME__" == "CYGWIN"* ]] || [[ "$__OS_NAME__" == "MSYS"* ]] || [[ "$__OS_NAME__" == "Windows_NT" ]]; then
+      local _OS_NAME
+      _OS_NAME=$(judge_name)
+      if [[ "$_OS_NAME" == "MINGW"* ]] || [[ "$_OS_NAME" == "CYGWIN"* ]] || [[ "$_OS_NAME" == "MSYS"* ]] || [[ "$_OS_NAME" == "Windows_NT" ]]; then
         return 0
       else
         return 1
@@ -57,7 +85,9 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
     }
 
     judge_linux_system() {
-      if [[ "$__OS_NAME__" == "Ubuntu" ]]; then
+      local _OS_NAME
+      _OS_NAME=$(judge_name)
+      if [[ "$_OS_NAME" == "Ubuntu" ]] || [[ "$_OS_NAME" == "Debian" ]] || [[ "$_OS_NAME" == "Fedora" ]] || [[ "$_OS_NAME" == "RedHat" ]] || [[ "$_OS_NAME" == "AlibabaCloudLinux" ]]; then
         return 0
       else
         return 1
@@ -65,20 +95,12 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
     }
 
     judge_macos_system() {
-      if [[ "$__OS_NAME__" == "Darwin" ]]; then
+      local _OS_NAME
+      _OS_NAME=$(judge_name)
+      if [[ "$_OS_NAME" == "Darwin" ]]; then
         return 0
       else
         return 1
-      fi
-    }
-
-    judge_arch() {
-      if [[ "$__OS_ARCH__" == "arm64" ]]; then
-        echo "ARM64"
-      elif [[ "$__OS_ARCH__" == "x86_64" ]]; then
-        echo "AMD64"
-      else
-        echo "$__OS_ARCH__"
       fi
     }
 
@@ -86,7 +108,7 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
       OS_NAME='Windows'
       IS_WINDOWS=true
     elif judge_linux_system; then
-      OS_NAME=$__OS_NAME__
+      OS_NAME=$(judge_name)
       IS_LINUX=true
     elif judge_macos_system; then
       OS_NAME='MacOS'
@@ -95,7 +117,35 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
       OS_NAME='Unknown'
     fi
 
-    OS_VERS=$__OS_VERS__
+    # -------------------- judge os version -----------------
+
+    judge_version() {
+      if [[ "$OS_NAME" == "MacOS" ]]; then
+        sw_vers -productVersion
+      elif [[ "$OS_NAME" == "Debian" ]]; then
+        cat /etc/debian_version
+      elif [[ "$OS_NAME" == "AlibabaCloudLinux" ]]; then
+        . /etc/os-release
+        echo "$PRETTY_NAME" | awk '{print $4}'
+      else
+        echo "$__BASE_OS_VERS__"
+      fi
+    }
+
+    OS_VERS=$(judge_version)
+
+    # -------------------- judge os arch --------------------
+
+    judge_arch() {
+      if [[ "$__BASE_OS_ARCH__" == "arm64" ]]; then
+        echo "ARM64"
+      elif [[ "$__BASE_OS_ARCH__" == "x86_64" ]]; then
+        echo "AMD64"
+      else
+        echo "$__BASE_OS_ARCH__"
+      fi
+    }
+
     OS_ARCH=$(judge_arch)
     CURRENT_OS="$OS_NAME $OS_VERS $OS_ARCH"
 
@@ -142,7 +192,7 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
   # print_system_extra_info
 }
 
-# build from ./_console.sh
+# import from ./__console.sh
 {
   RED='\033[0;31m'
   GREEN='\033[0;32m'
@@ -274,7 +324,7 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
   }
 }
 
-# build from ./_parse-user-paramter.sh
+# import from ./__parse-user-paramter.sh
 {
   USER_PARAMTERS=()
 
@@ -287,6 +337,20 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
         USER_PARAMTERS+=("$key${_m_}$value")
         ;;
       --*)
+        key="$1"
+        if [[ -n "$2" && "$2" != --* ]]; then
+          USER_PARAMTERS+=("$key${_m_}$2")
+          shift
+        else
+          USER_PARAMTERS+=("$key${_m_}true")
+        fi
+        ;;
+      -*=*)
+        key="${1%%=*}"
+        value="${1#*=}"
+        USER_PARAMTERS+=("$key${_m_}$value")
+        ;;
+      -*)
         key="$1"
         if [[ -n "$2" && "$2" != --* ]]; then
           USER_PARAMTERS+=("$key${_m_}$2")
@@ -363,7 +427,7 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
   parse_user_param "$@"
 }
 
-# build from ./_parse-paramter.sh
+# import from ./__parse-paramter.sh
 {
 
   print_default_param() {
@@ -439,8 +503,6 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
 
     console_desc
 
-    console_check_system
-
     for PARAMTER in "${PARAMTERS[@]}"; do
       local split
       eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
@@ -465,6 +527,8 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
       console_key_value "$name" "$msg$defaultStr"
     done
     console_empty_line
+
+    console_check_system
 
     console_support_os
 
@@ -506,6 +570,102 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
   }
 }
 
+# import from ./__install.common.sh
+{
+  apt_get_update() {
+    console_content_starting "Package list is updating..."
+    # sudo apt-get -y update
+    eval "sudo apt-get -y update $(get_redirect_output)"
+    console_content_complete
+  }
+
+  apt_get_install() {
+    local label="$1"
+    local name="$2"
+    local version="$3"
+
+    # shellcheck disable=SC2086,SC2155
+    local versions="$(apt-cache madison $name | awk '{print $3}')"
+
+    console_content_starting "$label is installing..."
+    if [[ -z "$version" ]]; then
+      # sudo apt-get -y install git
+      eval "sudo apt-get -y install $name $(get_redirect_output)"
+    else
+      # choose version
+      if echo "$versions" | grep -q "^${version}$"; then
+        # sudo apt-get install git="$gitVersion" -y
+        eval "sudo apt-get -y install $name=$version $(get_redirect_output)"
+      else
+        console_content_error "$label $version is not available."
+        console_content "Support versions:"
+        console_sulines "$versions"
+        console_empty_line
+        exit 1
+      fi
+    fi
+    console_content_complete
+  }
+
+  dnf_update() {
+    console_content_starting "Package list is updating..."
+    # sudo apt-get -y update
+    eval "sudo dnf makecache $(get_redirect_output)"
+    console_content_complete
+  }
+
+  dnf_add_epel_repo() {
+    local inChina="$1"
+    local version="$2"
+    local repoUrl
+
+    if [[ "$inChina" == "true" ]]; then
+      console_content "dnf registry use the Chinese mirror."
+
+      repoUrl="https://mirrors.aliyun.com/epel/epel-release-latest-$version.noarch.rpm"
+    else
+      console_content "dnf registry use the Default mirror."
+      repoUrl="https://dl.fedoraproject.org/pub/epel/epel-release-latest-$version.noarch.rpm"
+    fi
+
+    console_content_starting "Epel repo is installing..."
+    # sudo dnf install -y https://mirrors.aliyun.com/epel/epel-release-latest-8.noarch.rpm
+    eval "sudo dnf install -y $repoUrl $(get_redirect_output)"
+    console_content_complete
+  }
+
+  dnf_install() {
+    local label="$1"
+    local name="$2"
+    local version="$3"
+
+    # shellcheck disable=SC2086,SC2155
+    local versions="$(dnf list --showduplicates $name | awk '{print $2}' | tail -n +2)"
+    if echo "$versions" | grep -q "Packages"; then
+      versions=$(echo "$versions" | tail -n +2)
+    fi
+
+    console_content_starting "$label is installing..."
+    if [[ -z "$version" ]]; then
+      # sudo dnf -y install git
+      eval "sudo dnf -y install $name $(get_redirect_output)"
+    else
+      # choose version
+      if echo "$versions" | grep -q "^${version}$"; then
+        # sudo dnf install git="$gitVersion" -y
+        eval "sudo dnf -y install $name-$version $(get_redirect_output)"
+      else
+        console_content_error "$label $version is not available."
+        console_content "Support versions:"
+        console_sulines "$versions"
+        console_empty_line
+        exit 1
+      fi
+    fi
+    console_content_complete
+  }
+}
+
 print_help_or_param
 
 dockerVersion=$(get_param '--docker-version')
@@ -513,24 +673,31 @@ inChina=$(get_param '--in-china')
 
 # ------------------------------------------------------------
 
-# build from ./_install-docker-ce.ubuntu.sh
-{
+install_by_apt_get() {
+  # ------------------------------
 
-  installOnUbuntu() {
-    # ------------------------------------------------------------
+  # step 0: Remove history version
+  for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do
+    # sudo apt-get -y remove $pkg;
+    eval "sudo apt-get -y remove $pkg $(get_redirect_output)"
+  done
 
-    console_title "Install docker-ce on Ubuntu"
+  # ------------------------------
 
-    local ubuntuRelease
-    ubuntuRelease=$(lsb_release -rs)
-    local ubuntuCodename
-    ubuntuCodename=$(lsb_release -cs)
-    local ubuntuVersion
-    ubuntuVersion=$(lsb_release -is | tr '[:upper:]' '[:lower:]').${ubuntuRelease}~${ubuntuCodename}
+  # step 1: Install necessary system tools
+  apt_get_update
 
-    console_key_value "OS Version" "$ubuntuVersion"
+  console_content_starting "The necessary system tools is installing..."
+  # sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+  eval "sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common $(get_redirect_output)"
+  console_content_complete
 
-    # shellcheck disable=SC2154
+  # ------------------------------
+
+  # step 2: Install GPG certificate
+  local dockerRegistry
+
+  if [[ "$OS_NAME" == "Ubuntu" ]]; then
     if [[ "${inChina}" == "true" ]]; then
       dockerRegistry="https://mirrors.aliyun.com/docker-ce/linux/ubuntu"
       console_content "Docker source registry use the Chinese mirror."
@@ -538,109 +705,165 @@ inChina=$(get_param '--in-china')
       dockerRegistry="https://download.docker.com/linux/ubuntu"
       console_content "Docker source registry use the Official mirror."
     fi
-
-    # ------------------------------------------------------------
-
-    # step 1: Install necessary system tools
-    console_content_starting "Package list is updating..."
-    # sudo apt-get -y update
-    eval "sudo apt-get -y update $(get_redirect_output)"
-    console_content_complete
-
-    console_content_starting "The necessary system tools is installing..."
-    # sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
-    eval "sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common $(get_redirect_output)"
-
-    console_content_complete
-
-    # ------------------------------------------------------------
-
-    # step 2: Install GPG certificate
-    if [ ! -f '/etc/apt/keyrings/docker.asc' ]; then
-      sudo install -m 0755 -d /etc/apt/keyrings
-      curl -fsSL $dockerRegistry/gpg -o /etc/apt/keyrings/docker.asc
-      sudo chmod a+r /etc/apt/keyrings/docker.asc
-      console_content "The GPG certificate is installed."
+  elif [[ "$OS_NAME" == "Debian" ]]; then
+    if [[ "${inChina}" == "true" ]]; then
+      dockerRegistry="https://mirrors.aliyun.com/docker-ce/linux/debian"
+      console_content "Docker source registry use the Chinese mirror."
     else
-      console_content "The GPG certificate is already installed."
+      dockerRegistry="https://download.docker.com/linux/debian"
+      console_content "Docker source registry use the Official mirror."
     fi
+  else
+    echo "Not support this OS."
+    exit 1
+  fi
 
-    # ------------------------------------------------------------
+  if [ ! -f '/etc/apt/keyrings/docker.asc' ]; then
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL $dockerRegistry/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+    console_content "The GPG certificate is installed."
+  else
+    console_content "The GPG certificate is already installed."
+  fi
 
-    # Step 3: Write software source information
-    if [ ! -f '/etc/apt/sources.list.d/docker.list' ]; then
-      echo \
-        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $dockerRegistry \
-        $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |
-        sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+  # ------------------------------
 
-      console_content "The software source information is written."
-    else
-      console_content "The software source information is already written."
-    fi
+  # Step 3: Write software source information
+  if [ ! -f '/etc/apt/sources.list.d/docker.list' ]; then
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $dockerRegistry \
+      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |
+      sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
 
-    # ------------------------------------------------------------
+    console_content "The software source information is written."
+  else
+    console_content "The software source information is already written."
+  fi
 
-    # Step 4: Update
-    console_content_starting "Package list is updating..."
-    # sudo apt-get -y update
-    eval "sudo apt-get -y update $(get_redirect_output)"
-    console_content_complete
+  # ------------------------------
 
-    # View all versions of Docker CE
-    # apt-cache madison docker-ce
+  # Step 4: Update
+  apt_get_update
 
-    # ------------------------------------------------------------
+  # View all versions of Docker CE
+  # apt-cache madison docker-ce
 
-    installDocker() {
-      # shellcheck disable=SC2154
-      console_content_starting "Docker CE '5:$dockerVersion~$ubuntuVersion' is installing..."
+  # ------------------------------
 
-      # sudo apt-get -y install "docker-ce=5:$dockerVersion~$ubuntuVersion"
-      eval "sudo apt-get -y install docker-ce=5:$dockerVersion~$ubuntuVersion $(get_redirect_output)"
+  # Step 5: Install
+  local local="Docker CE"
+  local name="docker-ce"
+  local version=$dockerVersion
+  apt_get_install "$local" "$name" "$version"
 
-      console_content_complete
-    }
+  local="Docker CE Cli"
+  name="docker-ce-cli"
+  version=$dockerVersion
+  apt_get_install "$local" "$name" "$version"
 
-    uninstallDocker() {
-      console_content_starting "Docker CE $1 is removing..."
-
-      # sudo apt-get -y remove docker-ce
-      eval "sudo apt-get -y remove docker-ce $(get_redirect_output)"
-
-      console_content_complete
-    }
-
-    if dpkg-query -W -f='${Status}' docker-ce 2>/dev/null | grep -q "ok installed"; then
-      local installedVersion
-      installedVersion=$(apt-cache policy docker-ce | grep 'Installed' | awk '{print $2}')
-      local dockerBaseVersion
-      dockerBaseVersion="5:$dockerVersion~$ubuntuVersion"
-
-      if [[ "$installedVersion" != "$dockerBaseVersion" ]]; then
-        console_content "Docker CE ${installedVersion} is not the version you want."
-        uninstallDocker "$installedVersion"
-        installDocker
-      else
-        console_content "Docker CE ${dockerVersion} is already installed."
-      fi
-    else
-      installDocker
-    fi
-  }
-
+  apt_get_install "containerd.io" "containerd.io"
+  apt_get_install "docker-buildx-plugin " "docker-buildx-plugin"
+  apt_get_install "docker-compose-plugin" "docker-compose-plugin"
 }
 
-# ------------------------------------------------------------
+install_by_dnf() {
+  # ------------------------------
 
-if grep -qi 'ubuntu' /etc/os-release; then
-  installOnUbuntu
+  # step 0: Remove history version
+  if [[ "$OS_NAME" == "RedHat" ]]; then
+    eval "sudo dnf remove -y 
+      docker-client-latest \
+      docker-common \
+      docker-latest \
+      docker-latest-logrotate \
+      docker-logrotate \
+      docker-selinux \
+      docker-engine-selinux \
+      docker-engine
+      $(get_redirect_output)"
+  else
+    eval "sudo dnf remove -y docker \
+      docker-client \
+      docker-client-latest \
+      docker-common \
+      docker-latest \
+      docker-latest-logrotate \
+      docker-logrotate \
+      docker-selinux \
+      docker-engine-selinux \
+      docker-engine
+      $(get_redirect_output)"
+  fi
+
+  # ------------------------------
+
+  # step 1: Set repository
+  local dockerRegistry
+
+  if [[ "$OS_NAME" == "Fedora" ]]; then
+    if [[ "${inChina}" == "true" ]]; then
+      console_content "Docker source registry use the Chinese mirror."
+      dockerRegistry="https://mirrors.aliyun.com/docker-ce/linux/fedora/docker-ce.repo"
+    else
+      console_content "Docker source registry use the Official mirror."
+      dockerRegistry="https://download.docker.com/linux/fedora/docker-ce.repo"
+    fi
+    eval "sudo dnf -y install dnf-plugins-core $(get_redirect_output)"
+  elif [[ "$OS_NAME" == "RedHat" ]]; then
+    if [[ "${inChina}" == "true" ]]; then
+      console_content "Docker source registry use the Chinese mirror."
+      dockerRegistry="https://mirrors.aliyun.com/docker-ce/linux/rhel/docker-ce.repo"
+    else
+      console_content "Docker source registry use the Official mirror."
+      dockerRegistry="https://download.docker.com/linux/rhel/docker-ce.repo"
+    fi
+    eval "sudo dnf -y install dnf-plugins-core $(get_redirect_output)"
+  elif [[ "$OS_NAME" == "AlibabaCloudLinux" ]]; then
+    dockerRegistry="https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo"
+    console_content "Docker source registry use the Chinese mirror."
+    eval "sudo dnf -y install dnf-plugin-releasever-adapter --repo alinux3-plus $(get_redirect_output)"
+  else
+    echo "Not support this OS."
+    exit 1
+  fi
+
+  eval "sudo dnf config-manager --add-repo $dockerRegistry $(get_redirect_output)"
+
+  dnf_update
+
+  # ------------------------------
+
+  # Step 5: Install
+  local local="Docker CE"
+  local name="docker-ce"
+  local version=$dockerVersion
+  dnf_install "$local" "$name" "$version"
+
+  local="Docker CE Cli"
+  name="docker-ce-cli"
+  version=$dockerVersion
+  dnf_install "$local" "$name" "$version"
+
+  dnf_install "containerd.io" "containerd.io"
+  dnf_install "docker-buildx-plugin " "docker-buildx-plugin"
+  dnf_install "docker-compose-plugin" "docker-compose-plugin"
+}
+
+if command -v docker &>/dev/null; then
+  console_content "Docker is already installed."
 else
-  echo "Not support this OS."
-  exit 1
+  if [[ "$OS_NAME" == "Ubuntu" ]] || [[ "$OS_NAME" == "Debian" ]]; then
+    install_by_apt_get
+  elif [[ "$OS_NAME" == "Fedora" ]] || [[ "$OS_NAME" == "RedHat" ]] || [[ "$OS_NAME" == "AlibabaCloudLinux" ]]; then
+    install_by_dnf
+  else
+    echo "Not support this OS."
+    exit 1
+  fi
 fi
 
-console_key_value "Docker CE"      "$(docker --version | awk '{print $3}' | sed 's/,//')"
+console_key_value "Docker CE" "$(docker --version | awk '{print $3}' | sed 's/,//')"
 console_key_value "Docker compose" "$(docker compose version | awk '{print $4}')"
 console_empty_line
 
