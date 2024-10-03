@@ -52,7 +52,7 @@
 
       repoUrl="https://mirrors.aliyun.com/epel/epel-release-latest-$version.noarch.rpm"
     else
-      console_content "dnf registry use the Default mirror."
+      console_content "dnf registry use the Fedora Offical mirror."
       repoUrl="https://dl.fedoraproject.org/pub/epel/epel-release-latest-$version.noarch.rpm"
     fi
 

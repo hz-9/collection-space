@@ -57,8 +57,11 @@ inChina=$(get_param '--in-china')
 
 console_title "Install nvm"
 
-if [[ ! -f "$nvmHome/README.md" ]]; then
-  console_content_starting "nvm '${nvmHome}' is installing..."
+if [[ -f "$nvmHome/README.md" ]]; then
+  console_content "nvm is already installed."
+  source "${nvmHome}/nvm.sh"
+else
+  console_content_starting "nvm $nvmVersion is installing..."
 
   # Check Git is installed
   if ! command -v git &> /dev/null; then
@@ -81,9 +84,6 @@ if [[ ! -f "$nvmHome/README.md" ]]; then
   fi
 
   console_content_complete
-  source "${nvmHome}/nvm.sh"
-else
-  console_content "nvm ${nvmHome} is already installed."
   source "${nvmHome}/nvm.sh"
 fi
 
@@ -151,9 +151,6 @@ installPM2() {
 }
 
 if [[ ! -d "$pm2Home" ]]; then
-  installPM2
-elif [[ $(pm2 -v) != "$pm2Version" ]]; then
-  console_content "PM2 $(pm2 -v) is not the version you want."
   installPM2
 else
   console_content "PM2 $(pm2 -v) is already installed."

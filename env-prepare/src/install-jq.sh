@@ -5,7 +5,7 @@ PARAMTERS=(
   "--help${_m_}-h${_m_}Print help message.${_m_}false"
   "--debug${_m_}${_m_}Print debug message.${_m_}false"
 
-  "--p7zip-version${_m_}${_m_}p7Zip version. Default is lastest available.${_m_}"
+  "--jq-version${_m_}${_m_}jq version. Default is lastest available.${_m_}"
   "--in-china${_m_}${_m_}Use the Chinese mirror.${_m_}false"
 )
 
@@ -25,8 +25,8 @@ SUPPORT_OS_LIST=(
   "AlibabaCloudLinux 3.2104 AMD64"
 )
 
-SHELL_NAME="p7Zip Installer"
-SHELL_DESC="Install 'p7zip'."
+SHELL_NAME="JQ Installer"
+SHELL_DESC="Install 'jq'."
 
 source ./__judge-system.sh
 
@@ -40,23 +40,23 @@ source ./__install.common.sh
 
 print_help_or_param
 
-z7Version=$(get_param '--p7zip-version')
+jqVersion=$(get_param '--jq-version')
 
 inChina=$(get_param '--in-china')
 
 # ------------------------------------------------------------
 
-console_title "Install p7zip"
+console_title "Install jq"
 
-if command -v 7z &> /dev/null; then
-  console_content "p7zip is already installed."
+if command -v jq &>/dev/null; then
+  console_content "jq is already installed."
 else
   install_by_apt_get() {
     apt_get_update
 
-    local local="p7zip"
-    local name="p7zip-full"
-    local version=$z7Version
+    local local="jq"
+    local name="jq"
+    local version=$jqVersion
 
     apt_get_install "$local" "$name" "$version"
   }
@@ -68,15 +68,10 @@ else
 
     dnf_update
 
-    local local="p7zip"
-    local name="p7zip"
-    local version=$z7Version
-    
-    dnf_install "$local" "$name" "$version"
+    local local="jq"
+    local name="jq"
+    local version=$jqVersion
 
-    local="p7zip plugins"
-    name="p7zip-plugins"
-    version=$z7Version
     dnf_install "$local" "$name" "$version"
   }
 
@@ -90,17 +85,7 @@ else
   fi
 fi
 
-get_7zip_version() {
-  local v1
-  v1=$(7z | head -n 2 | tail -n 1 | awk '{print $3}')
-
-  if [[ "$v1" == "(x64)" ]]; then
-    v1=$(7z | head -n 2 | tail -n 1 | awk '{print $2}')
-  fi
-
-  echo "$v1"
-}
-console_key_value "p7zip" "$(get_7zip_version)"
+console_key_value "JQ" "$(jq --version | sed 's/jq-//')"
 console_empty_line
 
 # ------------------------------------------------------------
