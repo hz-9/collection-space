@@ -49,7 +49,16 @@ install_by_apt_get() {
   # ------------------------------
 
   # step 0: Remove history version
-  for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do
+  need_remove_pkg_list=(
+    docker.io
+    docker-doc
+    docker-compose
+    docker-compose-v2
+    podman-docker
+    containerd
+    runc
+  )
+  for pkg in "${need_remove_pkg_list[@]}"; do
     # sudo apt-get -y remove $pkg;
     eval "sudo apt-get -y remove $pkg $(get_redirect_output)"
   done
@@ -103,8 +112,7 @@ install_by_apt_get() {
 
   # Step 3: Write software source information
   if [ ! -f '/etc/apt/sources.list.d/docker.list' ]; then
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $dockerRegistry \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $dockerRegistry
       $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |
       sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
 
@@ -143,30 +151,40 @@ install_by_dnf() {
   # ------------------------------
 
   # step 0: Remove history version
+  console_content_starting "History package is removing..."
+
+  need_remove_pkg_list=()
   if [[ "$OS_NAME" == "RedHat" ]]; then
-    eval "sudo dnf remove -y 
-      docker-client-latest \
-      docker-common \
-      docker-latest \
-      docker-latest-logrotate \
-      docker-logrotate \
-      docker-selinux \
-      docker-engine-selinux \
+    need_remove_pkg_list=(
+      docker-client-latest
+      docker-common
+      docker-latest
+      docker-latest-logrotate
+      docker-logrotate
+      docker-selinux
+      docker-engine-selinux
       docker-engine
-      $(get_redirect_output)"
+    )
   else
-    eval "sudo dnf remove -y docker \
-      docker-client \
-      docker-client-latest \
-      docker-common \
-      docker-latest \
-      docker-latest-logrotate \
-      docker-logrotate \
-      docker-selinux \
-      docker-engine-selinux \
-      docker-engine
-      $(get_redirect_output)"
+    need_remove_pkg_list=(
+      docker
+      docker-client
+      docker-client-latest
+      docker-common
+      docker-latest
+      docker-latest-logrotate
+      docker-logrotate
+      docker-selinux
+      docker-engine-selinux
+      docker-engine 
+    )
   fi
+
+  for pkg in "${need_remove_pkg_list[@]}"; do
+    eval "sudo dnf remove -y $pkg $(get_redirect_output)"
+  done
+
+  console_content_complete
 
   # ------------------------------
 

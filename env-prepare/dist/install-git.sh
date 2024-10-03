@@ -289,7 +289,12 @@ SHELL_DESC="Install 'git'."
   tempTime=$(get_current_time_ms)
   console_content_starting() {
     tempTime=$(get_current_time_ms)
-    printf "    %s" "$1"
+
+    if [ "$(get_param '--debug')" == 'false' ]; then
+      printf "    %s" "$1"
+    else
+      printf "    %s\n\n" "$1"
+    fi
   }
 
   console_content_complete() {
@@ -298,13 +303,23 @@ SHELL_DESC="Install 'git'."
     local timeDiff
     timeDiff=$((currentTime - tempTime))
 
-    printf " ${GREEN}%s${NC} %s${NC}\n" "done." "(${timeDiff} ms)"
+    if [ "$(get_param '--debug')" == 'false' ]; then
+      printf " ${GREEN}%s${NC} %s${NC}\n" "done." "(${timeDiff} ms)"
+    else
+      printf "\n ${GREEN}%s${NC} %s${NC}\n" "done." "(${timeDiff} ms)"
+    fi
   }
 
   console_content_error() {
     local msg=$1
-    printf " ${RED}%s${NC}\n" "error."
-    printf "    ${RED}%s${NC}\n" "Reason: \"${msg}\""
+
+    if [ "$(get_param '--debug')" == 'false' ]; then
+      printf " ${RED}%s${NC}\n" "error."
+      printf "    ${RED}%s${NC}\n" "Reason: \"${msg}\""
+    else
+      printf "\n ${RED}%s${NC}\n" "error."
+      printf "    ${RED}%s${NC}\n" "Reason: \"${msg}\""
+    fi
   }
 
   console_content_emptystr() {
@@ -624,7 +639,7 @@ SHELL_DESC="Install 'git'."
 
       repoUrl="https://mirrors.aliyun.com/epel/epel-release-latest-$version.noarch.rpm"
     else
-      console_content "dnf registry use the Default mirror."
+      console_content "dnf registry use the Fedora Offical mirror."
       repoUrl="https://dl.fedoraproject.org/pub/epel/epel-release-latest-$version.noarch.rpm"
     fi
 

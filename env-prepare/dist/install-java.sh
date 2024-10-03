@@ -1,13 +1,17 @@
 #!/bin/bash
 
-# import from install-docker-ce.sh
+# import from install-java.sh
 _m_='__@@__'
 
 PARAMTERS=(
   "--help${_m_}-h${_m_}Print help message.${_m_}false"
   "--debug${_m_}${_m_}Print debug message.${_m_}false"
 
-  "--docker-version${_m_}${_m_}Docker CE version.${_m_}"
+  # "--sdkman-version${_m_}${_m_}SDKMan version.${_m_}"
+  "--java-version${_m_}${_m_}Java version.${_m_}17.0.12-oracle"
+  "--maven-version${_m_}${_m_}Maven version.${_m_}3.9.9"
+  "--tomcat-version${_m_}${_m_}Tomcat version.${_m_}10.1.30"
+
   "--in-china${_m_}${_m_}Use the Chinese mirror.${_m_}false"
 )
 
@@ -27,8 +31,8 @@ SUPPORT_OS_LIST=(
   "AlibabaCloudLinux 3.2104 AMD64"
 )
 
-SHELL_NAME="Docker CE Installer"
-SHELL_DESC="Install 'docker-ce' 'docker-compose'."
+SHELL_NAME="Java Installer"
+SHELL_DESC="Install 'sdkman' 'java' and 'maven'."
 
 # import from ./__judge-system.sh
 {
@@ -683,221 +687,143 @@ SHELL_DESC="Install 'docker-ce' 'docker-compose'."
 
 print_help_or_param
 
-dockerVersion=$(get_param '--docker-version')
+sdkmanVersion=$(get_param '--sdkman-version')
+sdkmanHome="${HOME}/.sdkman"
+
+javaVersion=$(get_param '--java-version')
+javaHome="${sdkmanHome}/candidates/java/${javaVersion}"
+
+mavenVersion=$(get_param '--maven-version')
+mavenHome="${sdkmanHome}/candidates/maven/${mavenVersion}"
+
+tomcatVersion=$(get_param '--tomcat-version')
+tomcatHome="${sdkmanHome}/candidates/tomcat/${tomcatVersion}"
+
 inChina=$(get_param '--in-china')
 
 # ------------------------------------------------------------
 
-install_by_apt_get() {
-  # ------------------------------
+console_title "Install SDKMan"
 
-  # step 0: Remove history version
-  need_remove_pkg_list=(
-    docker.io
-    docker-doc
-    docker-compose
-    docker-compose-v2
-    podman-docker
-    containerd
-    runc
-  )
-  for pkg in "${need_remove_pkg_list[@]}"; do
-    # sudo apt-get -y remove $pkg;
-    eval "sudo apt-get -y remove $pkg $(get_redirect_output)"
-  done
-
-  # ------------------------------
-
-  # step 1: Install necessary system tools
-  apt_get_update
-
-  console_content_starting "The necessary system tools is installing..."
-  # sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
-  eval "sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common $(get_redirect_output)"
-  console_content_complete
-
-  # ------------------------------
-
-  # step 2: Install GPG certificate
-  local dockerRegistry
-
-  if [[ "$OS_NAME" == "Ubuntu" ]]; then
-    if [[ "${inChina}" == "true" ]]; then
-      dockerRegistry="https://mirrors.aliyun.com/docker-ce/linux/ubuntu"
-      console_content "Docker source registry use the Chinese mirror."
-    else
-      dockerRegistry="https://download.docker.com/linux/ubuntu"
-      console_content "Docker source registry use the Official mirror."
-    fi
-  elif [[ "$OS_NAME" == "Debian" ]]; then
-    if [[ "${inChina}" == "true" ]]; then
-      dockerRegistry="https://mirrors.aliyun.com/docker-ce/linux/debian"
-      console_content "Docker source registry use the Chinese mirror."
-    else
-      dockerRegistry="https://download.docker.com/linux/debian"
-      console_content "Docker source registry use the Official mirror."
-    fi
-  else
-    echo "Not support this OS."
-    exit 1
-  fi
-
-  if [ ! -f '/etc/apt/keyrings/docker.asc' ]; then
-    sudo install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL $dockerRegistry/gpg -o /etc/apt/keyrings/docker.asc
-    sudo chmod a+r /etc/apt/keyrings/docker.asc
-    console_content "The GPG certificate is installed."
-  else
-    console_content "The GPG certificate is already installed."
-  fi
-
-  # ------------------------------
-
-  # Step 3: Write software source information
-  if [ ! -f '/etc/apt/sources.list.d/docker.list' ]; then
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $dockerRegistry
-      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |
-      sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
-
-    console_content "The software source information is written."
-  else
-    console_content "The software source information is already written."
-  fi
-
-  # ------------------------------
-
-  # Step 4: Update
-  apt_get_update
-
-  # View all versions of Docker CE
-  # apt-cache madison docker-ce
-
-  # ------------------------------
-
-  # Step 5: Install
-  local local="Docker CE"
-  local name="docker-ce"
-  local version=$dockerVersion
-  apt_get_install "$local" "$name" "$version"
-
-  local="Docker CE Cli"
-  name="docker-ce-cli"
-  version=$dockerVersion
-  apt_get_install "$local" "$name" "$version"
-
-  apt_get_install "containerd.io" "containerd.io"
-  apt_get_install "docker-buildx-plugin " "docker-buildx-plugin"
-  apt_get_install "docker-compose-plugin" "docker-compose-plugin"
-}
-
-install_by_dnf() {
-  # ------------------------------
-
-  # step 0: Remove history version
-  console_content_starting "History package is removing..."
-
-  need_remove_pkg_list=()
-  if [[ "$OS_NAME" == "RedHat" ]]; then
-    need_remove_pkg_list=(
-      docker-client-latest
-      docker-common
-      docker-latest
-      docker-latest-logrotate
-      docker-logrotate
-      docker-selinux
-      docker-engine-selinux
-      docker-engine
-    )
-  else
-    need_remove_pkg_list=(
-      docker
-      docker-client
-      docker-client-latest
-      docker-common
-      docker-latest
-      docker-latest-logrotate
-      docker-logrotate
-      docker-selinux
-      docker-engine-selinux
-      docker-engine 
-    )
-  fi
-
-  for pkg in "${need_remove_pkg_list[@]}"; do
-    eval "sudo dnf remove -y $pkg $(get_redirect_output)"
-  done
-
-  console_content_complete
-
-  # ------------------------------
-
-  # step 1: Set repository
-  local dockerRegistry
-
-  if [[ "$OS_NAME" == "Fedora" ]]; then
-    if [[ "${inChina}" == "true" ]]; then
-      console_content "Docker source registry use the Chinese mirror."
-      dockerRegistry="https://mirrors.aliyun.com/docker-ce/linux/fedora/docker-ce.repo"
-    else
-      console_content "Docker source registry use the Official mirror."
-      dockerRegistry="https://download.docker.com/linux/fedora/docker-ce.repo"
-    fi
-    eval "sudo dnf -y install dnf-plugins-core $(get_redirect_output)"
-  elif [[ "$OS_NAME" == "RedHat" ]]; then
-    if [[ "${inChina}" == "true" ]]; then
-      console_content "Docker source registry use the Chinese mirror."
-      dockerRegistry="https://mirrors.aliyun.com/docker-ce/linux/rhel/docker-ce.repo"
-    else
-      console_content "Docker source registry use the Official mirror."
-      dockerRegistry="https://download.docker.com/linux/rhel/docker-ce.repo"
-    fi
-    eval "sudo dnf -y install dnf-plugins-core $(get_redirect_output)"
-  elif [[ "$OS_NAME" == "AlibabaCloudLinux" ]]; then
-    dockerRegistry="https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo"
-    console_content "Docker source registry use the Chinese mirror."
-    eval "sudo dnf -y install dnf-plugin-releasever-adapter --repo alinux3-plus $(get_redirect_output)"
-  else
-    echo "Not support this OS."
-    exit 1
-  fi
-
-  eval "sudo dnf config-manager --add-repo $dockerRegistry $(get_redirect_output)"
-
-  dnf_update
-
-  # ------------------------------
-
-  # Step 5: Install
-  local local="Docker CE"
-  local name="docker-ce"
-  local version=$dockerVersion
-  dnf_install "$local" "$name" "$version"
-
-  local="Docker CE Cli"
-  name="docker-ce-cli"
-  version=$dockerVersion
-  dnf_install "$local" "$name" "$version"
-
-  dnf_install "containerd.io" "containerd.io"
-  dnf_install "docker-buildx-plugin " "docker-buildx-plugin"
-  dnf_install "docker-compose-plugin" "docker-compose-plugin"
-}
-
-if command -v docker &>/dev/null; then
-  console_content "Docker is already installed."
+if [[ -f "$sdkmanHome/bin/sdkman-init.sh" ]]; then
+  console_content "SDKMan is already installed."
+  source "$sdkmanHome/bin/sdkman-init.sh"
 else
-  if [[ "$OS_NAME" == "Ubuntu" ]] || [[ "$OS_NAME" == "Debian" ]]; then
-    install_by_apt_get
-  elif [[ "$OS_NAME" == "Fedora" ]] || [[ "$OS_NAME" == "RedHat" ]] || [[ "$OS_NAME" == "AlibabaCloudLinux" ]]; then
-    install_by_dnf
-  else
-    echo "Not support this OS."
+  console_content_starting "SDKMan is installing..."
+
+  # Check Git is installed
+  if ! command -v unzip &>/dev/null; then
+    console_content_error "Not found unzip, please install unzip first."
+    console_empty_line
+
     exit 1
   fi
+
+  if ! command -v zip &>/dev/null; then
+    console_content_error "Not found zip, please install zip first."
+    console_empty_line
+
+    exit 1
+  fi
+
+  if [ "$(get_param '--debug')" == 'true' ]; then
+    curl -s "https://get.sdkman.io" | bash
+  else
+    curl -s "https://get.sdkman.io" | bash &>/dev/null
+  fi
+
+  console_content_complete
+  source "$sdkmanHome/bin/sdkman-init.sh"
 fi
 
-console_key_value "Docker CE" "$(docker --version | awk '{print $3}' | sed 's/,//')"
-console_key_value "Docker compose" "$(docker compose version | awk '{print $4}')"
+console_key_value "SDKMan" "$(sdk version | grep -v 'SDKMAN!' | grep -v '^$' | tr '\n' ' ')"
+console_key_value "SDKMan Home" "$sdkmanHome"
+console_empty_line
+
+# ------------------------------------------------------------
+
+# Tomcat Version
+# local versions="$(sdk list tomcat | awk '/^[[:space:]]*[0-9]+\.[0-9]+\.[0-9]+/ {for(i=1;i<=NF;i++) print $i}'"
+
+console_title "Install Java"
+
+if [[ -f "$javaHome/README" ]]; then
+  console_content "Java $javaVersion is already installed."
+else
+  console_content_starting "Java $javaVersion is installing..."
+
+  support_versions="$(sdk list java | grep '|' | awk -F '|' '{gsub(/^[[:space:]]+|[[:space:]]+$/, "", $6); print $6}')"
+  if echo "$support_versions" | grep -q "^${javaVersion}$"; then
+    # sdk install java $javaVersion
+    eval "sdk install java $javaVersion $(get_redirect_output)"
+  else
+    console_content_error "Java $javaVersion is not available."
+    console_content "Support versions:"
+    console_sulines "$support_versions"
+    console_empty_line
+    exit 1
+  fi
+
+  console_content_complete
+fi
+
+console_key_value "Java" "$(java --version | awk 'NR==1{print $2}')"
+console_empty_line
+
+# ------------------------------------------------------------
+
+console_title "Install Maven"
+
+if [[ -f "$mavenHome/README.txt" ]]; then
+  console_content "Maven $mavenVersion is already installed."
+else
+  console_content_starting "Maven $mavenVersion is installing..."
+
+  support_versions=$(sdk list maven | awk '/^[[:space:]]/ {for(i=1;i<=NF;i++) if ($i ~ /^[0-9]+\.[0-9]+\.[0-9]+/) print $i}')
+
+  if echo "$support_versions" | grep -q "^${mavenVersion}$"; then
+    # sdk install java $javaVersion
+    eval "sdk install maven $mavenVersion $(get_redirect_output)"
+  else
+    console_content_error "Maven $mavenVersion is not available."
+    console_content "Support versions:"
+    console_sulines "$support_versions"
+    console_empty_line
+    exit 1
+  fi
+
+  console_content_complete
+fi
+
+console_key_value "Maven" "$(mvn -v | awk 'NR==1{print $3}')"
+console_empty_line
+
+# ------------------------------------------------------------
+
+console_title "Install Tomcat"
+
+if [[ -f "$tomcatHome/README.md" ]]; then
+  console_content "Tomcat $tomcatVersion is already installed."
+else
+  console_content_starting "Tomcat $tomcatVersion is installing..."
+
+  support_versions=$(sdk list tomcat | awk '/^[[:space:]]/ {for(i=1;i<=NF;i++) if ($i ~ /^[0-9]+\.[0-9]+\.[0-9]+/) print $i}')
+
+  if echo "$support_versions" | grep -q "^${tomcatVersion}$"; then
+    # sdk install java $javaVersion
+    eval "sdk install tomcat $tomcatVersion $(get_redirect_output)"
+  else
+    console_content_error "Tomcat $tomcatVersion is not available."
+    console_content "Support versions:"
+    console_sulines "$support_versions"
+    console_empty_line
+    exit 1
+  fi
+
+  console_content_complete
+fi
+
+console_key_value "Maven" "$(mvn -v | awk 'NR==1{print $3}')"
 console_empty_line
 
 # ------------------------------------------------------------
