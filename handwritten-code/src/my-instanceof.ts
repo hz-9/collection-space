@@ -2,7 +2,7 @@
  * @Author       : Chen Zhen
  * @Date         : 2024-04-20 19:36:19
  * @LastEditors  : Chen Zhen
- * @LastEditTime : 2024-08-31 15:30:30
+ * @LastEditTime : 2024-10-06 20:44:56
  */
 
 /**
@@ -17,6 +17,10 @@
 export function myInstanceof(left: any, right: any): boolean {
   if (right === null || (typeof right !== 'object' && typeof right !== 'function')) {
     throw new TypeError("Right-hand side of 'instanceof' is not an object")
+  }
+
+  if (right[Symbol.hasInstance]) {
+    return right[Symbol.hasInstance](left)
   }
 
   let r = right.prototype
