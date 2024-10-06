@@ -92,4 +92,58 @@
     fi
     console_content_complete
   }
+
+  download_file() {
+    local url="$1"
+    local target="$2"
+    local dir
+    dir=$(dirname "$target")
+    local filename
+    filename=$(basename "$target")
+    local showConsoleContent="$3"
+
+    mkdir -p "$dir"
+
+    if [[ "$showConsoleContent" != "false" ]]; then
+      console_content "The file '$filename' is downloading..."
+      console_content "  from : $url"
+      console_content "  to   : $target"
+      console_content_starting "..."
+    fi
+
+    eval "curl -L '$url' -o '$target' $(get_redirect_output)"
+
+    if [[ "$showConsoleContent" != "false" ]]; then
+      console_content_complete
+    fi
+  }
+
+  unzip_file() {
+    local sourceFile=$1
+    local targetDir=$2
+
+    mkdir -p "$targetDir"
+
+    if [[ $IS_WINDOWS == true ]]; then
+      # powershell.exe -Command "
+      #   \$zipFile = '$(to_windows_path_format "$sourceFile")'
+      #   \$targetDir = '$(to_windows_path_format "$targetDir")'
+      #   Add-Type -AssemblyName System.IO.Compression.FileSystem
+      #   [System.IO.Compression.ZipFile]::ExtractToDirectory(\$zipFile, \$targetDir)
+      # "
+      eval """
+        powershell.exe -Command \"
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          [System.IO.Compression.ZipFile]::ExtractToDirectory(
+            '$(to_windows_path_format "$sourceFile")'
+          , '$(to_windows_path_format "$targetDir")')
+        \"
+       $(get_redirect_output)
+
+      """
+    else
+      # tar -xf "$1" -C "$2"
+      echo "TODO"
+    fi
+  }
 }
