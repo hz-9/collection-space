@@ -1,5 +1,7 @@
 #!/bin/bash
-_m_='__@@__'
+_m_='♥'
+
+source ./__const.sh
 
 PARAMTERS=(
   "--help${_m_}-h${_m_}Print help message.${_m_}false"

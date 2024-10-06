@@ -1,11 +1,13 @@
 #!/bin/bash
-_m_='__@@__'
+_m_='♥'
+
+source ./__const.sh
 
 PARAMTERS=(
   "--help${_m_}-h${_m_}Print help message.${_m_}false"
   "--debug${_m_}${_m_}Print debug message.${_m_}false"
 
-  "--7zip-version${_m_}${_m_}7Zip version. Default is lastest available.${_m_}24.08"
+  "--7zip-version${_m_}${_m_}7Zip version.${_m_}24.08"
   "--in-china${_m_}${_m_}Use the Chinese mirror.${_m_}false"
 )
 
@@ -72,7 +74,9 @@ else
       # rm -rf "./7z${converted_version}-linux-x64.tar.xz"
       # ln -s "/usr/local/7z/${z7Version}/7zz" /usr/bin/7zz
       # chmod +x /usr/bin/7zz
-      eval "curl -L $url -o 7z${converted_version}-linux-x64.tar.xz $(get_redirect_output)"
+      # eval "curl -L $url -o 7z${converted_version}-linux-x64.tar.xz $(get_redirect_output)"
+      download_file "$url" "$(pwd)/7z${converted_version}-linux-x64.tar.xz" "false"
+
       mkdir -p "/usr/local/7z/${z7Version}"
       eval "tar -xf 7z${converted_version}-linux-x64.tar.xz -C /usr/local/7z/${z7Version} $(get_redirect_output)"
       rm -rf "./7z${converted_version}-linux-x64.tar.xz"

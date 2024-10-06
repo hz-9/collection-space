@@ -47,7 +47,7 @@
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -66,7 +66,7 @@
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -83,8 +83,8 @@
     local key="$1"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
-      local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      local split=()
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"

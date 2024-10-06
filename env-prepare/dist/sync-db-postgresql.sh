@@ -1,7 +1,36 @@
 #!/bin/bash
 
 # import from sync-db-postgresql.sh
-_m_='__@@__'
+_m_='♥'
+
+# import from ./__const.sh
+{
+  get_outline_package() {
+    local packageName="$1"
+    echo "${HOME}"/Downloads/"$packageName"
+  }
+
+  # to_windows_path_format() {
+  #   local original_path=$1
+  #   local windows_path
+  #   windows_path=$(echo "$original_path" | sed 's|^/c/|C:\\|' | sed 's|/|\\|g')
+  #   echo "$windows_path"
+  # }
+
+  to_windows_path_format() {
+    local original_path=$1
+    local windows_path
+    windows_path=$(echo "$original_path" | sed 's|^/\([a-zA-Z]\)/|\1:\\|' | sed 's|/|\\|g')
+    echo "$windows_path"
+  }
+
+  to_git_bash_path_format() {
+    local original_path=$1
+    local git_bash_path
+    git_bash_path=$(echo "$original_path" | sed 's|^\([a-zA-Z]\):|/\1|' | sed 's|\\|/|g')
+    echo "$git_bash_path"
+  }
+}
 
 PARAMTERS=(
   "--help${_m_}-h${_m_}Print help message.${_m_}false"
@@ -229,7 +258,7 @@ SHELL_DESC="Sync PostgreSQL database."
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -248,7 +277,7 @@ SHELL_DESC="Sync PostgreSQL database."
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -265,8 +294,8 @@ SHELL_DESC="Sync PostgreSQL database."
     local key="$1"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
-      local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      local split=()
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -292,7 +321,7 @@ SHELL_DESC="Sync PostgreSQL database."
     # shellcheck disable=SC2153
     for PARAMTER in "${PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="$_m_" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -311,7 +340,7 @@ SHELL_DESC="Sync PostgreSQL database."
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -329,7 +358,7 @@ SHELL_DESC="Sync PostgreSQL database."
 
     for PARAMTER in "${PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -361,7 +390,7 @@ SHELL_DESC="Sync PostgreSQL database."
 
     for PARAMTER in "${PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -402,7 +431,7 @@ SHELL_DESC="Sync PostgreSQL database."
 
     for PARAMTER in "${PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"

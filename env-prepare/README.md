@@ -114,6 +114,18 @@ In china.
 curl -o-  https://gitee.com/hz-9/collection-space/raw/master/env-prepare/dist/install-p7zip.sh | bash -s -- --in-china
 ```
 
+## Install Sysinternals PsTools
+
+``` sh
+curl -o-  https://raw.githubusercontent.com/hz-9/collection-space/refs/heads/master/env-prepare/dist/install-pstools.sh | bash
+```
+
+In china.
+
+``` sh
+curl -o-  https://gitee.com/hz-9/collection-space/raw/master/env-prepare/dist/install-pstools.sh | bash -s -- --in-china
+```
+
 ## Install unzip
 
 ``` sh
@@ -124,6 +136,18 @@ In china.
 
 ``` sh
 curl -o-  https://gitee.com/hz-9/collection-space/raw/master/env-prepare/dist/install-unzip.sh | bash -s -- --in-china
+```
+
+## Install Windows Service Wrapper
+
+``` sh
+curl -o-  https://raw.githubusercontent.com/hz-9/collection-space/refs/heads/master/env-prepare/dist/install-winsw.sh | bash
+```
+
+In china.
+
+``` sh
+curl -o-  https://gitee.com/hz-9/collection-space/raw/master/env-prepare/dist/install-winsw.sh | bash -s -- --in-china
 ```
 
 ## Install zip

@@ -1,7 +1,36 @@
 #!/bin/bash
 
 # import from install-nginx.sh
-_m_='__@@__'
+_m_='♥'
+
+# import from ./__const.sh
+{
+  get_outline_package() {
+    local packageName="$1"
+    echo "${HOME}"/Downloads/"$packageName"
+  }
+
+  # to_windows_path_format() {
+  #   local original_path=$1
+  #   local windows_path
+  #   windows_path=$(echo "$original_path" | sed 's|^/c/|C:\\|' | sed 's|/|\\|g')
+  #   echo "$windows_path"
+  # }
+
+  to_windows_path_format() {
+    local original_path=$1
+    local windows_path
+    windows_path=$(echo "$original_path" | sed 's|^/\([a-zA-Z]\)/|\1:\\|' | sed 's|/|\\|g')
+    echo "$windows_path"
+  }
+
+  to_git_bash_path_format() {
+    local original_path=$1
+    local git_bash_path
+    git_bash_path=$(echo "$original_path" | sed 's|^\([a-zA-Z]\):|/\1|' | sed 's|\\|/|g')
+    echo "$git_bash_path"
+  }
+}
 
 PARAMTERS=(
   "--help${_m_}-h${_m_}Print help message.${_m_}false"
@@ -69,6 +98,15 @@ SHELL_DESC="Install 'nginx'."
         echo "AlibabaCloudLinux"
       elif [[ "$__BASE_OS_NAME__" == "Red Hat Enterprise Linux" ]]; then
         echo "RedHat"
+      elif [[ "$__BASE_OS_NAME__" == "MINGW"* ]] || [[ "$__BASE_OS_NAME__" == "CYGWIN"* ]] || [[ "$__BASE_OS_NAME__" == "MSYS"* ]] || [[ "$__BASE_OS_NAME__" == "Windows_NT" ]]; then
+        # Read from 'registry' to determine the Windows version
+        local productName
+        productName=$(powershell.exe -Command "(Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ProductName" | tr -d '\r')
+        if [[ "$productName" == "Windows Server 2019"* ]] || [[ "$productName" == "Windows Server 2022"* ]]; then
+          echo "WindowsServer"
+        else 
+          echo "No Support Windows Version"
+        fi
       else
         echo "$__BASE_OS_NAME__"
       fi
@@ -77,7 +115,7 @@ SHELL_DESC="Install 'nginx'."
     judge_window_system() {
       local _OS_NAME
       _OS_NAME=$(judge_name)
-      if [[ "$_OS_NAME" == "MINGW"* ]] || [[ "$_OS_NAME" == "CYGWIN"* ]] || [[ "$_OS_NAME" == "MSYS"* ]] || [[ "$_OS_NAME" == "Windows_NT" ]]; then
+      if [[ "$_OS_NAME" == "WindowsServer" ]]; then
         return 0
       else
         return 1
@@ -105,7 +143,7 @@ SHELL_DESC="Install 'nginx'."
     }
 
     if judge_window_system; then
-      OS_NAME='Windows'
+      OS_NAME=$(judge_name)
       IS_WINDOWS=true
     elif judge_linux_system; then
       OS_NAME=$(judge_name)
@@ -127,6 +165,10 @@ SHELL_DESC="Install 'nginx'."
       elif [[ "$OS_NAME" == "AlibabaCloudLinux" ]]; then
         . /etc/os-release
         echo "$PRETTY_NAME" | awk '{print $4}'
+      elif [[ "$OS_NAME" == "WindowsServer" ]]; then
+        local productName
+        productName=$(powershell.exe -Command "(Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ProductName" | tr -d '\r')
+        echo "$productName" | awk '{print $3}'
       else
         echo "$__BASE_OS_VERS__"
       fi
@@ -388,7 +430,7 @@ SHELL_DESC="Install 'nginx'."
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -407,7 +449,7 @@ SHELL_DESC="Install 'nginx'."
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -424,8 +466,8 @@ SHELL_DESC="Install 'nginx'."
     local key="$1"
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
-      local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      local split=()
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -451,7 +493,7 @@ SHELL_DESC="Install 'nginx'."
     # shellcheck disable=SC2153
     for PARAMTER in "${PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="$_m_" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -470,7 +512,7 @@ SHELL_DESC="Install 'nginx'."
 
     for PARAMTER in "${USER_PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -488,7 +530,7 @@ SHELL_DESC="Install 'nginx'."
 
     for PARAMTER in "${PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -520,7 +562,7 @@ SHELL_DESC="Install 'nginx'."
 
     for PARAMTER in "${PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -561,7 +603,7 @@ SHELL_DESC="Install 'nginx'."
 
     for PARAMTER in "${PARAMTERS[@]}"; do
       local split
-      eval "split=('${PARAMTER//${_m_}/$'\'\n\''}')"
+      IFS="${_m_}" read -r -a split <<< "$PARAMTER"
 
       local name
       name="${split[0]}"
@@ -678,6 +720,60 @@ SHELL_DESC="Install 'nginx'."
       fi
     fi
     console_content_complete
+  }
+
+  download_file() {
+    local url="$1"
+    local target="$2"
+    local dir
+    dir=$(dirname "$target")
+    local filename
+    filename=$(basename "$target")
+    local showConsoleContent="$3"
+
+    mkdir -p "$dir"
+
+    if [[ "$showConsoleContent" != "false" ]]; then
+      console_content "The file '$filename' is downloading..."
+      console_content "  from : $url"
+      console_content "  to   : $target"
+      console_content_starting "..."
+    fi
+
+    eval "curl -L '$url' -o '$target' $(get_redirect_output)"
+
+    if [[ "$showConsoleContent" != "false" ]]; then
+      console_content_complete
+    fi
+  }
+
+  unzip_file() {
+    local sourceFile=$1
+    local targetDir=$2
+
+    mkdir -p "$targetDir"
+
+    if [[ $IS_WINDOWS == true ]]; then
+      # powershell.exe -Command "
+      #   \$zipFile = '$(to_windows_path_format "$sourceFile")'
+      #   \$targetDir = '$(to_windows_path_format "$targetDir")'
+      #   Add-Type -AssemblyName System.IO.Compression.FileSystem
+      #   [System.IO.Compression.ZipFile]::ExtractToDirectory(\$zipFile, \$targetDir)
+      # "
+      eval """
+        powershell.exe -Command \"
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          [System.IO.Compression.ZipFile]::ExtractToDirectory(
+            '$(to_windows_path_format "$sourceFile")'
+          , '$(to_windows_path_format "$targetDir")')
+        \"
+       $(get_redirect_output)
+
+      """
+    else
+      # tar -xf "$1" -C "$2"
+      echo "TODO"
+    fi
   }
 }
 
