@@ -44,12 +44,32 @@ export default (appInfo: EggAppInfo) => {
       formatter: (meta?: any): string => {
         if (!meta) return ''
         const meta_: LoggerMeta = meta as LoggerMeta
-        return `[HZ-9] ${meta_.pid} - ${meta_.date.substring(0, 19)} ${meta_.level} [Request] ${meta_.message}`
+        const marker = 'Request'
+
+        return [
+          '[HZ-9]',
+          meta_.pid.toString().padEnd(6, ' '),
+          '-',
+          meta_.date.substring(0, 19),
+          meta_.level.padStart(7, ' '),
+          `[${marker.padStart(14, ' ')}]`,
+          meta_.message,
+        ].join(' ')
       },
       contextFormatter: (meta?: any): string => {
         if (!meta) return ''
         const meta_: LoggerMeta = meta as LoggerMeta
-        return `[HZ-9] ${meta_.pid} - ${meta_.date.substring(0, 19)} ${meta_.level} [Request] ${meta_.message}`
+        const marker = 'Request'
+
+        return [
+          '[HZ-9]',
+          meta_.pid.toString().padEnd(6, ' '),
+          '-',
+          meta_.date.substring(0, 19),
+          meta_.level.padStart(7, ' '),
+          `[${marker.padStart(14, ' ')}]`,
+          meta_.message,
+        ].join(' ')
       },
     },
   }

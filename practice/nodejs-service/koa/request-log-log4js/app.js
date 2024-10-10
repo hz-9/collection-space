@@ -2,7 +2,7 @@
  * @Author       : Chen Zhen
  * @Date         : 2024-07-06 23:31:08
  * @LastEditors  : Chen Zhen
- * @LastEditTime : 2024-10-10 18:28:04
+ * @LastEditTime : 2024-10-10 18:37:30
  */
 const fs = require('fs')
 const path = require('path')
@@ -10,15 +10,9 @@ const Koa = require('koa')
 const Router = require('@koa/router')
 const app = new Koa()
 
-// logger
-app.use(async (ctx, next) => {
-  const start = Date.now()
+const { requestLogMiddleware } = require('./middleware/log4js.middleware')
 
-  await next()
-
-  const ms = Date.now() - start
-  console.log(`${ctx.method} ${ctx.url} - ${ms} ms`)
-})
+app.use(requestLogMiddleware())
 
 // response
 const router = new Router()
