@@ -19,3 +19,4 @@ test/**/*.map
 config/**/*.map
 
 !.prettierrc.js
+!.eslintrc.js

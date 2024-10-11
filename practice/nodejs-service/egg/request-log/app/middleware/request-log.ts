@@ -2,25 +2,45 @@
  * @Author       : Chen Zhen
  * @Date         : 2024-07-07 13:29:47
  * @LastEditors  : Chen Zhen
- * @LastEditTime : 2024-07-07 14:40:50
+ * @LastEditTime : 2024-10-11 00:25:48
  */
 import { Context, EggLogger } from 'egg'
 
-// eslint-disable-next-line no-undef-init
-let requestLogger: EggLogger | undefined = undefined
+let requestLogger: EggLogger | undefined
+
+const logToken = {
+  // remoteAddr: (req: Context['request']) => req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress,
+  remoteAddr: (req: Context['request']) => req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+  httpInfo: (req: Context['request']) =>
+    `${req.method} ${req.url} ${req.protocol}/${req.req.httpVersionMajor}.${req.req.httpVersionMinor}`,
+  status: (res: Context['response']) => res.status,
+  contentLength: (res: Context['response']) => res.length,
+  referrer: (req: Context['request']) => req.headers.referer || req.headers.referrer || '-',
+  userAgent: (req) => req.headers['user-agent'],
+}
 
 export default function requestLogMiddleware(): any {
   return async (ctx: Context, next: () => Promise<any>) => {
-    const st = Date.now()
-
-    await next()
-
-    const { ip, method, url, protocol, req, headers } = ctx.request
-    const { status, length } = ctx.response
-    const logMsg: string = `${ip} - "${method} ${url} ${protocol}/${req.httpVersion}" ${status} ${length} ${Date.now() - st} ms "${headers['user-agent']}"`
     if (!requestLogger) {
       requestLogger = ctx.app.getLogger('request')
     }
+
+    const start = Date.now()
+
+    await next()
+
+    const ms = Date.now() - start
+
+    const logMsg = [
+      logToken.remoteAddr(ctx.request),
+      '-',
+      `"${logToken.httpInfo(ctx.request)}"`,
+      logToken.status(ctx.response),
+      logToken.contentLength(ctx.response),
+      `${ms}ms`,
+      `"${logToken.referrer(ctx.request)}"`,
+      `"${logToken.userAgent(ctx.request)}"`,
+    ].join(' ')
 
     requestLogger.info(logMsg)
   }
