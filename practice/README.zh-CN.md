@@ -9,6 +9,14 @@
 | `cross-domain` | 跨域演示环境。描述了多种跨域解决方案的具体实践。 |
 | `docker-image`| 多种 `Node.js` 服务端框架使用 `dockerfile` 创建镜像的示例。|
 
+## Node.js Code Snippet
+
+一些 Node.js 代码片段。
+
+|名称 | 描述 |
+| --- | --- |
+| `potrace` | 一个将图片简化为 SVG 的工具库。 |
+
 ## Node.js Service
 
 使用多个服务端框架创建多个实践示例。
