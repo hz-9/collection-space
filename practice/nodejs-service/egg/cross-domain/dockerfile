@@ -15,8 +15,12 @@ RUN pnpm install
 # Copy project files to the working directory
 COPY . .
 
+# Build and remove devDependencies pacakges
+RUN npm run tsc && pnpm prune --prod
+
 # Expose the port on which the application runs
 EXPOSE 3002
 
 # Start the application
-CMD ["npm", "start"]
+# CMD ["npm", "run", "start:docker"]
+CMD ["npm", "run", "start:container"]
