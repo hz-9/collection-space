@@ -1,4 +1,4 @@
-var cors = require('cors')
+const cors = require('cors')
 
 exports.bindCorsRouter = (crossDomainRouter) => {
   const corsOptions = {

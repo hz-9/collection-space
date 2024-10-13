@@ -1,4 +1,4 @@
-var express = require('express')
+const express = require('express')
 const { bindCorsRouter } = require('./cors')
 const { bindJsonpRouter } = require('./jsonp')
 
