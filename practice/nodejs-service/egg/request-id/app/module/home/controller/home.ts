@@ -1,7 +1,8 @@
 import { EggLogger } from 'egg'
 import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum } from '@eggjs/tegg'
 
-import { get } from '../../../utils/http-content'
+// eslint-disable-next-line import/extensions
+import { get } from '@/utils/http-content'
 
 @HTTPController({
   path: '/',

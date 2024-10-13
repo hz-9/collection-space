@@ -8,8 +8,7 @@
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/bin/www",
       "env": {
-        "DEBUG": "express:*",
-        "DEBUG_CLS_HOOKED": "true"
+        "DEBUG": "express:*"
       },
       "console": "integratedTerminal"
     }

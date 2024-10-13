@@ -2,7 +2,7 @@
  * @Author       : Chen Zhen
  * @Date         : 2024-07-07 22:52:35
  * @LastEditors  : Chen Zhen
- * @LastEditTime : 2024-07-07 23:00:01
+ * @LastEditTime : 2024-10-13 12:43:36
  */
 import { MiddlewareConsumer, Module } from '@nestjs/common'
 import { AppController } from './app.controller'
