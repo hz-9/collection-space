@@ -8,13 +8,15 @@
   },
   "scripts": {
     "start": "egg-bin dev --port 3002",
-    "start:prod": "egg-scripts start --daemon --title=egg-server-template",
+    "start:prod": "egg-scripts start --daemon --title=egg-server-template --port 3002",
+    "start:container": "egg-scripts start --title=egg-server-template --port 3002",
     "stop": "egg-scripts stop --title=egg-server-template",
     "test:local": "egg-bin test -p",
     "test": "npm run lint -- --fix && npm run test:local",
     "cov": "egg-bin cov -p",
     "ci": "npm run lint && npm run cov && npm run tsc && npm run clean",
     "lint": "eslint . --ext .ts --cache",
+    "prettier": "prettier --write .",
     "tsc": "tsc",
     "clean": "tsc -b --clean"
   },
@@ -32,14 +34,12 @@
   },
   "devDependencies": {
     "@eggjs/tsconfig": "1",
+    "@hz-9/eslint-config-airbnb-ts": "^0.5.11",
     "@types/mocha": "10",
     "@types/node": "20",
     "egg-bin": "6",
     "egg-mock": "5",
-    "eslint": "8",
-    "eslint-config-egg": "13",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
+    "eslint": "^8.2.0",
     "typescript": "5.3.3"
   },
   "engines": {
