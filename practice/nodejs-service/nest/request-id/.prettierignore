@@ -65,4 +65,9 @@ pnpm-lock.yaml
 yarn.lock
 
 # Heft
+.heftge-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Heft
 .heft
