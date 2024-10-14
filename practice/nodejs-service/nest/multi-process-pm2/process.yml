@@ -1,0 +1,6 @@
+apps:
+  - name: NEST-MULTI-PROCESS-DEMO
+    namespace: HZ-9
+    script: ./dist/main.js
+    mode: cluster
+    instances: 6

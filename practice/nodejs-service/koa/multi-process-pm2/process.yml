@@ -1,0 +1,6 @@
+apps:
+  - name: KOA-MULTI-PROCESS-DEMO
+    namespace: HZ-9
+    script: ./app.js
+    mode: cluster
+    instances: 6
