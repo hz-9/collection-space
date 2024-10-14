@@ -8,7 +8,7 @@ PARAMTERS=(
   "--debug${_m_}${_m_}Print debug message.${_m_}false"
 
   "--action${_m_}-v${_m_}Action. (action: 'online-install' / 'outline-prepare' / 'outline-install')${_m_}online-install"
-  "--offline-package${_m_}${_m_}The package's filepath for offline installation.${_m_}$(get_outline_package 'pstools.zip')"
+  "--package${_m_}${_m_}The package's filepath for offline installation.${_m_}$(get_outline_package 'pstools.zip')"
 
   "--in-china${_m_}${_m_}Use the Chinese mirror.${_m_}false"
 )
@@ -36,14 +36,14 @@ print_help_or_param
 
 inChina=$(get_param '--in-china')
 action=$(get_param '--action')
-offlinePackage=$(get_param '--offline-package')
+package=$(get_param '--package')
 
 installDir="/c/Program Files/Sysinternals/PsTools"
 
 psToolsNormalUrl="https://download.sysinternals.com/files/PSTools.zip"
 psToolsChineseUrl="https://gitee.com/hz-9/some-software-installation-packages/raw/master/Sysinternals/PsTools/PSTools.zip"
 
-psToolsFilepath="$(get_outline_package 'PSTools.zip')"
+psToolsFilepath=$package
 
 # ------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# import from install-git.sh
+# import from install-git-online.sh
 _m_='♥'
 
 # import from ./__const.sh
@@ -57,7 +57,7 @@ SUPPORT_OS_LIST=(
 )
 
 SHELL_NAME="Git Installer"
-SHELL_DESC="Install 'git'."
+SHELL_DESC="Install 'git' by software manange tool."
 
 # import from ./__judge-system.sh
 {
