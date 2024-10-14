@@ -1,0 +1,8 @@
+apps:
+  - name: EXPRESS-MULTI-PROCESS-DEMO
+    namespace: HZ-9
+    script: ./bin/www
+    mode: cluster
+    instances: 6
+    env:
+      DEBUG: express:*
