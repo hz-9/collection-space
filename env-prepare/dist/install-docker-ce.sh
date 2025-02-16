@@ -851,9 +851,9 @@ install_by_apt_get() {
 
   # Step 3: Write software source information
   if [ ! -f '/etc/apt/sources.list.d/docker.list' ]; then
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $dockerRegistry
-      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |
-      sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+    echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $dockerRegistry $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
 
     console_content "The software source information is written."
   else
@@ -915,7 +915,7 @@ install_by_dnf() {
       docker-logrotate
       docker-selinux
       docker-engine-selinux
-      docker-engine 
+      docker-engine
     )
   fi
 

@@ -28,7 +28,7 @@ SUPPORT_OS_LIST=(
 )
 
 SHELL_NAME="Git Installer"
-SHELL_DESC="Install 'git'."
+SHELL_DESC="Install 'git' by software manange tool."
 
 source ./__judge-system.sh
 

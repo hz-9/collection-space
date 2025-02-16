@@ -62,6 +62,7 @@ else
       exit 1
     fi
 
+    local support_versions
     support_versions=$(curl -s "https://api.github.com/repos/ip7z/7zip/releases" | jq -r '.[].tag_name')
 
     if echo "$support_versions" | grep -q "^${z7Version}$"; then

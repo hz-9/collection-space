@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# import from install-pstools.sh
+# import from install-git-package.sh
 _m_='♥'
 
 # import from ./__const.sh
@@ -31,25 +31,6 @@ _m_='♥'
     echo "$git_bash_path"
   }
 }
-
-PARAMTERS=(
-  "--help${_m_}-h${_m_}Print help message.${_m_}false"
-  "--debug${_m_}${_m_}Print debug message.${_m_}false"
-
-  "--action${_m_}-v${_m_}Action. (action: 'online-install' / 'outline-prepare' / 'outline-install')${_m_}online-install"
-  "--package${_m_}${_m_}The package's filepath for offline installation.${_m_}$(get_outline_package 'pstools.zip')"
-
-  "--in-china${_m_}${_m_}Use the Chinese mirror.${_m_}false"
-)
-
-SUPPORT_OS_LIST=(
-  "WindowsServer 2019 AMD64"
-  "WindowsServer 2022 AMD64"
-)
-
-SHELL_NAME="Sysinternals PsTools Installer"
-SHELL_DESC="Install 'Sysinternals PsTools'. \n
-    More information: https://docs.microsoft.com/en-us/sysinternals/downloads/pstools"
 
 # import from ./__judge-system.sh
 {
@@ -225,6 +206,36 @@ SHELL_DESC="Install 'Sysinternals PsTools'. \n
 
   # print_system_extra_info
 }
+
+PARAMTERS=(
+  "--help${_m_}-h${_m_}Print help message.${_m_}false"
+  "--debug${_m_}${_m_}Print debug message.${_m_}false"
+
+  "--git-version${_m_}${_m_}Git version. Default is lastest available.${_m_}2.47.0"
+  "--in-china${_m_}${_m_}Use the Chinese mirror.${_m_}false"
+
+  "--action${_m_}-v${_m_}Action. (action: 'online-install' / 'outline-prepare' / 'outline-install')${_m_}online-install"
+  "--package${_m_}${_m_}The package's filepath for offline installation.${_m_}$(get_outline_package 'Git-64-bit.zip')"
+)
+
+SUPPORT_OS_LIST=(
+  "Ubuntu 20.04 AMD64"
+  "Ubuntu 22.04 AMD64"
+  "Ubuntu 24.04 AMD64"
+
+  "Debian 11.9 AMD64"
+  "Debian 12.2 AMD64"
+
+  "Fedora 40 AMD64"
+
+  "RedHat 8.5 AMD64"
+  "RedHat 9.0 AMD64"
+
+  "AlibabaCloudLinux 3.2104 AMD64"
+)
+
+SHELL_NAME="Git Installer"
+SHELL_DESC="Install 'git' by installation package."
 
 # import from ./__console.sh
 {
@@ -771,78 +782,137 @@ SHELL_DESC="Install 'Sysinternals PsTools'. \n
 
 print_help_or_param
 
+gitVersion=$(get_param '--git-version')
+
 inChina=$(get_param '--in-china')
+
 action=$(get_param '--action')
+
 package=$(get_param '--package')
-
-installDir="/c/Program Files/Sysinternals/PsTools"
-
-psToolsNormalUrl="https://download.sysinternals.com/files/PSTools.zip"
-psToolsChineseUrl="https://gitee.com/hz-9/some-software-installation-packages/raw/master/Sysinternals/PsTools/PSTools.zip"
-
-psToolsFilepath=$package
 
 # ------------------------------------------------------------
 
-console_title "Install Sysinternals PsTools"
+console_title "Install git"
 
-pstools_package_prepare() {
+gitFilepath="$package"
+gitDirpath=$(dirname "$gitFilepath")/git
+
+support_versions='2.47.0'
+
+git_windows_package_prepare() {
+  echo "Prepare git on Windows. TODO"
+
   local url
   if [[ "$inChina" == "true" ]]; then
-    url=$psToolsChineseUrl
-    console_content "Sysinternals PsTools registry registry use the Chinese mirror."
+    url="https://mirrors.huaweicloud.com/git-for-windows/"
+    console_content "Git registry use the Chinese mirror."
   else
-    url=$psToolsNormalUrl
-    console_content "Sysinternals PsTools registry registry use the Official mirror."
+    url="https://github.com/git-for-windows/git/releases/download/"
+    console_content "Git registry use the Official mirror."
   fi
-  local filepath=$psToolsFilepath
 
-  if [[ "$action" == "online-install" ]]; then
-    download_file "$url" "$filepath"
+  if echo "$support_versions" | grep -q "^${gitVersion}$"; then
+    local filepath=$gitFilepath
+
+    # 1. 下载文件
+    # 2. 写入版本信息
+    # 3. 压缩文件
+
+    if [[ "$action" == "online-install" ]]; then
+      download_file "$url/$gitVersion.windows.1/Git-$gitVersion-64-bit.exe" "$filepath"
+    else
+      console_content_starting "The Git outline install package is preparing..."
+
+      download_file "$url/$gitVersion.windows.1/Git-$gitVersion-64-bit.exe" "$filepath" "false"
+
+      console_content_complete
+      console_empty_line
+      console_key_value "Outline Package" "$filepath"
+    fi
   else
-    console_content_starting "The Sysinternals PsTools outline install package is preparing..."
-
-    download_file "$url" "$filepath" "false"
-
-    console_content_complete
-
+    console_content_error "Git $gitVersion is not available."
+    console_content "Support versions:"
+    console_sulines "$support_versions"
     console_empty_line
-
-    console_key_value "Outline Package" "$filepath"
+    exit 1
   fi
 }
 
-pstools_package_install() {
-  if [[ -f "$installDir/psversion.txt" ]]; then
-    console_content "Sysinternals PsTools is already installed."
+git_windows_package_install() {
+  echo "Install git on Windows. TODO"
+}
+
+git_linux_package_prepare() {
+  echo "Prepare git on Linux. TODO"
+}
+
+git_linux_package_install() {
+  echo "Install git on Linux. TODO"
+}
+
+# install_on_windows() {
+#   # local url
+#   # if [[ "$inChina" == "true" ]]; then
+#   #   url="https://mirrors.huaweicloud.com/git-for-windows/"
+#   #   console_content "Git registry use the Chinese mirror."
+#   # else
+#   #   url="https://github.com/git-for-windows/git/releases/download/"
+#   # fi
+
+#   # if echo "$support_versions" | grep -q "^${gitVersion}$"; then
+#   #   download_file "$url/$gitVersion.windows.1/Git-$gitVersion-64-bit.exe" "$package"
+
+#   #   console_content "Git $gitVersion is downloaded."
+
+#   #   # sdk install java $javaVersion
+#   #   # eval "sdk install tomcat $tomcatVersion $(get_redirect_output)"
+#   # else
+#   #   console_content_error "Git $gitVersion is not available."
+#   #   console_content "Support versions:"
+#   #   console_sulines "$support_versions"
+#   #   console_empty_line
+#   #   exit 1
+#   # fi
+# }
+
+# install_on_linux() {
+#   local support_versions='2.47.0'
+
+#   echo "Install git on Linux. TODO"
+# }
+
+if judge_window_system; then
+  if [[ "$action" == "outline-prepare" ]]; then
+    git_windows_package_prepare
+  elif [[ "$action" == "outline-install" ]]; then
+    git_windows_package_install
+  elif [[ "$action" == "online-install" ]]; then
+    git_windows_package_prepare
+    git_windows_package_install
   else
-    console_content_starting "Sysinternals PsTools is installing..."
-    
-    unzip_file "$psToolsFilepath" "$installDir"
-
-    console_content_complete
+    console_content_error "The action '$action' is not supported."
+    console_empty_line
+    exit 1
   fi
-
-  local ps_version
-  ps_version=$(grep -oP '(?<=PsTools Version in this package: )\d+\.\d+' "$installDir/psversion.txt")
-
-  console_key_value "PsTools" "$ps_version"
-  console_empty_line
-}
-
-if [[ "$action" == "outline-prepare" ]]; then
-  pstools_package_prepare
-elif [[ "$action" == "outline-install" ]]; then
-  pstools_package_install
-elif [[ "$action" == "online-install" ]]; then
-  pstools_package_prepare
-  pstools_package_install
+elif judge_linux_system; then
+  if [[ "$action" == "outline-prepare" ]]; then
+    git_linux_package_prepare
+  elif [[ "$action" == "outline-install" ]]; then
+    git_linux_package_install
+  elif [[ "$action" == "online-install" ]]; then
+    git_linux_package_prepare
+    git_linux_package_install
+  else
+    console_content_error "The action '$action' is not supported."
+    console_empty_line
+    exit 1
+  fi
 else
-  console_content_error "The action '$action' is not supported."
-  console_empty_line
+  echo "Not support this OS."
   exit 1
 fi
 
+console_key_value "Git" "$(git --version | awk '{print $3}')"
 console_empty_line
 
 # ------------------------------------------------------------
