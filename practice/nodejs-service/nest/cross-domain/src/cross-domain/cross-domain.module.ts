@@ -1,9 +1,10 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
-import { SampleCrossDomainController } from './sample.cross-domain.controller'
-import { JsonpCrossDomainController } from './jsonp.cross-domain.controller'
-import { CorsCrossDomainController } from './cors.cross-domain.controller'
 import * as cors from 'cors'
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import type { CorsOptions } from 'cors'
+
+import { CorsCrossDomainController } from './cors.cross-domain.controller'
+import { JsonpCrossDomainController } from './jsonp.cross-domain.controller'
+import { SampleCrossDomainController } from './sample.cross-domain.controller'
 
 @Module({
   imports: [],

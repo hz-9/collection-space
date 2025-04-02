@@ -13,7 +13,9 @@
     "koa": "^2.15.3"
   },
   "devDependencies": {
-    "@hz-9/eslint-config-airbnb": "^0.3.10",
+    "@hz-9/eslint-config-airbnb": "~0.4.0",
+    "@hz-9/prettier-config": "~0.1.2",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "eslint": "^8.2.0",
     "prettier": "^3.0.0"
   }

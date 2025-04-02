@@ -1,9 +1,9 @@
 exports.bindJsonpRouter = (crossDomainRouter) => {
-  const corsOptions = {
-    // ...
-  }
+  // const corsOptions = {
+  //   // ...
+  // }
 
-  crossDomainRouter.get('/jsonp', function (req, res, next) {
+  crossDomainRouter.get('/jsonp', (req, res) => {
     const responseData = { message: 'This is Jsonp for a Single Route.' }
     if (req.query.callback) {
       const text = `/**/ typeof ${req.query.callback} === 'function' && ${req.query.callback}(${JSON.stringify(responseData)});`
@@ -15,7 +15,7 @@ exports.bindJsonpRouter = (crossDomainRouter) => {
     }
   })
 
-  crossDomainRouter.get('/jsonp2', function (req, res, next) {
+  crossDomainRouter.get('/jsonp2', (req, res) => {
     res.jsonp({ message: 'This is Jsonp for a Single Route.' })
   })
 

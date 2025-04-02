@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import type { Service } from '../types'
 import type { AxiosRequestConfig } from 'axios'
+import { computed, ref, watch } from 'vue'
+
+import type { Service } from '../types'
 
 const props = defineProps<{
   service: Service

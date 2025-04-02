@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { type Website } from '../../types'
+import { onMounted, ref } from 'vue'
 
 import MultiTabs from '../../components/multi-tabs.vue'
 import TwoPage from '../../components/two-page.vue'
-
+import { type Website } from '../../types'
 import type { MessageLog } from '../../types/index'
 
 const list = ref<Website[]>([])

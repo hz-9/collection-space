@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
 import type { StepProps } from 'ant-design-vue'
-import { type Website } from '../../types'
+import { ref, watch } from 'vue'
 
 import MultiTabs from '../../components/multi-tabs.vue'
+import { type Website } from '../../types'
 
 const list = ref<Website[]>([])
 

@@ -4,14 +4,10 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-10-13 23:22:53
  */
-
-import createError from 'http-errors'
-
 import express, { type Request, type Response } from 'express'
-
-import path from 'node:path'
-
+import createError from 'http-errors'
 import logger from 'morgan'
+import path from 'node:path'
 
 const app = express()
 

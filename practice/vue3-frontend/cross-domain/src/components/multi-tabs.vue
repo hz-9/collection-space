@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, watch, defineEmits } from 'vue'
-import type { Website, Service } from '../types'
+import { defineEmits, ref, watch } from 'vue'
+
+import type { Service, Website } from '../types'
 
 const props = defineProps<{
   title: string

@@ -6,11 +6,10 @@
  */
 
 /* eslint-disable no-console */
-
-import { NestFactory } from '@nestjs/core'
-import * as path from 'node:path'
-import * as os from 'node:os'
 import * as cluster_ from 'node:cluster'
+import * as os from 'node:os'
+import * as path from 'node:path'
+import { NestFactory } from '@nestjs/core'
 
 import { AppModule } from './app.module'
 

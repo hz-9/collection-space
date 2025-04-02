@@ -4,8 +4,7 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-10-11 01:18:13
  */
-import { ConsoleLogger as NestjsConsoleLogger, Injectable } from '@nestjs/common'
-
+import { Injectable, ConsoleLogger as NestjsConsoleLogger } from '@nestjs/common'
 import { type Configuration, Logger, configure } from 'log4js'
 
 const defaultLog4jsOptions: Configuration = {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRouter } from 'vue-router'
+
 import MainContent from './components/main-content.vue'
 
 const router = useRouter()

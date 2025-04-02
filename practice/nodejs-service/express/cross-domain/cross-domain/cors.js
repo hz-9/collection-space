@@ -7,7 +7,7 @@ exports.bindCorsRouter = (crossDomainRouter) => {
      */
   }
 
-  crossDomainRouter.get('/cors', cors(corsOptions), function (req, res, next) {
+  crossDomainRouter.get('/cors', cors(corsOptions), (req, res) => {
     res.json({ message: 'This is CORS-enabled for a Single Route.' })
   })
 

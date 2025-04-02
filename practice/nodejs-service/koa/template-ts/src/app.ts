@@ -4,11 +4,10 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-10-13 23:34:24
  */
-
+import Router from '@koa/router'
+import Koa from 'koa'
 import fs from 'node:fs'
 import path from 'node:path'
-import Koa from 'koa'
-import Router from '@koa/router'
 
 const app = new Koa()
 

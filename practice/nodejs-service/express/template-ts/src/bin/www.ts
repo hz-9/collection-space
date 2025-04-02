@@ -3,9 +3,7 @@
 /**
  * Module dependencies.
  */
-
 import debugFun from 'debug'
-
 import http from 'node:http'
 
 import app from '../app'
@@ -16,7 +14,7 @@ const debug = debugFun('express:server')
  * Normalize a port into a number, string, or false.
  */
 
-function normalizePort(val : any) {
+function normalizePort(val: any) {
   const port = parseInt(val, 10)
 
   if (Number.isNaN(port)) {
@@ -49,7 +47,7 @@ const server = http.createServer(app)
  * Event listener for HTTP server "error" event.
  */
 
-function onError(error : any) {
+function onError(error: any) {
   if (error.syscall !== 'listen') {
     throw error
   }

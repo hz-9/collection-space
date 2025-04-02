@@ -1,28 +1,30 @@
 // This file is created by egg-ts-helper@2.1.0
 // Do not modify this file!!!!!!!!!
-/* eslint-disable */
 
-import 'egg'
-import 'egg-onerror'
-import 'egg-session'
-import 'egg-i18n'
-import 'egg-watcher'
-import 'egg-multipart'
-import 'egg-security'
-import 'egg-development'
-import 'egg-logrotator'
-import 'egg-schedule'
-import 'egg-static'
-import 'egg-jsonp'
-import 'egg-view'
-import '@eggjs/tegg-plugin'
+/* eslint-disable */
+import '@eggjs/tegg-aop-plugin'
 import '@eggjs/tegg-config'
 import '@eggjs/tegg-controller-plugin'
-import '@eggjs/tegg-schedule-plugin'
 import '@eggjs/tegg-eventbus-plugin'
-import '@eggjs/tegg-aop-plugin'
-import 'egg-tracer'
+import '@eggjs/tegg-plugin'
+import '@eggjs/tegg-schedule-plugin'
+import 'egg'
 import { EggPluginItem } from 'egg'
+import 'egg-cors'
+import 'egg-development'
+import 'egg-i18n'
+import 'egg-jsonp'
+import 'egg-logrotator'
+import 'egg-multipart'
+import 'egg-onerror'
+import 'egg-schedule'
+import 'egg-security'
+import 'egg-session'
+import 'egg-static'
+import 'egg-tracer'
+import 'egg-view'
+import 'egg-watcher'
+
 declare module 'egg' {
   interface EggPlugin {
     onerror?: EggPluginItem
@@ -44,5 +46,6 @@ declare module 'egg' {
     eventbusModule?: EggPluginItem
     aopModule?: EggPluginItem
     tracer?: EggPluginItem
+    cors?: EggPluginItem
   }
 }

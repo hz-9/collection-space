@@ -5,9 +5,9 @@
  * @LastEditTime : 2024-10-13 12:43:36
  */
 import { MiddlewareConsumer, Module } from '@nestjs/common'
+
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-
 import { RidMiddleware } from './middleware/rid.middleware'
 
 @Module({

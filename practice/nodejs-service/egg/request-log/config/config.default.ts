@@ -1,6 +1,6 @@
+import { EggAppConfig, EggAppInfo, LoggerLevel, PowerPartial } from 'egg'
 import fs from 'node:fs'
 import path from 'node:path'
-import { EggAppConfig, EggAppInfo, PowerPartial, LoggerLevel } from 'egg'
 
 type LoggerMeta = {
   level: LoggerLevel
@@ -20,7 +20,7 @@ export default (appInfo: EggAppInfo) => {
 
   // override config from framework / plugin
   // use for cookie sign key, should change to your own and keep security
-  config.keys = appInfo.name + '_1720324213796_4631'
+  config.keys = `${appInfo.name}_1720324213796_4631`
 
   // add your egg config in here
   config.middleware = ['requestLog']
@@ -43,32 +43,32 @@ export default (appInfo: EggAppInfo) => {
       file: 'request.log',
       formatter: (meta?: any): string => {
         if (!meta) return ''
-        const meta_: LoggerMeta = meta as LoggerMeta
+        const loggerMeta: LoggerMeta = meta as LoggerMeta
         const marker = 'Request'
 
         return [
           '[HZ-9]',
-          meta_.pid.toString().padEnd(6, ' '),
+          loggerMeta.pid.toString().padEnd(6, ' '),
           '-',
-          meta_.date.substring(0, 19),
-          meta_.level.padStart(7, ' '),
+          loggerMeta.date.substring(0, 19),
+          loggerMeta.level.padStart(7, ' '),
           `[${marker.padStart(14, ' ')}]`,
-          meta_.message,
+          loggerMeta.message,
         ].join(' ')
       },
       contextFormatter: (meta?: any): string => {
         if (!meta) return ''
-        const meta_: LoggerMeta = meta as LoggerMeta
+        const loggerMeta: LoggerMeta = meta as LoggerMeta
         const marker = 'Request'
 
         return [
           '[HZ-9]',
-          meta_.pid.toString().padEnd(6, ' '),
+          loggerMeta.pid.toString().padEnd(6, ' '),
           '-',
-          meta_.date.substring(0, 19),
-          meta_.level.padStart(7, ' '),
+          loggerMeta.date.substring(0, 19),
+          loggerMeta.level.padStart(7, ' '),
           `[${marker.padStart(14, ' ')}]`,
-          meta_.message,
+          loggerMeta.message,
         ].join(' ')
       },
     },

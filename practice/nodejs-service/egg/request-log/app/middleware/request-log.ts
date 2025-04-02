@@ -2,11 +2,11 @@
  * @Author       : Chen Zhen
  * @Date         : 2024-07-07 13:29:47
  * @LastEditors  : Chen Zhen
- * @LastEditTime : 2024-10-11 00:25:48
+ * @LastEditTime : 2025-04-02 13:17:00
  */
 import { Context, EggLogger } from 'egg'
 
-let requestLogger: EggLogger | undefined
+let requestLogger: EggLogger | null = null
 
 const logToken = {
   // remoteAddr: (req: Context['request']) => req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress,

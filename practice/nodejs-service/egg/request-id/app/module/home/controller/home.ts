@@ -1,5 +1,5 @@
+import { HTTPController, HTTPMethod, HTTPMethodEnum, Inject } from '@eggjs/tegg'
 import { EggLogger } from 'egg'
-import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum } from '@eggjs/tegg'
 
 // eslint-disable-next-line import/extensions
 import { get } from '@/utils/http-content'
@@ -16,6 +16,7 @@ export class HomeController {
     path: '/',
   })
   async index() {
+    // eslint-disable-next-line no-console
     console.log('rid: ', get('rid'))
     return 'This is the egg service.'
   }

@@ -4,8 +4,9 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-10-11 01:21:22
  */
-import { NestFactory } from '@nestjs/core'
 import * as path from 'path'
+import { NestFactory } from '@nestjs/core'
+
 import { AppModule } from './app.module'
 import { Log4jsLogger } from './middleware/log4js.logger'
 

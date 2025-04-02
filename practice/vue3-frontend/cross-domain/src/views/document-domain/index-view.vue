@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { ref, nextTick, onMounted, onBeforeUnmount } from 'vue'
-import { type Website } from '../../types'
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 
+import LeftMockIframe from '../../components/left-mock-iframe.vue'
 import MultiTabs from '../../components/multi-tabs.vue'
 import TwoPage from '../../components/two-page.vue'
-import LeftMockIframe from '../../components/left-mock-iframe.vue'
-
+import { type Website } from '../../types'
 import type { MessageLog, SendInfo } from '../../types/index'
 
 const list = ref<Website[]>([

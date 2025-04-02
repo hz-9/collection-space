@@ -1,10 +1,10 @@
-import './assets/main.css'
-import 'ant-design-vue/dist/reset.css'
 import Antd from 'ant-design-vue'
-import { createApp } from 'vue'
+import 'ant-design-vue/dist/reset.css'
 import { createPinia } from 'pinia'
+import { createApp } from 'vue'
 
 import App from './App.vue'
+import './assets/main.css'
 import router from './router'
 
 const app = createApp(App)

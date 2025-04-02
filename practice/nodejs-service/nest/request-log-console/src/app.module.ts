@@ -4,10 +4,10 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-10-11 00:36:47
  */
-import { Module, MiddlewareConsumer } from '@nestjs/common'
+import { MiddlewareConsumer, Module } from '@nestjs/common'
+
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-
 import { LoggerMiddleware } from './middleware/logger.middleware'
 
 @Module({

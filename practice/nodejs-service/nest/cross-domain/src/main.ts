@@ -4,9 +4,11 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-10-08 01:06:00
  */
-import { NestFactory } from '@nestjs/core'
 import * as path from 'path'
+import { NestFactory } from '@nestjs/core'
+
 import { AppModule } from './app.module'
+
 ;(async (): Promise<void> => {
   const app = await NestFactory.create(AppModule)
 

@@ -1,5 +1,5 @@
-import { EggLogger, Context as ContentType } from 'egg'
-import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum, Context } from '@eggjs/tegg'
+import { Context, HTTPController, HTTPMethod, HTTPMethodEnum, Inject } from '@eggjs/tegg'
+import { Context as ContentType, EggLogger } from 'egg'
 
 @HTTPController({
   path: '/cross-domain',

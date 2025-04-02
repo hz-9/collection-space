@@ -4,10 +4,9 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-10-13 12:34:41
  */
-
 import { Context } from 'egg'
 
-import { ns, set, generateRId } from '../utils/http-content'
+import { generateRId, ns, set } from '../utils/http-content'
 
 export default function ridMiddleware(): any {
   return async (_ctx: Context, next: () => Promise<any>) => {

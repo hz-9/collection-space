@@ -1,6 +1,6 @@
+import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg'
 import fs from 'node:fs'
 import path from 'node:path'
-import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg'
 
 export default (appInfo: EggAppInfo) => {
   const config = {} as PowerPartial<EggAppConfig>
@@ -35,7 +35,7 @@ export default (appInfo: EggAppInfo) => {
 
     origin: (ctx) => {
       if (ctx.originalUrl === '/cross-domain/cors') return '*'
-      return undefined
+      return ''
     },
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
   }

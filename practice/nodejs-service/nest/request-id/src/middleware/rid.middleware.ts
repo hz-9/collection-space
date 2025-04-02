@@ -4,10 +4,9 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-07-07 23:01:18
  */
+import * as cls from 'cls-hooked'
 import { Injectable, NestMiddleware } from '@nestjs/common'
 import type { NextFunction, Request, Response } from 'express'
-
-import * as cls from 'cls-hooked'
 
 const nsid = 'a6a29a6f-6747-4b5f-b99f-07ee96e32f88'
 

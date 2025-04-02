@@ -4,7 +4,7 @@ const { bindJsonpRouter } = require('./jsonp')
 
 const crossDomainRouter = express.Router()
 
-crossDomainRouter.get('/sample', function (req, res, next) {
+crossDomainRouter.get('/sample', (req, res) => {
   res.json({ message: 'This is sample for a Single Route.' })
 })
 

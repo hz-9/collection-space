@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { type Service, ServiceStatus } from '../../types'
-import jsonpAdapter from 'axios-jsonp'
-
+import { CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined } from '@ant-design/icons-vue'
 import axios, { type AxiosRequestConfig } from 'axios'
-import { CloseCircleOutlined, CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons-vue'
+import jsonpAdapter from 'axios-jsonp'
+import { onMounted, ref } from 'vue'
 
 import MultiTabs from '../../components/multi-tabs.vue'
-
 import RequestView from '../../components/request-view.vue'
+import { type Service, ServiceStatus } from '../../types'
 
 const list = ref<Service[]>([
   {

@@ -4,9 +4,8 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-07-07 12:02:04
  */
-
+import { AccessLevel, Inject, SingletonProto } from '@eggjs/tegg'
 import { EggLogger } from 'egg'
-import { SingletonProto, AccessLevel, Inject } from '@eggjs/tegg'
 
 @SingletonProto({
   // 如果需要在上层使用，需要把 accessLevel 显示声明为 public

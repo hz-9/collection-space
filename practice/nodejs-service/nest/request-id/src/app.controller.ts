@@ -5,8 +5,8 @@
  * @LastEditTime : 2024-10-13 12:43:45
  */
 import { Controller, Get } from '@nestjs/common'
-import { AppService } from './app.service'
 
+import { AppService } from './app.service'
 import { get } from './middleware/rid.middleware'
 
 @Controller()

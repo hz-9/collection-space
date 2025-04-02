@@ -4,7 +4,7 @@
  * @LastEditors  : Chen Zhen
  * @LastEditTime : 2024-10-11 01:13:35
  */
-import { ConsoleLogger as NestjsConsoleLogger, Injectable } from '@nestjs/common'
+import { Injectable, ConsoleLogger as NestjsConsoleLogger } from '@nestjs/common'
 
 @Injectable()
 export class ConsoleLogger extends NestjsConsoleLogger {

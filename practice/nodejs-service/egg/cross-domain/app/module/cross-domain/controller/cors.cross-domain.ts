@@ -1,5 +1,5 @@
-import { EggLogger, Context as ContentType } from 'egg'
-import { Inject, HTTPController, HTTPMethod, HTTPMethodEnum, Context } from '@eggjs/tegg'
+import { Context, HTTPController, HTTPMethod, HTTPMethodEnum, Inject } from '@eggjs/tegg'
+import { Context as ContentType, EggLogger } from 'egg'
 
 @HTTPController({
   path: '/cross-domain',
@@ -13,6 +13,7 @@ export class CorsCrossDomainController {
     path: '/cors',
   })
   async cors(@Context() ctx: ContentType) {
+    // eslint-disable-next-line no-console
     console.log('ctx', ctx)
     return { message: 'This is CORS-enabled for a Single Route.' }
   }

@@ -26,16 +26,18 @@ export class LoggerMiddleware implements NestMiddleware {
 
     response.on('finish', () => {
       const responseTime = Date.now() - start
-      this._logger.log([
-        logToken.remoteAddr(request),
-        '-',
-        `"${logToken.httpInfo(request)}"`,
-        logToken.status(response),
-        logToken.contentLength(response),
-        `${responseTime}ms`,
-        `"${logToken.referrer(request)}"`,
-        `"${logToken.userAgent(request)}"`,
-      ].join(' '))
+      this._logger.log(
+        [
+          logToken.remoteAddr(request),
+          '-',
+          `"${logToken.httpInfo(request)}"`,
+          logToken.status(response),
+          logToken.contentLength(response),
+          `${responseTime}ms`,
+          `"${logToken.referrer(request)}"`,
+          `"${logToken.userAgent(request)}"`,
+        ].join(' ')
+      )
     })
 
     next()

@@ -1,12 +1,13 @@
 exports.bindJsonpRouter = (crossDomainRouter) => {
-  const corsOptions = {
-    /**
-     * Docs: https://github.com/koajs/cors/?tab=readme-ov-file#corsoptions
-     */
-  }
+  // const corsOptions = {
+  //   /**
+  //    * Docs: https://github.com/koajs/cors/?tab=readme-ov-file#corsoptions
+  //    */
+  // }
 
-  crossDomainRouter.get('/jsonp', function (ctx, next) {
+  crossDomainRouter.get('/jsonp', (ctx) => {
     const responseData = { message: 'This is Jsonp for a Single Route.' }
+    // eslint-disable-next-line no-console
     console.log('req.query.callback', ctx.query.callback)
     if (ctx.query.callback) {
       const text = `/**/ typeof ${ctx.query.callback} === 'function' && ${
