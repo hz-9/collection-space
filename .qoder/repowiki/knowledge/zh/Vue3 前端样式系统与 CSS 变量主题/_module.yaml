@@ -1,0 +1,11 @@
+schema_version: 1
+module_path: frontend_style
+title: Vue3 前端样式系统与 CSS 变量主题
+scope: []
+source_files:
+    - practice/vue3-frontend/cross-domain/src/assets/base.css
+    - practice/vue3-frontend/cross-domain/src/assets/main.css
+    - practice/vue3-frontend/cross-domain/src/App.vue
+    - practice/vue3-frontend/cross-domain/public/common.css
+depends_on: []
+related_to: []

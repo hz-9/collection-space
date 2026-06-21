@@ -1,0 +1,14 @@
+schema_version: 1
+module_path: configuration_system
+title: 多框架配置体系与环境分层实践
+scope: []
+source_files:
+    - practice/nodejs-service/egg/cross-domain/config/config.default.ts
+    - practice/nodejs-service/egg/cross-domain/config/config.local.ts
+    - practice/nodejs-service/egg/cross-domain/config/config.prod.ts
+    - practice/nodejs-service/egg/cross-domain/config/plugin.ts
+    - practice/vue3-frontend/cross-domain/vite.config.ts
+    - practice/nodejs-service/nest/cross-domain/src/main.ts
+    - practice/nodejs-service/express/cross-domain/app.js
+depends_on: []
+related_to: []

@@ -1,0 +1,106 @@
+# 知识卡导出索引文件
+schema_version: 1
+locale: zh-CN
+branch: master
+nodes_managed: true
+exported_at: "2026-06-21T04:38:00Z"
+modules:
+    "":
+        dir_name: Web 项目脚本与示例集合
+        title: Web 项目脚本与示例集合
+        scope:
+            - .gitignore
+            - .prettierignore
+            - README.md
+            - README.zh-CN.md
+            - build.sh
+            - .nvmrc
+            - LICENSE
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    build_system:
+        dir_name: 构建与部署体系：Jenkins CI、Docker 多阶段构建及 PM2 运维
+        title: 构建与部署体系：Jenkins CI、Docker 多阶段构建及 PM2 运维
+        scope: []
+        source_files:
+            - ci&cd/jenkins/jenkinsfile/service.1.Jenkinsfile
+            - ci&cd/jenkins/jenkinsfile/website.1.Jenkinsfile
+            - practice/nodejs-service/egg/cross-domain/dockerfile
+            - practice/vue3-frontend/cross-domain/dockerfile
+            - practice/docker-env/cross-domain/compose/docker-compose.yml
+            - build.sh
+            - practice/nodejs-service/egg/run.sh
+        children: []
+        depends_on: []
+        related_to: []
+    configuration_system:
+        dir_name: 多框架配置体系与环境分层实践
+        title: 多框架配置体系与环境分层实践
+        scope: []
+        source_files:
+            - practice/nodejs-service/egg/cross-domain/config/config.default.ts
+            - practice/nodejs-service/egg/cross-domain/config/config.local.ts
+            - practice/nodejs-service/egg/cross-domain/config/config.prod.ts
+            - practice/nodejs-service/egg/cross-domain/config/plugin.ts
+            - practice/vue3-frontend/cross-domain/vite.config.ts
+            - practice/nodejs-service/nest/cross-domain/src/main.ts
+            - practice/nodejs-service/express/cross-domain/app.js
+        children: []
+        depends_on: []
+        related_to: []
+    dependency_management:
+        dir_name: Node.js 项目依赖管理策略
+        title: Node.js 项目依赖管理策略
+        scope: []
+        source_files:
+            - handwritten-code/package.json
+            - handwritten-code/pnpm-lock.yaml
+            - practice/nodejs-service/egg/cross-domain/package.json
+            - practice/nodejs-service/egg/cross-domain/pnpm-lock.yaml
+            - practice/nodejs-service/express/cross-domain/package.json
+            - practice/nodejs-service/express/cross-domain/package-lock.json
+            - practice/vue3-frontend/cross-domain/package.json
+            - practice/vue3-frontend/cross-domain/pnpm-lock.yaml
+        children: []
+        depends_on: []
+        related_to: []
+    error_handling:
+        dir_name: 错误处理机制
+        title: 错误处理机制
+        scope: []
+        source_files:
+            - practice/nodejs-service/express/cross-domain/app.js
+            - handwritten-code/src/my-promise.ts
+            - practice/nodejs-service/egg/request-log/app/middleware/request-log.ts
+            - practice/nodejs-service/nest/template/src/main.ts
+        children: []
+        depends_on: []
+        related_to: []
+    frontend_style:
+        dir_name: Vue3 前端样式系统与 CSS 变量主题
+        title: Vue3 前端样式系统与 CSS 变量主题
+        scope: []
+        source_files:
+            - practice/vue3-frontend/cross-domain/src/assets/base.css
+            - practice/vue3-frontend/cross-domain/src/assets/main.css
+            - practice/vue3-frontend/cross-domain/src/App.vue
+            - practice/vue3-frontend/cross-domain/public/common.css
+        children: []
+        depends_on: []
+        related_to: []
+    logging_system:
+        dir_name: 日志系统：多框架下的统一格式与中间件实践
+        title: 日志系统：多框架下的统一格式与中间件实践
+        scope: []
+        source_files:
+            - practice/nodejs-service/egg/request-log/config/config.default.ts
+            - practice/nodejs-service/egg/request-log/app/middleware/request-log.ts
+            - practice/nodejs-service/express/request-log-log4js/middleware/log4js.middleware.js
+            - practice/nodejs-service/koa/request-log-log4js/middleware/log4js.middleware.js
+            - practice/nodejs-service/nest/request-log-log4js/src/middleware/log4js.logger.ts
+            - practice/nodejs-service/express/request-log-morgan/middleware/morgan.middleware.js
+        children: []
+        depends_on: []
+        related_to: []

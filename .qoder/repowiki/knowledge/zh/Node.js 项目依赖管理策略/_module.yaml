@@ -1,0 +1,15 @@
+schema_version: 1
+module_path: dependency_management
+title: Node.js 项目依赖管理策略
+scope: []
+source_files:
+    - handwritten-code/package.json
+    - handwritten-code/pnpm-lock.yaml
+    - practice/nodejs-service/egg/cross-domain/package.json
+    - practice/nodejs-service/egg/cross-domain/pnpm-lock.yaml
+    - practice/nodejs-service/express/cross-domain/package.json
+    - practice/nodejs-service/express/cross-domain/package-lock.json
+    - practice/vue3-frontend/cross-domain/package.json
+    - practice/vue3-frontend/cross-domain/pnpm-lock.yaml
+depends_on: []
+related_to: []

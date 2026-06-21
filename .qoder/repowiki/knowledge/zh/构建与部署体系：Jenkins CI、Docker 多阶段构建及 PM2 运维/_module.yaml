@@ -1,0 +1,14 @@
+schema_version: 1
+module_path: build_system
+title: 构建与部署体系：Jenkins CI、Docker 多阶段构建及 PM2 运维
+scope: []
+source_files:
+    - ci&cd/jenkins/jenkinsfile/service.1.Jenkinsfile
+    - ci&cd/jenkins/jenkinsfile/website.1.Jenkinsfile
+    - practice/nodejs-service/egg/cross-domain/dockerfile
+    - practice/vue3-frontend/cross-domain/dockerfile
+    - practice/docker-env/cross-domain/compose/docker-compose.yml
+    - build.sh
+    - practice/nodejs-service/egg/run.sh
+depends_on: []
+related_to: []

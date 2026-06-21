@@ -1,0 +1,13 @@
+schema_version: 1
+module_path: logging_system
+title: 日志系统：多框架下的统一格式与中间件实践
+scope: []
+source_files:
+    - practice/nodejs-service/egg/request-log/config/config.default.ts
+    - practice/nodejs-service/egg/request-log/app/middleware/request-log.ts
+    - practice/nodejs-service/express/request-log-log4js/middleware/log4js.middleware.js
+    - practice/nodejs-service/koa/request-log-log4js/middleware/log4js.middleware.js
+    - practice/nodejs-service/nest/request-log-log4js/src/middleware/log4js.logger.ts
+    - practice/nodejs-service/express/request-log-morgan/middleware/morgan.middleware.js
+depends_on: []
+related_to: []

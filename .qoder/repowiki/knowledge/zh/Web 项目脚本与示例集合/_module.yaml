@@ -1,0 +1,14 @@
+schema_version: 1
+module_path: ""
+title: Web 项目脚本与示例集合
+scope:
+    - .gitignore
+    - .prettierignore
+    - README.md
+    - README.zh-CN.md
+    - build.sh
+    - .nvmrc
+    - LICENSE
+source_files: []
+depends_on: []
+related_to: []
