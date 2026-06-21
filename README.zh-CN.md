@@ -5,7 +5,7 @@
 | 路径                       | 规划                                                                                                   |
 | -------------------------- | ------------------------------------------------------------------------------------------------------ |
 | `ci&cd`                    | 一些 ci&cd 脚本。                                                                                      |
-| ~~`data-structure`~~       | 一些数据结构类。移动至 [@hz-9/algorithm](https://github.com/hz-9/tool/tree/master/libraries/algorithm) |
+| ~~`data-structure`~~       | 一些数据结构类。移动至 [@hz-9/algorithm](https://github.com/hz-9/tool-nx/tree/master/packages/algorithm) |
 | ~~`docker-envs`~~          | 一些 docker-compose 脚本。移动至 [hz-9/env-containers](https://github.com/hz-9/env-containers)         |
 | ~~`env-prepare`~~          | 一些软件安装脚本。移动至 [hz-9/env-scripts](https://github.com/hz-9/env-scripts)                       |
 | `handwritten-code`         | 一个手写示例。                                                                                         |

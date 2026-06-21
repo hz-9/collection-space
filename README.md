@@ -5,7 +5,7 @@
 | Path                       | Plan                                                                                                                 |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `ci&cd`                    | Some ci&cd scripts.                                                                                                  |
-| ~~`data-structure`~~       | Some data-structure class. Move to [@hz-9/algorithm](https://github.com/hz-9/tool/tree/master/libraries/algorithm)   |
+| ~~`data-structure`~~       | Some data-structure class. Move to [@hz-9/algorithm](https://github.com/hz-9/tool-nx/tree/master/packages/algorithm)   |
 | ~~`docker-envs`~~          | Some docker-compose scripts. Move to [hz-9/env-containers](https://github.com/hz-9/env-containers) |
 | ~~`env-prepare`~~              | Some software install scripts. Move to [hz-9/env-scripts](https://github.com/hz-9/env-scripts)|
 | `handwritten-code`         | A handwritten example.                                                                                               |
